@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['resources/traveling_icon.png'],
+      includeAssets: ['traveling_icon.png'],
       manifest: {
         name: 'ZenTravel - 旅の禪',
         short_name: 'ZenTravel',
@@ -21,7 +21,7 @@ export default defineConfig({
         orientation: 'portrait',
         icons: [
           {
-            src: 'resources/traveling_icon.png',
+            src: 'traveling_icon.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any maskable'
