@@ -7,12 +7,12 @@ import { ScheduleItem, Booking, HighlightTag, HighlightColor, WeatherInfo } from
 const MOCK_SCHEDULE: ScheduleItem[] = [
   // --- 1/4 (Sun) D1 ---
   { 
-      id: 'd1-1', date: '2026-01-04', time: '09:20', displayTime: '09:20',
+      id: 'd1-1', date: '2026-01-04', time: '09:20', 
       title: '起飛', location: 'TPE 桃園機場 (Terminal 1)', category: 'transport', categoryColor: 'red',
       isCompleted: false 
   },
   { 
-      id: 'd1-2', date: '2026-01-04', time: '12:50', displayTime: '12:50',
+      id: 'd1-2', date: '2026-01-04', time: '12:50', 
       title: '降落', location: 'KIX 關西機場', category: 'transport', categoryColor: 'red',
       isCompleted: false 
   },
@@ -217,7 +217,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
   },
   { 
       id: 'd4-5', date: '2026-01-07', time: '15:30', displayTime: '15:30\n16:00',
-      title: '哆奇剛的瘋狂礦車', location: 'USJ', category: 'Express', categoryColor: 'red',
+      title: '咚奇剛的瘋狂礦車™', location: 'USJ', category: 'Express', categoryColor: 'red',
       isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/m6eZWZhHxoUsrnha8'
   },
@@ -292,7 +292,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
       mapUrl: 'https://maps.app.goo.gl/ojQc91auSEy5C9VD8'
   },
   { 
-      id: 'd6-4', date: '2026-01-09', time: '19:00', displayTime: '19:00',
+      id: 'd6-4', date: '2026-01-09', time: '19:00',
       title: '炸牛 元村 難波御堂筋店', location: '大阪', category: '晚餐', categoryColor: 'red',
       description: '(Visa預約中)', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/v3PsudaxqCnLeSyj6'
@@ -314,12 +314,12 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
       description: '(飯店寄存行李)', isCompleted: false 
   },
   { 
-      id: 'd7-3', date: '2026-01-10', time: '14:00', displayTime: '14:00',
+      id: 'd7-3', date: '2026-01-10', time: '14:00', 
       title: '起飛 (KIX)', location: '關西機場', category: 'transport', categoryColor: 'red',
       description: '(逛免稅商店/伴手禮)', isCompleted: false 
   },
   { 
-      id: 'd7-4', date: '2026-01-10', time: '16:15', displayTime: '16:15',
+      id: 'd7-4', date: '2026-01-10', time: '16:15', 
       title: '降落 (TPE)', location: '桃園機場 Terminal 1', category: 'transport', categoryColor: 'red',
       isCompleted: false 
   },
@@ -538,7 +538,7 @@ export const ScheduleTab: React.FC = () => {
                 {/* 1. Time Column - Aligned Right */}
                 <div className="w-14 py-4 flex flex-col items-end justify-start flex-shrink-0 pr-3">
                     <span className={`font-mono font-bold text-sm text-right leading-none ${item.isCompleted ? 'text-gray-300' : 'text-gray-500'}`}>
-                        {item.displayTime?.split('\n')[0] || item.time}
+                        {item.displayTime?.split('\n')[0]}
                     </span>
                     {item.displayTime?.includes('\n') && (
                          <span className="text-[10px] text-gray-300 font-mono mt-1 text-right">{item.displayTime.split('\n')[1]}</span>
