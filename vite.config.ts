@@ -1,4 +1,3 @@
-
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
@@ -9,7 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['icon.svg'],
+      includeAssets: ['resources/ICON.png'],
       manifest: {
         name: 'ZenTravel - 旅の禪',
         short_name: 'ZenTravel',
@@ -22,9 +21,9 @@ export default defineConfig({
         orientation: 'portrait',
         icons: [
           {
-            src: 'icon.svg',
-            sizes: 'any',
-            type: 'image/svg+xml',
+            src: 'resources/ICON.png',
+            sizes: '512x512',
+            type: 'image/png',
             purpose: 'any maskable'
           }
         ]

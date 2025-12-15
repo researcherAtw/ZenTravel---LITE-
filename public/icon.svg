@@ -5,50 +5,33 @@
     </clipPath>
   </defs>
 
-  <!-- Dashed Orbit Line (Background Ring) -->
-  <circle cx="256" cy="256" r="230" fill="none" stroke="#EA4335" stroke-width="20" stroke-linecap="round" stroke-dasharray="30 40" transform="rotate(20 256 256)" />
+  <!-- Dashed Orbit Line -->
+  <circle cx="256" cy="256" r="230" fill="none" stroke="#EA4335" stroke-width="24" stroke-linecap="round" stroke-dasharray="40 50" transform="rotate(-20 256 256)" />
 
   <!-- Globe Body (Ocean) -->
   <circle cx="256" cy="256" r="190" fill="#4299E1" />
 
-  <!-- Continents (Green Landmasses) -->
+  <!-- Continents -->
   <g clip-path="url(#globe-clip)" fill="#81C784">
-    <!-- Top Right Land -->
-    <path d="M 300 40 H 500 V 160 H 400 A 20 20 0 0 1 380 140 V 100 H 300 Z" />
-    
-    <!-- Middle/Right Land -->
-    <path d="M 320 200 H 550 V 300 H 370 A 20 20 0 0 1 350 280 V 240 H 320 A 20 20 0 0 1 300 220 V 200 Z" />
-    
-    <!-- Bottom Right Land -->
-    <path d="M 330 340 H 500 V 450 H 380 A 20 20 0 0 1 360 430 V 400 H 330 Z" />
-    
-    <!-- Top Left Land -->
-    <path d="M 20 120 H 220 A 20 20 0 0 1 240 140 V 180 H 150 A 20 20 0 0 0 130 200 V 220 H 20 Z" />
-    
-    <!-- Middle Left Land -->
-    <path d="M -20 260 H 200 A 20 20 0 0 1 220 280 V 320 H 120 A 20 20 0 0 0 100 340 V 360 H -20 Z" />
-    
-    <!-- Bottom Center Island -->
-    <rect x="170" y="380" width="70" height="35" rx="17.5" />
-    
-    <!-- Top Center Small Island -->
-    <rect x="250" y="70" width="80" height="35" rx="17.5" />
+    <!-- Left Landmass -->
+    <path d="M 50 180 C 50 180 120 140 160 200 C 190 260 120 320 150 380 C 180 440 80 480 40 480 L 0 480 L 0 180 Z" />
+    <!-- Right Landmass -->
+    <path d="M 320 50 C 280 90 320 150 300 190 C 280 230 380 270 360 320 C 340 370 420 410 512 410 L 512 50 L 320 50 Z" />
+    <!-- Islands -->
+    <circle cx="260" cy="280" r="35" />
+    <circle cx="160" cy="110" r="25" />
   </g>
 
-  <!-- Pins -->
   <!-- Left Pin -->
-  <g transform="translate(85, 110) rotate(-15)">
-    <!-- Pin Body -->
-    <path d="M 0 0 C -45 0 -80 35 -80 80 C -80 135 0 210 0 210 C 0 210 80 135 80 80 C 80 35 45 0 0 0 Z" fill="#EA4335" />
-    <!-- Pin Center Shadow/Hole -->
-    <circle cx="0" cy="75" r="20" fill="#B71C1C" opacity="0.3" />
+  <g transform="translate(125, 125) rotate(-45)">
+     <!-- Pin Shape: Tip at 0,0, Bulb centered at 0,-130 -->
+     <path d="M 0 0 C -5 -10 -75 -80 -75 -130 A 75 75 0 1 1 75 -130 C 75 -80 5 -10 0 0 Z" fill="#EA4335" />
+     <circle cx="0" cy="-130" r="28" fill="#B71C1C" opacity="0.4" />
   </g>
 
   <!-- Right Pin -->
-  <g transform="translate(427, 110) rotate(15)">
-    <!-- Pin Body -->
-    <path d="M 0 0 C -45 0 -80 35 -80 80 C -80 135 0 210 0 210 C 0 210 80 135 80 80 C 80 35 45 0 0 0 Z" fill="#EA4335" />
-    <!-- Pin Center Shadow/Hole -->
-    <circle cx="0" cy="75" r="20" fill="#B71C1C" opacity="0.3" />
+  <g transform="translate(387, 125) rotate(45)">
+     <path d="M 0 0 C -5 -10 -75 -80 -75 -130 A 75 75 0 1 1 75 -130 C 75 -80 5 -10 0 0 Z" fill="#EA4335" />
+     <circle cx="0" cy="-130" r="28" fill="#B71C1C" opacity="0.4" />
   </g>
 </svg>
