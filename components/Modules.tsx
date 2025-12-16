@@ -18,44 +18,44 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
   },
   { 
       id: 'd1-3', date: '2026-01-04', time: '13:00', title: 'Dior 心斎橋', 
-      location: '大阪', category: '購物', categoryColor: 'orange',
+      location: '大阪 (心斎橋)', category: '購物', categoryColor: 'orange',
       businessHours: '11:00 - 20:00', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/n9RXpreTK4BmtSKX7'
   },
   { 
       id: 'd1-4', date: '2026-01-04', time: '13:00', title: '大阪高島屋店', 
-      location: '大阪', category: '購物', categoryColor: 'orange',
+      location: '大阪 (難波)', category: '購物', categoryColor: 'orange',
       description: '(1F SUQQU | 2F Dior | 3-4F Polo)', businessHours: '10:00 - 20:00', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/jv8vH9DvuRvfqx1U8'
   },
   { 
       id: 'd1-5', date: '2026-01-04', time: '13:00', title: '大丸心齋橋店 本館', 
-      location: '大阪', category: '購物', categoryColor: 'orange',
+      location: '大阪 (心斎橋)', category: '購物', categoryColor: 'orange',
       description: '(1F SUQQU | 3F Celine\n9F pokemon center)', businessHours: '10:00 - 20:00', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/BCqeSZqrh5uiRpoy9'
   },
   { 
       id: 'd1-6', date: '2026-01-04', time: '13:00', title: 'Loewe 大丸梅田店', 
-      location: '大阪', category: '購物', categoryColor: 'orange',
+      location: '大阪 (梅田)', category: '購物', categoryColor: 'orange',
       description: '(3F LOEWE男士)', businessHours: '10:00 - 20:00', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/fQjzaNz4cygtSEmSA'
   },
   { 
       id: 'd1-7', date: '2026-01-04', time: '13:00', title: 'Loewe 阪急男士大阪店', 
-      location: '大阪', category: '購物', categoryColor: 'orange',
+      location: '大阪 (梅田)', category: '購物', categoryColor: 'orange',
       description: '(2F LOEWE男士)', businessHours: '10:00 - 20:00', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/oNoJb8b498ZQfhGbA'
   },
   { 
       id: 'd1-8', date: '2026-01-04', time: '13:00', title: 'Tables Cafe', 
-      location: '大阪', category: '下午茶', categoryColor: 'blue',
-      description: '(草莓蛋糕)', businessHours: '10:00 - 20:00', isCompleted: false,
+      location: '大阪 (堀江)', category: '下午茶', categoryColor: 'blue',
+      description: '(草莓蛋糕)', businessHours: '11:00 - 20:00', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/xvZvhNF7KLUSNVAz7'
   },
   { 
       id: 'd1-9', date: '2026-01-04', time: '13:00', title: 'BicCamera 難波店', 
-      location: '大阪', category: '購物', categoryColor: 'orange',
-      description: '(Sony 相機鏡頭)', businessHours: '10:00 - 22:00', isCompleted: false,
+      location: '大阪 (難波)', category: '購物', categoryColor: 'orange',
+      description: '(Sony 相機鏡頭)', businessHours: '10:00 - 21:00', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/2QzAfgJhk68BKUBt7'
   },
   { 
@@ -71,7 +71,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
   },
   { 
       id: 'd1-12', date: '2026-01-04', time: '18:00', title: '麥×鷄', 
-      location: '大阪', category: '晚餐', categoryColor: 'green',
+      location: '大阪 (心斎橋)', category: '晚餐', categoryColor: 'green',
       description: '(雞白湯拉麵)', businessHours: '18:00 - 22:00', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/3x5qTHVEmY1XCb4f9'
   },
@@ -79,31 +79,36 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
   // --- 1/5 (Mon) D2 ---
   { 
       id: 'd2-1', date: '2026-01-05', time: '09:00', title: 'COLONY by EQI', 
-      location: '大阪', category: '早午餐', categoryColor: 'green',
+      location: '大阪 (西心斎橋)', category: '早午餐', categoryColor: 'green',
+      businessHours: '11:00 - 23:00',
       description: '(鬆餅)', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/Lfg2wRUuyf1fDih46'
   },
   { 
       id: 'd2-2', date: '2026-01-05', time: '09:30', title: 'MAZE CAFE', 
-      location: '大阪', category: '早午餐', categoryColor: 'green',
+      location: '大阪 (西心斎橋)', category: '早午餐', categoryColor: 'green',
+      businessHours: '08:00 - 16:00',
       isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/MQyHYzPZ8BCgt4PK7'
   },
   { 
       id: 'd2-3', date: '2026-01-05', time: '10:30', title: '3COINS+plus', 
-      location: '大阪', category: '購物', categoryColor: 'orange',
+      location: '大阪 (心斎橋)', category: '購物', categoryColor: 'orange',
+      businessHours: '11:00 - 21:00',
       isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/fR5yQ1eUrYacsSmc6'
   },
   { 
       id: 'd2-4', date: '2026-01-05', time: '11:00', title: '3COINS', 
-      location: '大阪', category: '購物', categoryColor: 'orange',
+      location: '大阪 (難波/心斎橋)', category: '購物', categoryColor: 'orange',
+      businessHours: '11:00 - 21:00',
       isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/xr7GvpuohiGVhw7K8'
   },
   { 
       id: 'd2-5', date: '2026-01-05', time: '11:30', title: '靴下屋', 
       location: '大阪', category: '購物', categoryColor: 'orange',
+      businessHours: '11:00 - 21:00',
       description: '(Tabio)', isCompleted: false 
   },
   { 
@@ -113,26 +118,29 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
   },
   { 
       id: 'd2-7', date: '2026-01-05', time: '14:00', title: '浅草茶屋たばねのし', 
-      location: '大阪', category: '下午茶', categoryColor: 'blue',
+      location: '大阪 (難波)', category: '下午茶', categoryColor: 'blue',
+      businessHours: '11:30 - 21:00',
       description: '(可麗餅、抹茶拿鐵)', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/1Rx3JmBJCNg7nvrz5'
   },
   { 
       id: 'd2-8', date: '2026-01-05', time: '16:00', title: 'あべのソラハ', 
-      location: '大阪', category: '購物', categoryColor: 'orange',
+      location: '大阪 (阿倍野)', category: '購物', categoryColor: 'orange',
+      businessHours: '10:00 - 21:30',
       description: '(3F Ungrid服飾店)', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/KmBGoBB2fNMsXQdd7'
   },
   { 
       id: 'd2-9', date: '2026-01-05', time: '18:00', displayTime: '18:00',
       title: '牛舌的檸檬 大阪本店', 
-      location: '大阪', category: '晚餐', categoryColor: 'red',
+      location: '大阪 (心斎橋)', category: '晚餐', categoryColor: 'red',
       description: '(已預約)', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/XyLM17JrCuZr45mt8'
   },
   { 
       id: 'd2-10', date: '2026-01-05', time: '20:00', title: '唐吉軻德', 
-      location: '大阪', category: '購物', categoryColor: 'orange',
+      location: '大阪 (道頓堀)', category: '購物', categoryColor: 'orange',
+      businessHours: '24H',
       isCompleted: false 
   },
   { 
@@ -144,38 +152,41 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
   // --- 1/6 (Tue) D3 ---
   { 
       id: 'd3-1', date: '2026-01-06', time: '11:00', 
-      title: 'Tart Square', location: '大阪', category: '早午餐', categoryColor: 'green',
-      description: '(和牛鹹塔/甜食塔)', businessHours: '11:00-19:00', isCompleted: false,
+      title: 'Tart Square', location: '大阪 (堀江)', category: '早午餐', categoryColor: 'green',
+      description: '(和牛鹹塔/甜食塔)', businessHours: '11:00 - 19:00', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/iKP9MLJs7AbywHKQ8'
   },
   { 
       id: 'd3-2', date: '2026-01-06', time: '11:30', title: 'LiLo Coffee Roasters', 
-      location: '大阪', category: '外帶咖啡', categoryColor: 'blue',
+      location: '大阪 (心斎橋)', category: '外帶咖啡', categoryColor: 'blue',
       description: '(咖啡廳 | 現金Only)', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/kr7uR73TsLyrguqRA'
   },
   { 
       id: 'd3-3', date: '2026-01-06', time: '12:00', 
-      title: 'エモジ (EMOJI)', location: '大阪', category: '購物', categoryColor: 'orange',
+      title: 'エモジ (EMOJI)', location: '大阪 (松屋町)', category: '購物', categoryColor: 'orange',
       description: '(御朱印帳、集章冊)', businessHours: '12:00 - 18:00', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/MHT3xD2ZRB9dz8E46'
   },
   { 
       id: 'd3-4', date: '2026-01-06', time: '13:00', title: '難波八阪神社', 
-      location: '大阪', category: '景點', categoryColor: 'purple',
+      location: '大阪 (難波)', category: '景點', categoryColor: 'purple',
+      businessHours: '06:30 - 17:00',
       isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/ZgiFUDhiTbZUhQvk8'
   },
   { 
       id: 'd3-5', date: '2026-01-06', time: '14:30', title: 'COLONY by EQI', 
       location: '心斎橋アメ村店', category: '下午茶', categoryColor: 'blue',
+      businessHours: '11:00 - 23:00',
       description: '(舒芙蕾)', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/eZc5Hi3E5zW9A4sX6'
   },
   { 
       id: 'd3-6', date: '2026-01-06', time: '16:00', title: '道頓堀大觀覽車', 
       location: '道頓堀', category: '景點', categoryColor: 'purple',
-      description: '(唐吉軻德摩天輪)', isCompleted: false,
+      businessHours: '11:00 - 21:30',
+      description: '(唐吉軻德摩天輪)\n(週二定期維修會延後至13:00開放)', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/XtcYSxdr8Cnjb1Ua9'
   },
   { 
@@ -223,7 +234,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
   },
   { 
       id: 'd4-6', date: '2026-01-07', time: '18:00',
-      title: '燃えよ麺助', location: '大阪', category: '晚餐', categoryColor: 'green',
+      title: '燃えよ麺助', location: '大阪 (福島)', category: '晚餐', categoryColor: 'green',
       description: '(蔥鴨拉麵、金色貝拉麵)', businessHours: '18:00 - 21:00', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/qKVRK9EiqsuWwL5k7'
   },
@@ -231,43 +242,45 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
   // --- 1/8 (Thu) D5 ---
   { 
       id: 'd5-1', date: '2026-01-08', time: '12:00', 
-      title: 'ろじうさぎ (Roji Usagi)', location: '京都', category: '早午餐', categoryColor: 'green',
+      title: 'ろじうさぎ (Roji Usagi)', location: '京都 (宮川町)', category: '早午餐', categoryColor: 'green',
       description: '(日式料理)', businessHours: '12:00 - 15:30', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/uJkpfNgAksJ5cWeM7'
   },
   { 
       id: 'd5-2', date: '2026-01-08', time: '13:30', title: '湯葉チーズ本舗', 
-      location: '京都', category: '點心', categoryColor: 'blue',
+      location: '京都 (嵐山)', category: '點心', categoryColor: 'blue',
+      businessHours: '11:00 - 17:30',
       description: '(炸豆皮起司)', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/Mgt5YJiAe2frMuYo6'
   },
   { 
       id: 'd5-3', date: '2026-01-08', time: '14:30', title: '天龍寺', 
-      location: '京都', category: '景點', categoryColor: 'purple',
+      location: '京都 (嵐山)', category: '景點', categoryColor: 'purple',
+      businessHours: '08:30 - 17:00',
       isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/AkXiyUDh8qDgMTGj8'
   },
   { 
       id: 'd5-4', date: '2026-01-08', time: '15:30', title: '嵯峨野竹林小徑', 
-      location: '京都', category: '景點', categoryColor: 'purple',
+      location: '京都 (嵐山)', category: '景點', categoryColor: 'purple',
       isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/x83m24TFXFNjCe8y5'
   },
   { 
       id: 'd5-5', date: '2026-01-08', time: '16:30', title: '野宮神社', 
-      location: '京都', category: '景點', categoryColor: 'purple',
+      location: '京都 (嵐山)', category: '景點', categoryColor: 'purple',
       isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/q7fRDitmuVnYtKbu8'
   },
   { 
       id: 'd5-6', date: '2026-01-08', time: '17:30', title: '常寂光寺', 
-      location: '京都', category: '景點', categoryColor: 'purple',
+      location: '京都 (嵐山)', category: '景點', categoryColor: 'purple',
       isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/xiiuvrhTuuvVWmAD9'
   },
   { 
       id: 'd5-7', date: '2026-01-08', time: '19:00', displayTime: '19:00',
-      title: '京都力山 京都站前店', location: '京都', category: '晚餐', categoryColor: 'red',
+      title: '京都力山 京都站前店', location: '京都 (下京區)', category: '晚餐', categoryColor: 'red',
       description: '(很貴的和牛壽喜燒 | 已預約)', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/KzHuQyJdRQKDNHNf7'
   },
@@ -275,25 +288,26 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
   // --- 1/9 (Fri) D6 ---
   { 
       id: 'd6-1', date: '2026-01-09', time: '10:00', title: '今宮戎神社', 
-      location: '大阪', category: '景點', categoryColor: 'purple',
+      location: '大阪 (浪速區)', category: '景點', categoryColor: 'purple',
+      businessHours: '09:00 - 17:00',
       description: '(中午前會有獻鯛儀式)', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/Sww1UwU92RM9SPvQ7'
   },
   { 
       id: 'd6-2', date: '2026-01-09', time: '13:00', 
-      title: '鮨 三心', location: '大阪', category: '早午餐', categoryColor: 'red',
+      title: '鮨 三心', location: '大阪 (谷町)', category: '早午餐', categoryColor: 'red',
       description: '(板前握壽司 | Visa預約中)', businessHours: '13:00 - 14:00', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/bnc9p3BMeFgTPcUh7'
   },
   { 
       id: 'd6-3', date: '2026-01-09', time: '11:00', 
-      title: 'pâtisserie accueil', location: '大阪', category: '下午茶', categoryColor: 'blue',
+      title: 'pâtisserie accueil', location: '大阪 (西區)', category: '下午茶', categoryColor: 'blue',
       description: '(法式甜點店)', businessHours: '11:00 - 19:00', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/ojQc91auSEy5C9VD8'
   },
   { 
       id: 'd6-4', date: '2026-01-09', time: '19:00',
-      title: '炸牛 元村 難波御堂筋店', location: '大阪', category: '晚餐', categoryColor: 'red',
+      title: '炸牛 元村 難波御堂筋店', location: '大阪 (難波)', category: '晚餐', categoryColor: 'red',
       description: '(Visa預約中)', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/v3PsudaxqCnLeSyj6'
   },
@@ -302,7 +316,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
   { 
       id: 'd7-1', date: '2026-01-10', time: '10:30', 
       title: '雞Soba 座銀 本店', 
-      location: '大阪', category: '早午餐', categoryColor: 'green',
+      location: '大阪 (肥後橋)', category: '早午餐', categoryColor: 'green',
       description: '(雞白湯拉麵)', isCompleted: false,
       businessHours: '10:30 - 22:00',
       mapUrl: 'https://maps.app.goo.gl/5MiUPJFxft7bBrtXA'
@@ -497,7 +511,7 @@ export const ScheduleTab: React.FC = () => {
                         onClick={() => setSelectedDate(date)}
                         className={`snap-center flex-shrink-0 flex flex-col items-center justify-center w-[52px] h-[72px] rounded-[16px] transition-all duration-300 relative ${
                             isSelected 
-                            ? 'bg-[#464646] text-white shadow-xl translate-y-0 z-10' 
+                            ? 'bg-[#464646] text-white translate-y-0 z-10' // Removed shadow-xl
                             : 'bg-white text-gray-400 shadow-sm hover:bg-gray-50'
                         }`}
                     >

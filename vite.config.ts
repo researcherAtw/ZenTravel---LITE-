@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['zen_icon.svg'],
+      includeAssets: ['japan_icon.svg'],
       manifest: {
         name: 'ZenTravel - 旅の禪',
         short_name: 'ZenTravel',
@@ -21,13 +21,13 @@ export default defineConfig({
         orientation: 'portrait',
         icons: [
           {
-            src: 'zen_icon.svg',
+            src: 'japan_icon.svg',
             sizes: '192x192',
             type: 'image/svg+xml',
             purpose: 'any maskable'
           },
           {
-            src: 'zen_icon.svg',
+            src: 'japan_icon.svg',
             sizes: '512x512',
             type: 'image/svg+xml',
             purpose: 'any maskable'
