@@ -33,6 +33,20 @@ const HighlightText: React.FC<{ text: string; highlight: string }> = ({ text, hi
   );
 };
 
+// Helper for category icons
+const getCategoryIcon = (category: string): string => {
+  const cat = category.toLowerCase();
+  if (cat.includes('transport') || cat.includes('起飛') || cat.includes('降落')) return 'fa-plane-departure';
+  if (cat.includes('購物') || cat.includes('買')) return 'fa-bag-shopping';
+  if (cat.includes('餐') || cat.includes('下午茶') || cat.includes('點心') || cat.includes('咖啡')) return 'fa-utensils';
+  if (cat.includes('景點') || cat.includes('拍照')) return 'fa-camera-retro';
+  if (cat.includes('設施') || cat.includes('遊樂')) return 'fa-mountain-sun';
+  if (cat.includes('express')) return 'fa-bolt-lightning';
+  if (cat.includes('check')) return 'fa-key';
+  if (cat.includes('逛街')) return 'fa-person-walking';
+  return 'fa-location-dot';
+};
+
 // --- MOCK DATA ---
 const MOCK_SCHEDULE: ScheduleItem[] = [
   // --- 1/4 (Sun) D1 ---
@@ -98,7 +112,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
       id: 'd1-10', date: '2026-01-04', time: '15:00', displayTime: '15:00',
       title: 'Check In', location: '大阪難波東急STAY美居酒店', category: 'Check In', categoryColor: 'red',
       isCompleted: false,
-      mapUrl: 'https://maps.app.goo.gl/N7ytR6Au52tiZJj49'
+      mapUrl: 'https://maps.app.goo.gl/N7ytR6Au52tiZJJ49'
   },
   { 
       id: 'd1-11', date: '2026-01-04', time: '16:00', title: '逛街', 
@@ -167,7 +181,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
       mapUrl: 'https://maps.app.goo.gl/1Rx3JmBJCNg7nvrz5'
   },
   { 
-      id: 'd2-8', date: '2026-01-05', time: '16:00', title: 'あべのソラハ', 
+      id: 'd2-8', date: '2026-01-05', time: '16:00', title: 'あべのソラ哈', 
       location: '大阪 (阿倍野)', category: '購物', categoryColor: 'orange',
       description: '3F Ungrid服飾店',
       businessHours: '10:00 - 21:30',
@@ -468,7 +482,7 @@ const NODE_STYLES: Record<HighlightColor, string> = {
     green: 'border-green-600',
     blue: 'border-blue-400',
     purple: 'border-purple-400',
-    gray: 'border-gray-400'
+    gray: 'border-stone-400'
 };
 
 // --- SCHEDULE TAB ---
@@ -626,9 +640,9 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
         </div>
       )}
 
-      {/* Increased right padding to pr-6 to fully accommodate badges moving to -right-2 */}
+      {/* Keep the right padding for the container to allow badges to pop out safely */}
       <div 
-        className={`relative pl-0 pr-6 mt-4 overflow-x-hidden min-h-[400px] transition-all duration-300 ${searchTerm ? 'pt-4' : ''}`}
+        className={`relative pl-0 pr-10 mt-4 transition-all duration-300 ${searchTerm ? 'pt-4' : ''}`}
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
@@ -645,6 +659,7 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
         >
             {filteredItems.map((item) => {
                 const timeLines = item.displayTime?.split('\n') || [];
+                const catIcon = getCategoryIcon(item.category);
 
                 return (
                 <div key={item.id} className="relative mb-0 group flex gap-0">
@@ -670,38 +685,50 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
                         <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-[1.5px] bg-stone-200"></div>
                         <div 
                             onClick={(e) => toggleComplete(item.id, e)}
-                            className={`relative z-10 w-2 h-2 rounded-full border-2 bg-zen-bg transition-all duration-300 mt-[1.3rem] cursor-pointer hover:scale-150 ${item.isCompleted ? 'border-gray-300 bg-gray-300' : NODE_STYLES[item.categoryColor || 'gray'] || 'border-gray-400'}`}
-                        ></div>
+                            className={`relative z-10 w-2.5 h-2.5 rounded-full border-2 bg-zen-bg transition-all duration-300 mt-[1.35rem] cursor-pointer hover:scale-150 ${item.isCompleted ? 'border-stone-300 bg-stone-300' : NODE_STYLES[item.categoryColor || 'gray'] || 'border-stone-400'}`}
+                        >
+                          {item.isCompleted && <i className="fa-solid fa-check text-white text-[5px] absolute inset-0 flex items-center justify-center"></i>}
+                        </div>
                     </div>
 
-                    {/* Increased top padding (py-4) and pl-3 to prevent badge clipping on top and left */}
-                    <div className="flex-grow min-w-0 py-4 pb-6 pl-3">
+                    <div className="flex-grow min-w-0 py-4 pb-6 pl-3 overflow-visible">
                         <div 
-                            className={`bg-white rounded-2xl p-4 shadow-zen border border-stone-50 transition-all duration-300 relative ${item.isCompleted ? 'opacity-60 grayscale-[50%]' : ''}`}
+                            className={`bg-white rounded-2xl p-4 shadow-zen border border-stone-50 transition-all duration-300 relative group ${item.isCompleted ? 'opacity-60 grayscale-[50%]' : ''}`}
                         >
-                            {item.isKlook && (
-                                <div className="absolute -top-2 -right-2 z-10 bg-[#FF5E00] text-white text-[8px] font-black px-2 py-1 rounded-lg shadow-sm transform rotate-12 border border-white/50 whitespace-nowrap">KLOOK</div>
-                            )}
-                            {item.isTabelog && (
-                                <div className="absolute -top-2 -right-2 z-10 bg-[#FF6B00] text-white text-[8px] font-black px-2 py-1 rounded-lg shadow-sm transform rotate-12 border border-white/50 whitespace-nowrap">Tabélog</div>
-                            )}
-                            {item.isGoogle && (
-                                <div className="absolute -top-2 -right-2 z-10 bg-[#4285F4] text-white text-[8px] font-black px-2 py-1 rounded-lg shadow-sm transform rotate-12 border border-white/50 whitespace-nowrap">Google</div>
-                            )}
-                            {item.isTablecheck && (
-                                <div className="absolute -top-2 -right-2 z-10 bg-[#312E81] text-white text-[8px] font-black px-2 py-1 rounded-lg shadow-sm transform rotate-12 border border-white/50 whitespace-nowrap">TableCheck</div>
-                            )}
+                            {/* Nested Watermark container with clipping to allow badges on parent to pop out */}
+                            <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
+                              <i className={`fa-solid ${catIcon} absolute -bottom-4 -right-2 text-[60px] text-stone-50/50 transform -rotate-12 transition-transform group-hover:scale-110 group-hover:rotate-0`}></i>
+                            </div>
+
+                            {/* Badges positioned absolutely - Z-index elevated and container overflow visible ensures complete display */}
+                            <div className="absolute -top-2 -right-2 z-20 flex flex-col gap-1 items-end pointer-events-none">
+                              {item.isKlook && (
+                                  <div className="bg-[#FF5E00] text-white text-[8px] font-black px-2 py-1 rounded-lg shadow-sm transform rotate-12 border border-white/50 whitespace-nowrap">KLOOK</div>
+                              )}
+                              {item.isTabelog && (
+                                  <div className="bg-[#FF6B00] text-white text-[8px] font-black px-2 py-1 rounded-lg shadow-sm transform rotate-12 border border-white/50 whitespace-nowrap">Tabélog</div>
+                              )}
+                              {item.isGoogle && (
+                                  <div className="bg-[#4285F4] text-white text-[8px] font-black px-2 py-1 rounded-lg shadow-sm transform rotate-12 border border-white/50 whitespace-nowrap">Google</div>
+                              )}
+                              {item.isTablecheck && (
+                                  <div className="bg-[#312E81] text-white text-[8px] font-black px-2 py-1 rounded-lg shadow-sm transform rotate-12 border border-white/50 whitespace-nowrap">Tablecheck</div>
+                              )}
+                            </div>
                             
-                            <div className="mb-3 pr-8">
-                                <h3 className={`font-bold text-lg leading-tight mb-2 ${item.isCompleted ? 'text-gray-500 line-through' : 'text-zen-text'}`}>
-                                  <HighlightText text={item.title} highlight={searchTerm} />
-                                </h3>
-                                <div className="flex flex-wrap items-center gap-2">
-                                  <CategoryBadge type={item.category} color={item.categoryColor} />
+                            <div className="mb-3 pr-8 relative z-10">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <i className={`fa-solid ${catIcon} text-[10px] text-stone-300`}></i>
+                                  <h3 className={`font-bold text-lg leading-tight ${item.isCompleted ? 'text-stone-400 line-through' : 'text-zen-text'}`}>
+                                    <HighlightText text={item.title} highlight={searchTerm} />
+                                  </h3>
+                                </div>
+                                <div className="flex flex-wrap items-center gap-2 mt-2">
+                                  <CategoryBadge type={item.category} color={item.categoryColor} icon={catIcon} />
                                   
                                   {item.businessHours && (
-                                      <div className="flex items-center gap-1.5 text-[10px] font-mono font-black text-stone-400 bg-stone-50 px-2 py-0.5 rounded-md border border-stone-100/50">
-                                          <i className="fa-regular fa-clock text-[9px]"></i>
+                                      <div className="flex items-center gap-1.5 text-[9px] font-mono font-black text-stone-400 bg-stone-50 px-2 py-0.5 rounded-md border border-stone-100/50">
+                                          <i className="fa-regular fa-clock text-[8px]"></i>
                                           <HighlightText text={item.businessHours} highlight={searchTerm} />
                                       </div>
                                   )}
@@ -709,23 +736,23 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
                             </div>
 
                             {item.description && (
-                                <div className="mb-4 p-3 bg-stone-50/80 rounded-xl border border-stone-100/50">
+                                <div className="mb-4 p-3 bg-stone-50/80 rounded-xl border border-stone-100/50 relative z-10">
                                     <p className="text-[11px] leading-relaxed text-stone-500 font-medium whitespace-pre-line">
                                         <HighlightText text={item.description} highlight={searchTerm} />
                                     </p>
                                 </div>
                             )}
 
-                            <div className="flex justify-between items-end gap-2 mt-auto">
+                            <div className="flex justify-between items-end gap-2 mt-auto relative z-10">
                                 <div className="flex-grow min-w-0">
-                                    <div className="text-[11px] text-gray-400 flex items-center gap-1.5 py-1 px-1 mt-1">
+                                    <div className="text-[11px] text-stone-400 flex items-center gap-1.5 py-1 px-1 mt-1 bg-stone-50/40 rounded-lg">
                                         <i className="fa-solid fa-map-pin text-[10px] text-stone-300 flex-shrink-0"></i> 
                                         <span className="truncate font-medium">
                                           <HighlightText text={item.location} highlight={searchTerm} />
                                         </span>
                                     </div>
                                 </div>
-                                <button onClick={(e) => { e.stopPropagation(); handleNavigate(item); }} className="flex-shrink-0 w-10 h-10 rounded-xl bg-stone-50 border border-stone-200 text-zen-text flex flex-col items-center justify-center hover:bg-zen-primary hover:text-white transition-all shadow-sm active:scale-90">
+                                <button onClick={(e) => { e.stopPropagation(); handleNavigate(item); }} className="flex-shrink-0 w-10 h-10 rounded-xl bg-white border border-stone-200 text-zen-text flex flex-col items-center justify-center hover:bg-zen-primary hover:text-white transition-all shadow-sm active:scale-90 group-hover:border-zen-primary/30">
                                     <i className="fa-solid fa-diamond-turn-right text-sm"></i>
                                     <span className="text-[7px] font-bold mt-0.5 uppercase tracking-tighter">GO</span>
                                 </button>
@@ -737,9 +764,9 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
             })}
 
             {filteredItems.length === 0 && (
-                <div className="text-center py-20 text-gray-400 opacity-60">
-                    <i className="fa-regular fa-calendar-plus text-4xl mb-2"></i>
-                    <p className="text-sm">找不到符合關鍵字的行程。</p>
+                <div className="text-center py-20 text-stone-300 opacity-60 animate-fade-in">
+                    <i className="fa-regular fa-calendar-plus text-5xl mb-4"></i>
+                    <p className="text-sm font-bold">找不到符合關鍵字的行程。</p>
                 </div>
             )}
         </div>
@@ -874,7 +901,7 @@ export const BookingsTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
                 ))}
 
                 {filteredBookings.length === 0 && (
-                    <div className="text-center py-24 text-stone-300">
+                    <div className="text-center py-24 text-stone-300 animate-fade-in">
                         <i className="fa-solid fa-receipt text-5xl mb-3 opacity-20"></i>
                         <p className="text-sm font-bold font-sans">目前沒有預訂資料。</p>
                     </div>

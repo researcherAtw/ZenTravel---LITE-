@@ -50,28 +50,35 @@ export const Button: React.FC<ButtonProps> = ({ children, variant = 'primary', s
   );
 };
 
-// Category Badge
-export const CategoryBadge: React.FC<{ type: string; color?: HighlightColor }> = ({ type, color }) => {
+// Category Badge with built-in Icon support
+export const CategoryBadge: React.FC<{ type: string; color?: HighlightColor; icon?: string }> = ({ type, color, icon }) => {
   const defaultStyles: Record<string, string> = {
-    sightseeing: "bg-blue-100 text-blue-800",
-    food: "bg-orange-100 text-orange-800",
-    transport: "bg-gray-200 text-gray-800",
-    stay: "bg-purple-100 text-purple-800"
+    transport: "bg-red-50 text-red-700 border-red-100",
+    購物: "bg-orange-50 text-orange-700 border-orange-100",
+    下午茶: "bg-blue-50 text-blue-700 border-blue-100",
+    晚餐: "bg-green-50 text-green-700 border-green-100",
+    早餐: "bg-green-50 text-green-700 border-green-100",
+    早午餐: "bg-green-50 text-green-700 border-green-100",
+    景點: "bg-purple-50 text-purple-700 border-purple-100",
+    設施: "bg-purple-50 text-purple-700 border-purple-100",
+    "Check In": "bg-stone-100 text-stone-700 border-stone-200",
+    "Check Out": "bg-stone-100 text-stone-700 border-stone-200",
   };
 
   const colorStyles: Record<HighlightColor, string> = {
-    red: "bg-red-100 text-red-800",
-    orange: "bg-orange-100 text-orange-800",
-    green: "bg-green-100 text-green-800",
-    blue: "bg-blue-100 text-blue-800",
-    purple: "bg-purple-100 text-purple-800",
-    gray: "bg-gray-200 text-gray-800"
+    red: "bg-red-50 text-red-700 border-red-100",
+    orange: "bg-orange-50 text-orange-700 border-orange-100",
+    green: "bg-green-50 text-green-700 border-green-100",
+    blue: "bg-blue-50 text-blue-700 border-blue-100",
+    purple: "bg-purple-50 text-purple-700 border-purple-100",
+    gray: "bg-stone-100 text-stone-700 border-stone-200"
   };
 
-  const styleClass = color ? colorStyles[color] : (defaultStyles[type] || "bg-gray-100 text-gray-800");
+  const styleClass = color ? colorStyles[color] : (defaultStyles[type] || "bg-stone-50 text-stone-700 border-stone-100");
 
   return (
-    <span className={`px-2 py-1 rounded-md text-xs font-bold uppercase ${styleClass}`}>
+    <span className={`px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-tight border flex items-center gap-1.5 ${styleClass}`}>
+      {icon && <i className={`fa-solid ${icon} text-[9px]`}></i>}
       {type}
     </span>
   );
