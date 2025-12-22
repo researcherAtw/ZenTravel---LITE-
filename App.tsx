@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { NAV_ITEMS } from './constants';
 import { TabType } from './types';
@@ -51,8 +50,8 @@ const App: React.FC = () => {
     } else {
       setShowError(true);
       setPasswordInput('');
-      // Shake effect placeholder
-      setTimeout(() => setShowError(false), 2000);
+      // Reset error message after a while
+      setTimeout(() => setShowError(false), 3000);
     }
   };
 
@@ -124,8 +123,8 @@ const App: React.FC = () => {
             <h2 className="text-xl font-bold text-zen-text mb-2 font-sans">存取受限</h2>
             <p className="text-xs text-stone-400 mb-8 font-bold tracking-widest uppercase">Password Required</p>
             
-            <form onSubmit={handlePasswordSubmit} className="w-full max-w-[240px] space-y-4">
-              <div className="relative">
+            <form onSubmit={handlePasswordSubmit} className="w-full max-w-[240px] flex flex-col gap-4">
+              <div className="flex flex-col gap-2">
                 <input 
                   type="password"
                   value={passwordInput}
@@ -133,7 +132,11 @@ const App: React.FC = () => {
                   placeholder="輸入密碼"
                   className={`w-full h-12 bg-white rounded-2xl px-4 text-center text-lg font-mono tracking-widest border transition-all ${showError ? 'border-red-400 ring-4 ring-red-50 animate-pulse' : 'border-stone-100 focus:border-zen-primary focus:ring-4 ring-zen-primary/10'} shadow-sm outline-none`}
                 />
-                {showError && <div className="absolute -bottom-6 left-0 right-0 text-center text-[10px] text-red-500 font-bold uppercase tracking-tighter">密碼錯誤，請重試</div>}
+                {showError && (
+                  <div className="text-center text-[10px] text-red-500 font-bold uppercase tracking-tighter py-1 animate-fade-in">
+                    密碼錯誤，請重試
+                  </div>
+                )}
               </div>
               <Button type="submit" className="w-full h-12 rounded-2xl">
                 解鎖頁面

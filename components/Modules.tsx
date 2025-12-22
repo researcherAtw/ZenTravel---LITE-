@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, Button, CategoryBadge } from './UI';
 import { ScheduleItem, Booking, HighlightTag, HighlightColor, WeatherInfo } from '../types';
@@ -339,7 +338,8 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
   },
   { 
       id: 'd6-4', date: '2026-01-09', time: '19:00', displayTime: '19:00',
-      title: '炸牛 元村 難波御堂筋店', location: '大阪 (難難)', category: '晚餐', categoryColor: 'red',
+      title: '炸牛 元村 難波御堂筋店', location: '大阪 (難波)', category: '晚餐', categoryColor: 'red',
+      description: '1 × 炸牛排套餐3種小碗 195g\n1 × 炸牛排套餐3種小碗 260g',
       isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/v3PsudaxqCnLeSyj6'
   },
@@ -545,6 +545,7 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
         i.title.toLowerCase().includes(term) || 
         i.location.toLowerCase().includes(term) || 
         i.category.toLowerCase().includes(term) ||
+        i.description?.toLowerCase().includes(term) ||
         i.businessHours?.toLowerCase().includes(term) ||
         i.displayTime?.toLowerCase().includes(term);
     
@@ -574,8 +575,8 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
                           onClick={() => handleDateChange(date)}
                           className={`snap-center flex-shrink-0 flex flex-col items-center justify-center w-[52px] h-[72px] rounded-[16px] transition-all duration-300 relative ${
                               isSelected 
-                              ? 'bg-[#464646] text-white scale-105 shadow-lg z-10' 
-                              : 'bg-white text-gray-400 shadow-sm hover:bg-gray-50'
+                              ? 'bg-[#464646] text-white scale-105 z-10' 
+                              : 'bg-white text-gray-400 hover:bg-gray-50'
                           }`}
                       >
                           <span className={`text-[9px] font-black tracking-widest mb-1 font-sans ${isSelected ? 'text-white' : 'text-gray-400'}`}>{dayName}</span>
@@ -594,7 +595,7 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
                       <span className="font-bold">{weather.locationName}</span>
                   </div>
                </div>
-               <div className="bg-white/80 border border-white p-2 px-3 rounded-2xl shadow-sm flex flex-col items-center min-w-[70px]">
+               <div className="bg-white/80 border border-white p-2 px-3 rounded-2xl flex flex-col items-center min-w-[70px]">
                   <div className="text-xl mb-0.5">
                       {weather.condition === 'sunny' && <i className="fa-solid fa-sun text-orange-400 animate-spin-slow"></i>}
                       {weather.condition === 'cloudy' && <i className="fa-solid fa-cloud text-gray-400"></i>}
@@ -673,6 +674,14 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
                                   )}
                                 </div>
                             </div>
+
+                            {item.description && (
+                                <div className="mb-4 p-3 bg-stone-50/80 rounded-xl border border-stone-100/50">
+                                    <p className="text-[11px] leading-relaxed text-stone-500 font-medium whitespace-pre-line">
+                                        <HighlightText text={item.description} highlight={searchTerm} />
+                                    </p>
+                                </div>
+                            )}
 
                             <div className="flex justify-between items-end gap-2 mt-auto">
                                 <div className="flex-grow min-w-0">
