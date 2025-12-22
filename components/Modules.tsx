@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useLayoutEffect } from 'react';
 import { Card, Button, CategoryBadge } from './UI';
 import { ScheduleItem, Booking, HighlightTag, HighlightColor, WeatherInfo } from '../types';
 
@@ -649,7 +648,6 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
         </div>
       )}
 
-      {/* Reduced pr-10 to pr-1 to release more space for cards */}
       <div 
         className={`relative pl-0 pr-1 mt-4 transition-all duration-300 ${searchTerm ? 'pt-4' : ''}`}
         onTouchStart={onTouchStart}
@@ -785,6 +783,20 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
 export const BookingsTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = '' }) => {
     const [bookings] = useState<Booking[]>(MOCK_BOOKINGS);
     const [filter, setFilter] = useState<'all' | 'flight' | 'hotel' | 'transfer' | 'activity'>('all');
+    const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
+    const filterRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
+
+    const filterOptions = ['all', 'flight', 'hotel', 'transfer', 'activity'];
+
+    useLayoutEffect(() => {
+      const el = filterRefs.current.get(filter);
+      if (el) {
+        setIndicatorStyle({
+          left: el.offsetLeft,
+          width: el.offsetWidth
+        });
+      }
+    }, [filter]);
 
     const getIcon = (type: string) => {
         switch(type) {
@@ -817,20 +829,33 @@ export const BookingsTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
                     </div>
                 </div>
                 
-                <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1 px-1">
-                    {['all', 'flight', 'hotel', 'transfer', 'activity'].map(f => (
-                        <button 
-                            key={f} 
-                            onClick={() => setFilter(f as any)} 
-                            className={`px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap shadow-sm border font-sans ${
-                                filter === f 
-                                ? 'bg-[#464646] text-white border-[#464646]' 
-                                : 'bg-white text-stone-400 border-stone-100 hover:border-stone-200'
-                            }`}
-                        >
-                            {f}
-                        </button>
-                    ))}
+                <div className="relative overflow-x-auto no-scrollbar pb-1 px-1">
+                    <div className="flex gap-2 min-w-max relative">
+                        {/* Sliding Background Indicator */}
+                        <div 
+                          className="absolute h-full rounded-2xl bg-[#464646] transition-all duration-300 cubic-bezier pointer-events-none z-0"
+                          style={{ 
+                            left: indicatorStyle.left, 
+                            width: indicatorStyle.width,
+                            top: 0
+                          }}
+                        />
+
+                        {filterOptions.map(f => (
+                            <button 
+                                key={f} 
+                                ref={(el) => { if (el) filterRefs.current.set(f, el); }}
+                                onClick={() => setFilter(f as any)} 
+                                className={`relative z-10 px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-colors duration-300 whitespace-nowrap border font-sans ${
+                                    filter === f 
+                                    ? 'text-white border-transparent' 
+                                    : 'bg-white text-stone-400 border-stone-100 hover:border-stone-200'
+                                }`}
+                            >
+                                {f}
+                            </button>
+                        ))}
+                    </div>
                 </div>
             </div>
 
@@ -873,7 +898,7 @@ export const BookingsTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
                                             <div className="w-full h-px bg-stone-100 relative mb-4">
                                                 <i className="fa-solid fa-plane absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-zen-primary/40 text-xs"></i>
                                             </div>
-                                            <div className="bg-stone-50 px-2 py-0.5 rounded text-[8px] font-black text-stone-400 font-mono tracking-widest">{booking.details['飛行時間']}</div>
+                                            <div className="bg-stone-50 px-2 py-0.5 rounded text-[14px] font-black text-stone-400 font-mono tracking-widest whitespace-nowrap">{booking.details['飛行時間']}</div>
                                         </div>
 
                                         <div className="flex flex-col items-end text-right">
