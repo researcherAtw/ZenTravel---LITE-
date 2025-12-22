@@ -3,6 +3,38 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Card, Button, CategoryBadge } from './UI';
 import { ScheduleItem, Booking, HighlightTag, HighlightColor, WeatherInfo } from '../types';
 
+// --- HELPERS ---
+
+// Helper to escape regex special characters
+const escapeRegExp = (string: string) => {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+};
+
+const HighlightText: React.FC<{ text: string; highlight: string }> = ({ text, highlight }) => {
+  if (!highlight.trim()) return <>{text}</>;
+  
+  const escapedHighlight = escapeRegExp(highlight);
+  const regex = new RegExp(`(${escapedHighlight})`, 'gi');
+  const parts = text.split(regex);
+  
+  return (
+    <>
+      {parts.map((part, i) => 
+        regex.test(part) ? (
+          <mark 
+            key={i} 
+            className="bg-yellow-400 text-stone-900 px-0.5 mx-px rounded-sm font-bold shadow-sm inline-block animate-fade-in"
+          >
+            {part}
+          </mark>
+        ) : (
+          part
+        )
+      )}
+    </>
+  );
+};
+
 // --- MOCK DATA ---
 const MOCK_SCHEDULE: ScheduleItem[] = [
   // --- 1/4 (Sun) D1 ---
@@ -20,7 +52,12 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
       id: 'd1-3', date: '2026-01-04', time: '13:00', title: 'Dior 心斎橋', 
       location: '大阪 (心斎橋)', category: '購物', categoryColor: 'orange',
       businessHours: '11:00 - 20:00', isCompleted: false,
-      mapUrl: 'https://maps.app.goo.gl/n9RXpreTK4BmtSKX7'
+      mapUrl: 'https://maps.app.goo.gl/n9RXpreTK4BmtSKX7',
+      guideInfo: {
+          story: "心齋橋的時尚地標，這家 Dior 的建築風格非常有現代感。",
+          highlights: [{id: 'h1', text: '精品店', color: 'orange'}, {id: 'h2', text: '建築美學', color: 'purple'}],
+          tip: "記得退稅。"
+      }
   },
   { 
       id: 'd1-4', date: '2026-01-04', time: '13:00', title: '大阪高島屋店', 
@@ -50,7 +87,12 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
       id: 'd1-8', date: '2026-01-04', time: '13:00', title: 'Tables Cafe', 
       location: '大阪 (堀江)', category: '下午茶', categoryColor: 'blue',
       description: '(草莓蛋糕)', businessHours: '11:00 - 20:00', isCompleted: false,
-      mapUrl: 'https://maps.app.goo.gl/xvZvhNF7KLUSNVAz7'
+      mapUrl: 'https://maps.app.goo.gl/xvZvhNF7KLUSNVAz7',
+      guideInfo: {
+          story: "這間草莓蛋糕非常有名，入口即化。",
+          highlights: [{id: 'h3', text: '草莓控必去', color: 'red'}, {id: 'h4', text: '網美店', color: 'orange'}],
+          tip: "可能要排隊。"
+      }
   },
   { 
       id: 'd1-9', date: '2026-01-04', time: '13:00', title: 'BicCamera 難波店', 
@@ -222,7 +264,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
   },
   { 
       id: 'd4-4', date: '2026-01-07', time: '15:00', displayTime: '15:00\n15:30',
-      title: '瑪利歐賽車：庫巴的挑戰書', location: 'USJ', category: 'Express', categoryColor: 'red',
+      title: '瑪利歐賽車：庫巴的挑戰賽', location: 'USJ', category: 'Express', categoryColor: 'red',
       isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/m6eZWZhHxoUsrnha8'
   },
@@ -282,7 +324,12 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
       id: 'd5-7', date: '2026-01-08', time: '19:00', displayTime: '19:00',
       title: '京都力山 京都站前店', location: '京都 (下京區)', category: '晚餐', categoryColor: 'red',
       description: '(很貴的和牛壽喜燒 | 已預約)', isCompleted: false,
-      mapUrl: 'https://maps.app.goo.gl/KzHuQyJdRQKDNHF7'
+      mapUrl: 'https://maps.app.goo.gl/KzHuQyJdRQKDNHF7',
+      guideInfo: {
+          story: "京都極致奢華的壽喜燒體驗。",
+          highlights: [{id: 'h5', text: '和牛', color: 'red'}, {id: 'h6', text: '奢華體驗', color: 'orange'}],
+          tip: "穿著得體。"
+      }
   },
 
   // --- 1/9 (Fri) D6 ---
@@ -426,22 +473,19 @@ const NODE_STYLES: Record<HighlightColor, string> = {
 
 // --- SCHEDULE TAB ---
 
-export const ScheduleTab: React.FC = () => {
+export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = '' }) => {
   const [selectedDate, setSelectedDate] = useState('2026-01-04');
   const [items, setItems] = useState(MOCK_SCHEDULE);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [weather, setWeather] = useState<WeatherInfo>({ condition: 'sunny', temp: 12, locationName: '日本大阪' });
   const [slideDirection, setSlideDirection] = useState<'left' | 'right' | null>(null);
   
-  // Ref for swipe tracking
   const touchStartPos = useRef<number | null>(null);
-  // Ref for date buttons to implement auto-centering
   const dateRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
 
   const dates = Array.from(new Set(items.map(i => i.date))).sort() as string[];
   const currentIndex = dates.indexOf(selectedDate);
 
-  // Update dynamic weather and location based on selected date
   useEffect(() => {
     const locationName = selectedDate === '2026-01-08' ? '日本京都' : '日本大阪';
     setWeather(prev => ({ 
@@ -452,7 +496,6 @@ export const ScheduleTab: React.FC = () => {
     }));
   }, [selectedDate]);
 
-  // AUTO-SCROLL selected date into view (Center)
   useEffect(() => {
     const activeBtn = dateRefs.current.get(selectedDate);
     if (activeBtn) {
@@ -464,7 +507,6 @@ export const ScheduleTab: React.FC = () => {
     }
   }, [selectedDate]);
 
-  // AUTO-SCROLL main container to top when selectedDate changes - No animation
   useEffect(() => {
     const scrollContainer = document.querySelector('.overflow-y-auto');
     if (scrollContainer) {
@@ -478,16 +520,16 @@ export const ScheduleTab: React.FC = () => {
   };
 
   const handleDateChange = (newDate: string) => {
+    if (newDate === selectedDate) return;
     const newIndex = dates.indexOf(newDate);
     if (newIndex > currentIndex) {
-        setSlideDirection('right'); // New content comes from right
+        setSlideDirection('right');
     } else if (newIndex < currentIndex) {
-        setSlideDirection('left');  // New content comes from left
+        setSlideDirection('left');
     }
     setSelectedDate(newDate);
   };
 
-  // --- Swipe Gesture Logic ---
   const onTouchStart = (e: React.TouchEvent) => {
     touchStartPos.current = e.touches[0].clientX;
   };
@@ -500,17 +542,34 @@ export const ScheduleTab: React.FC = () => {
 
     if (Math.abs(distance) > minDistance) {
         if (distance > 0 && currentIndex < dates.length - 1) {
-            // Swipe Left -> Next Day
             handleDateChange(dates[currentIndex + 1]);
         } else if (distance < 0 && currentIndex > 0) {
-            // Swipe Right -> Prev Day
             handleDateChange(dates[currentIndex - 1]);
         }
     }
     touchStartPos.current = null;
   };
 
-  const filteredItems = items.filter(i => i.date === selectedDate);
+  const filteredItems = items.filter(i => {
+    const matchDate = i.date === selectedDate;
+    if (!searchTerm) return matchDate;
+
+    const term = searchTerm.toLowerCase();
+    
+    // Comprehensive check of all textual fields
+    const matchSearch = 
+        i.title.toLowerCase().includes(term) || 
+        i.location.toLowerCase().includes(term) || 
+        i.description?.toLowerCase().includes(term) ||
+        i.category.toLowerCase().includes(term) ||
+        i.businessHours?.toLowerCase().includes(term) ||
+        i.displayTime?.toLowerCase().includes(term) ||
+        i.guideInfo?.story.toLowerCase().includes(term) ||
+        i.guideInfo?.tip.toLowerCase().includes(term) ||
+        i.guideInfo?.highlights.some(h => h.text.toLowerCase().includes(term));
+    
+    return searchTerm ? matchSearch : matchDate;
+  });
 
   const handleNavigate = (item: ScheduleItem) => {
       const url = item.mapUrl || `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(item.location)}`;
@@ -520,159 +579,168 @@ export const ScheduleTab: React.FC = () => {
   return (
     <div className="pb-20">
       
-      {/* 凍結上方區塊 (Frozen Upper Block) */}
-      <div className="sticky top-[108px] z-30 -mx-5 px-5 bg-zen-bg/95 backdrop-blur-sm pt-2 pb-4">
-          {/* Date Navigation */}
-          <div className="flex gap-2 overflow-x-auto no-scrollbar py-2 snap-x items-center">
-            {dates.map((date) => {
-                const d = new Date(date);
-                const dayName = d.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
-                const dayNum = d.getDate();
-                const isSelected = date === selectedDate;
-                return (
-                    <button
-                        key={date}
-                        ref={(el) => {
-                          if (el) dateRefs.current.set(date, el);
-                          else dateRefs.current.delete(date);
-                        }}
-                        onClick={() => handleDateChange(date)}
-                        className={`snap-center flex-shrink-0 flex flex-col items-center justify-center w-[52px] h-[72px] rounded-[16px] transition-all duration-300 relative ${
-                            isSelected 
-                            ? 'bg-[#464646] text-white scale-105 shadow-lg z-10' 
-                            : 'bg-white text-gray-400 shadow-sm hover:bg-gray-50'
-                        }`}
-                    >
-                        <span className={`text-[9px] font-black tracking-widest mb-1 font-sans ${isSelected ? 'text-white' : 'text-gray-400'}`}>{dayName}</span>
-                        <span className={`text-[20px] font-bold font-sans leading-none ${isSelected ? 'text-white' : 'text-gray-400'}`}>{dayNum}</span>
-                    </button>
-                )
-            })}
-          </div>
+      {!searchTerm && (
+        <div className="sticky top-[108px] z-30 -mx-5 px-5 bg-zen-bg/95 backdrop-blur-sm pt-2 pb-4">
+            <div className="flex gap-2 overflow-x-auto no-scrollbar py-2 snap-x items-center">
+              {dates.map((date) => {
+                  const d = new Date(date);
+                  const dayName = d.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
+                  const dayNum = d.getDate();
+                  const isSelected = date === selectedDate;
+                  return (
+                      <button
+                          key={date}
+                          ref={(el) => { if (el) dateRefs.current.set(date, el); }}
+                          onClick={() => handleDateChange(date)}
+                          className={`snap-center flex-shrink-0 flex flex-col items-center justify-center w-[52px] h-[72px] rounded-[16px] transition-all duration-300 relative ${
+                              isSelected 
+                              ? 'bg-[#464646] text-white scale-105 shadow-lg z-10' 
+                              : 'bg-white text-gray-400 shadow-sm hover:bg-gray-50'
+                          }`}
+                      >
+                          <span className={`text-[9px] font-black tracking-widest mb-1 font-sans ${isSelected ? 'text-white' : 'text-gray-400'}`}>{dayName}</span>
+                          <span className={`text-[20px] font-bold font-sans leading-none ${isSelected ? 'text-white' : 'text-gray-400'}`}>{dayNum}</span>
+                      </button>
+                  )
+              })}
+            </div>
 
-          {/* Date Header Info */}
-          <div className="flex justify-between items-end px-1 mt-4">
-             <div>
-                <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Day Plan</div>
-                <h2 className="text-3xl font-mono font-bold text-zen-text leading-tight">{selectedDate}</h2>
-                <div className="flex items-center gap-2 mt-1 text-gray-500 text-sm">
-                    <i className="fa-solid fa-location-dot text-zen-primary"></i> 
-                    <span className="font-bold">{weather.locationName}</span>
-                </div>
-             </div>
-             <div className="bg-white/80 border border-white p-2 px-3 rounded-2xl shadow-sm flex flex-col items-center min-w-[70px]">
-                <div className="text-xl mb-0.5">
-                    {weather.condition === 'sunny' && <i className="fa-solid fa-sun text-orange-400 animate-spin-slow"></i>}
-                    {weather.condition === 'cloudy' && <i className="fa-solid fa-cloud text-gray-400"></i>}
-                    {weather.condition === 'rain' && <i className="fa-solid fa-cloud-rain text-blue-400"></i>}
-                    {weather.condition === 'snow' && <i className="fa-regular fa-snowflake text-blue-200"></i>}
-                </div>
-                <div className="text-xs font-black font-mono">{weather.temp}°C</div>
-             </div>
-          </div>
-      </div>
+            <div className="flex justify-between items-end px-1 mt-4">
+               <div>
+                  <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Day Plan</div>
+                  <h2 className="text-3xl font-mono font-bold text-zen-text leading-tight">{selectedDate}</h2>
+                  <div className="flex items-center gap-2 mt-1 text-gray-500 text-sm">
+                      <i className="fa-solid fa-location-dot text-zen-primary"></i> 
+                      <span className="font-bold">{weather.locationName}</span>
+                  </div>
+               </div>
+               <div className="bg-white/80 border border-white p-2 px-3 rounded-2xl shadow-sm flex flex-col items-center min-w-[70px]">
+                  <div className="text-xl mb-0.5">
+                      {weather.condition === 'sunny' && <i className="fa-solid fa-sun text-orange-400 animate-spin-slow"></i>}
+                      {weather.condition === 'cloudy' && <i className="fa-solid fa-cloud text-gray-400"></i>}
+                      {weather.condition === 'rain' && <i className="fa-solid fa-cloud-rain text-blue-400"></i>}
+                      {weather.condition === 'snow' && <i className="fa-regular fa-snowflake text-blue-200"></i>}
+                  </div>
+                  <div className="text-xs font-black font-mono">{weather.temp}°C</div>
+               </div>
+            </div>
+        </div>
+      )}
 
-      {/* Timeline Content - Added touch handlers and overflow-hidden for animation container */}
       <div 
-        className="relative pl-1 pr-2 mt-6 overflow-x-hidden"
+        className={`relative pl-1 pr-2 mt-6 overflow-x-hidden min-h-[400px] transition-all duration-300 ${searchTerm ? 'pt-4' : ''}`}
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
+        {searchTerm && (
+          <div className="mb-6 px-1">
+             <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">搜尋結果</div>
+             <div className="text-sm font-bold text-zen-text">找到了 {filteredItems.length} 個符合的行程</div>
+          </div>
+        )}
+
         <div 
-            key={selectedDate}
-            className={`
-                will-change-transform
-                ${slideDirection === 'right' ? 'animate-slide-in-right' : ''}
-                ${slideDirection === 'left' ? 'animate-slide-in-left' : ''}
-                ${!slideDirection ? 'animate-fade-in' : ''}
-            `}
+            key={searchTerm || selectedDate}
+            className={`will-change-transform ${!searchTerm && slideDirection === 'right' ? 'animate-slide-in-right' : ''} ${!searchTerm && slideDirection === 'left' ? 'animate-slide-in-left' : ''} ${searchTerm || !slideDirection ? 'animate-fade-in' : ''}`}
         >
-            {filteredItems.map((item, index) => {
+            {filteredItems.map((item) => {
+                const isExpanded = expandedId === item.id || !!searchTerm;
+                const timeLines = item.displayTime?.split('\n') || [];
+
                 return (
                 <div key={item.id} className="relative mb-0 group flex gap-0">
-                    {/* 1. Time Column - Width increased to w-16 to fix clipping */}
                     <div className="w-16 py-4 flex flex-col items-end justify-start flex-shrink-0 pr-2">
-                        <span className={`font-mono font-bold text-xl text-right leading-none ${item.isCompleted ? 'text-gray-300' : 'text-zen-text'}`}>
-                            {item.displayTime?.split('\n')[0] || ""}
-                        </span>
-                        {item.displayTime?.includes('\n') && (
-                            <span className={`text-base font-mono mt-1 text-right font-bold leading-tight ${item.isCompleted ? 'text-gray-300' : 'text-gray-400'}`}>
-                            {item.displayTime.split('\n')[1]}
-                            </span>
-                        )}
+                        <div className="flex flex-col items-end gap-0.5">
+                            {timeLines.map((time, idx) => {
+                                const isPrimary = idx === 0;
+                                return (
+                                    <span 
+                                        key={idx} 
+                                        className={`font-mono font-bold text-right leading-none transition-all ${
+                                            isPrimary ? 'text-xl' : 'text-[13px] opacity-80 mt-0.5'
+                                        } ${item.isCompleted ? 'text-gray-300' : 'text-zen-text'}`}
+                                    >
+                                        {time}
+                                    </span>
+                                );
+                            })}
+                        </div>
                     </div>
 
-                    {/* 2. Timeline Line & Node - Width adjusted to w-4 */}
                     <div className="relative flex flex-col items-center px-0 flex-shrink-0 w-4">
                         <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-[1.5px] bg-stone-200"></div>
                         <div 
                             onClick={(e) => toggleComplete(item.id, e)}
-                            className={`
-                                relative z-10 w-2.5 h-2.5 rounded-full border-2 bg-zen-bg transition-all duration-300 mt-[1.3rem] cursor-pointer hover:scale-150
-                                ${item.isCompleted 
-                                    ? 'border-gray-300 bg-gray-300' 
-                                    : NODE_STYLES[item.categoryColor || 'gray'] || 'border-gray-400'
-                                }
-                            `}
+                            className={`relative z-10 w-2.5 h-2.5 rounded-full border-2 bg-zen-bg transition-all duration-300 mt-[1.3rem] cursor-pointer hover:scale-150 ${item.isCompleted ? 'border-gray-300 bg-gray-300' : NODE_STYLES[item.categoryColor || 'gray'] || 'border-gray-400'}`}
                         ></div>
                     </div>
 
-                    {/* 3. Content Card Column - Optimized padding to pl-4 */}
                     <div className="flex-grow min-w-0 py-2 pb-6 pl-4">
                         <div 
                             onClick={() => setExpandedId(expandedId === item.id ? null : item.id)}
-                            className={`bg-white rounded-2xl p-4 shadow-zen border border-stone-50 cursor-pointer transition-all duration-300 relative
-                                ${expandedId === item.id ? 'ring-2 ring-zen-primary/20' : 'hover:translate-y-[-2px]'}
-                                ${item.isCompleted ? 'opacity-60 grayscale-[50%]' : ''}
-                            `}
+                            className={`bg-white rounded-2xl p-4 shadow-zen border border-stone-50 cursor-pointer transition-all duration-300 relative ${isExpanded ? 'ring-2 ring-zen-primary/20 shadow-zen-hover' : 'hover:translate-y-[-2px]'} ${item.isCompleted ? 'opacity-60 grayscale-[50%]' : ''}`}
                         >
-                            {/* Title Area */}
                             <div className="mb-3 pr-8">
-                                <h3 className={`font-bold text-lg leading-tight mb-2 ${item.isCompleted ? 'text-gray-500 line-through' : 'text-zen-text'}`}>{item.title}</h3>
+                                <h3 className={`font-bold text-lg leading-tight mb-2 ${item.isCompleted ? 'text-gray-500 line-through' : 'text-zen-text'}`}>
+                                  <HighlightText text={item.title} highlight={searchTerm} />
+                                </h3>
                                 <CategoryBadge type={item.category} color={item.categoryColor} />
                             </div>
 
                             {item.description && (
                                 <div className="text-xs text-gray-400 font-medium whitespace-pre-line leading-relaxed mb-3">
-                                    {item.description}
+                                    <HighlightText text={item.description} highlight={searchTerm} />
                                 </div>
                             )}
 
-                            {/* Location & Navigation Button (Bottom-Right) */}
                             <div className="flex justify-between items-end gap-2 mt-auto">
                                 <div className="flex-grow min-w-0">
                                     <div className="text-xs text-gray-500 flex items-center gap-1.5 py-1.5 px-2 bg-stone-50/50 rounded-lg border border-stone-100/50">
                                         <i className="fa-solid fa-map-pin text-[10px] text-zen-primary flex-shrink-0"></i> 
-                                        <span className="truncate font-medium">{item.location}</span>
+                                        <span className="truncate font-medium">
+                                          <HighlightText text={item.location} highlight={searchTerm} />
+                                        </span>
                                     </div>
-                                    {item.businessHours && (
-                                        <div className="text-[9px] font-bold text-orange-400 bg-orange-50/50 px-2 py-0.5 rounded mt-1 inline-block">
-                                            <i className="fa-regular fa-clock mr-1"></i>{item.businessHours}
-                                        </div>
-                                    )}
                                 </div>
-
-                                <button 
-                                    onClick={(e) => { e.stopPropagation(); handleNavigate(item); }}
-                                    className="flex-shrink-0 w-10 h-10 rounded-xl bg-stone-50 border border-stone-200 text-zen-text flex flex-col items-center justify-center hover:bg-zen-primary hover:text-white hover:border-zen-primary transition-all duration-300 shadow-sm active:scale-90"
-                                    title="開啟地圖"
-                                >
+                                <button onClick={(e) => { e.stopPropagation(); handleNavigate(item); }} className="flex-shrink-0 w-10 h-10 rounded-xl bg-stone-50 border border-stone-200 text-zen-text flex flex-col items-center justify-center hover:bg-zen-primary hover:text-white transition-all shadow-sm active:scale-90">
                                     <i className="fa-solid fa-diamond-turn-right text-sm"></i>
                                     <span className="text-[7px] font-bold mt-0.5 uppercase tracking-tighter">GO</span>
                                 </button>
                             </div>
 
-                            {expandedId === item.id && (
-                                <div className="mt-4 pt-3 border-t border-dashed border-gray-200 animate-fade-in">
-                                    {item.guideInfo?.story && (
-                                        <p className="text-sm text-gray-600 leading-relaxed font-serif italic mb-3">"{item.guideInfo.story}"</p>
+                            {isExpanded && (
+                                <div className="mt-4 pt-3 border-t border-dashed border-gray-100 space-y-3 animate-fade-in">
+                                    {item.businessHours && (
+                                        <div className="flex items-center gap-2 text-[10px] text-stone-400">
+                                            <i className="fa-regular fa-clock"></i>
+                                            <span className="font-mono font-bold tracking-tight">
+                                                <HighlightText text={item.businessHours} highlight={searchTerm} />
+                                            </span>
+                                        </div>
                                     )}
-                                    
+
+                                    {item.guideInfo?.story && (
+                                        <div className="bg-stone-50 rounded-xl p-3 text-xs leading-relaxed text-stone-500 italic">
+                                            <HighlightText text={item.guideInfo.story} highlight={searchTerm} />
+                                        </div>
+                                    )}
+
                                     {item.guideInfo?.highlights && item.guideInfo.highlights.length > 0 && (
                                         <div className="flex flex-wrap gap-1.5">
                                             {item.guideInfo.highlights.map(h => (
-                                                <span key={h.id} className={`text-[10px] px-2 py-1 rounded border font-bold ${TAG_COLORS[h.color]}`}>{h.text}</span>
+                                                <span key={h.id} className={`text-[10px] px-2 py-1 rounded border font-bold ${TAG_COLORS[h.color]}`}>
+                                                    <HighlightText text={h.text} highlight={searchTerm} />
+                                                </span>
                                             ))}
+                                        </div>
+                                    )}
+
+                                    {item.guideInfo?.tip && (
+                                        <div className="flex items-start gap-2 text-[10px] text-orange-600 bg-orange-50/50 p-2 rounded-lg border border-orange-100">
+                                            <i className="fa-solid fa-lightbulb mt-0.5"></i>
+                                            <span className="font-bold">
+                                                <HighlightText text={item.guideInfo.tip} highlight={searchTerm} />
+                                            </span>
                                         </div>
                                     )}
                                 </div>
@@ -684,9 +752,9 @@ export const ScheduleTab: React.FC = () => {
             })}
 
             {filteredItems.length === 0 && (
-                <div className="text-center py-10 text-gray-400 opacity-60">
+                <div className="text-center py-20 text-gray-400 opacity-60">
                     <i className="fa-regular fa-calendar-plus text-4xl mb-2"></i>
-                    <p className="text-sm">No plans for this day yet.</p>
+                    <p className="text-sm">找不到符合關鍵字的行程。</p>
                 </div>
             )}
         </div>
@@ -695,7 +763,7 @@ export const ScheduleTab: React.FC = () => {
   );
 };
 
-export const BookingsTab: React.FC = () => {
+export const BookingsTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = '' }) => {
     const [bookings] = useState<Booking[]>(MOCK_BOOKINGS);
     const [filter, setFilter] = useState<'all' | 'flight' | 'hotel' | 'transfer' | 'activity'>('all');
 
@@ -709,21 +777,30 @@ export const BookingsTab: React.FC = () => {
         }
     };
 
-    const filteredBookings = filter === 'all' ? bookings : bookings.filter(b => b.type === filter);
+    const filteredBookings = bookings.filter(b => {
+      const matchType = filter === 'all' || b.type === filter;
+      if (!searchTerm) return matchType;
+      const term = searchTerm.toLowerCase();
+      
+      // Expanded search range for bookings
+      const matchSearch = 
+          b.title.toLowerCase().includes(term) || 
+          b.subTitle?.toLowerCase().includes(term) ||
+          b.referenceNo.toLowerCase().includes(term) ||
+          b.type.toLowerCase().includes(term) ||
+          Object.entries(b.details).some(([k, v]) => 
+              k.toLowerCase().includes(term) || v.toLowerCase().includes(term)
+          );
+          
+      return matchType && matchSearch;
+    });
 
     return (
         <div className="pb-20 space-y-6">
             <h2 className="text-2xl font-bold font-mono text-zen-text mb-4 px-1">Wallet</h2>
-            
             <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2 px-1">
                 {['all', 'flight', 'hotel', 'transfer', 'activity'].map(f => (
-                    <button 
-                        key={f}
-                        onClick={() => setFilter(f as any)}
-                        className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap ${
-                            filter === f ? 'bg-zen-text text-white shadow-zen-sm' : 'bg-white text-gray-400 border border-stone-100'
-                        }`}
-                    >
+                    <button key={f} onClick={() => setFilter(f as any)} className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap ${filter === f ? 'bg-zen-text text-white shadow-zen-sm' : 'bg-white text-gray-400 border border-stone-100'}`}>
                         {f}
                     </button>
                 ))}
@@ -731,7 +808,7 @@ export const BookingsTab: React.FC = () => {
 
             <div className="space-y-4 px-1">
                 {filteredBookings.map(booking => (
-                    <div key={booking.id} className="relative group">
+                    <div key={booking.id} className="relative group animate-fade-in">
                         {booking.type === 'flight' ? (
                             <div className="bg-white rounded-2xl shadow-zen overflow-hidden relative border border-stone-50">
                                 <div className="bg-[#4A90E2] h-2"></div>
@@ -739,116 +816,52 @@ export const BookingsTab: React.FC = () => {
                                     <div className="flex justify-between items-start mb-4">
                                         <div className="flex items-center gap-2">
                                             <i className="fa-solid fa-plane-up text-[#4A90E2]"></i>
-                                            <span className="font-bold text-sm tracking-wide">{booking.subTitle}</span>
-                                        </div>
-                                        <div className="text-right">
-                                            <div className="font-mono text-lg font-bold text-gray-800 leading-tight -mt-1">{booking.time}</div>
-                                            <div className="text-xs text-gray-500 font-mono mt-1">{booking.date}</div>
+                                            <span className="font-bold text-sm tracking-wide">
+                                              <HighlightText text={booking.subTitle || ''} highlight={searchTerm} />
+                                            </span>
                                         </div>
                                     </div>
-                                    
-                                    <div className="flex justify-between items-center mb-6 mt-20">
-                                        <div className="text-center">
-                                            <div className="text-3xl font-mono font-bold text-zen-text">{booking.title.split(' - ')[0]}</div>
+                                    <div className="flex justify-between items-center mb-6 mt-12">
+                                        <div className="text-3xl font-mono font-bold text-zen-text">
+                                          <HighlightText text={booking.title.split(' - ')[0]} highlight={searchTerm} />
                                         </div>
                                         <div className="flex-1 border-b-2 border-dashed border-gray-300 mx-4 relative top-1">
-                                            {booking.details['飛行時間'] && (
-                                                <span className="absolute -top-7 left-1/2 -translate-x-1/2 text-[10px] font-bold text-gray-400 bg-white px-2 py-0.5 whitespace-nowrap z-10">
-                                                    {booking.details['飛行時間']}
-                                                </span>
-                                            )}
                                             <i className="fa-solid fa-plane absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-300 bg-white px-1 text-xs z-10"></i>
                                         </div>
-                                        <div className="text-center">
-                                            <div className="text-3xl font-mono font-bold text-zen-text">{booking.title.split(' - ')[1]}</div>
+                                        <div className="text-3xl font-mono font-bold text-zen-text">
+                                          <HighlightText text={booking.title.split(' - ')[1]} highlight={searchTerm} />
                                         </div>
                                     </div>
-
-                                    <div className="grid grid-cols-3 gap-2 border-t border-dashed border-gray-200 pt-4">
-                                        {Object.entries(booking.details)
-                                            .filter(([key]) => key !== '飛行時間')
-                                            .map(([key, val]) => (
+                                    <div className="grid grid-cols-2 gap-4 border-t border-dashed border-gray-200 pt-4">
+                                        {Object.entries(booking.details).map(([key, val]) => (
                                             <div key={key}>
                                                 <div className="text-[10px] text-gray-400 uppercase font-bold">{key}</div>
-                                                <div className="font-bold text-zen-text text-sm">{val}</div>
+                                                <div className="font-bold text-zen-text text-sm">
+                                                  <HighlightText text={val} highlight={searchTerm} />
+                                                </div>
                                             </div>
                                         ))}
-                                    </div>
-                                </div>
-                                <div className="absolute top-[65%] -left-2 w-4 h-4 bg-zen-bg rounded-full shadow-inner"></div>
-                                <div className="absolute top-[65%] -right-2 w-4 h-4 bg-zen-bg rounded-full shadow-inner"></div>
-                            </div>
-                        ) : booking.type === 'transfer' ? (
-                            <div className="bg-white rounded-2xl shadow-zen overflow-hidden border border-stone-50">
-                                <div className="bg-[#2D2D2D] p-4 text-white">
-                                    <div className="flex justify-between items-center">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-                                                <i className="fa-solid fa-van-shuttle text-sm"></i>
-                                            </div>
-                                            <div>
-                                                <h3 className="font-bold text-sm leading-tight">Airport Transfer</h3>
-                                                <div className="text-[10px] text-white/60 font-mono tracking-wider">{booking.referenceNo}</div>
-                                            </div>
-                                        </div>
-                                        <div className="text-right">
-                                            <div className="text-xl font-mono font-bold">{booking.time}</div>
-                                            <div className="text-[10px] opacity-60">{booking.date}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="p-4">
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <div className="flex-1">
-                                            <div className="text-lg font-bold text-zen-text">{booking.title}</div>
-                                            <div className="text-xs text-gray-500 font-medium">{booking.subTitle}</div>
-                                        </div>
-                                        <div className="w-16 h-10 bg-gray-100 rounded-lg flex items-center justify-center border border-dashed border-gray-300">
-                                            <i className="fa-solid fa-car-side text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                    
-                                    <div className="bg-stone-50 rounded-xl p-3 space-y-2 mb-3">
-                                        <div className="flex justify-between items-center text-sm">
-                                            <span className="text-gray-400 text-xs">司機</span>
-                                            <span className="font-bold text-zen-text">{booking.details['司機']}</span>
-                                        </div>
-                                        <div className="flex justify-between items-center text-sm">
-                                            <span className="text-gray-400 text-xs">車牌</span>
-                                            <span className="font-mono font-bold bg-white border border-stone-200 px-1.5 rounded text-gray-700">{booking.details['車牌']}</span>
-                                        </div>
-                                         <div className="flex justify-between items-center text-sm">
-                                            <span className="text-gray-400 text-xs">會面</span>
-                                            <span className="font-bold text-zen-text text-right max-w-[60%] leading-tight">{booking.details['會面點']}</span>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
                         ) : (
                             <div className="bg-white rounded-2xl shadow-zen p-4 border border-stone-50 flex gap-4 items-stretch">
-                                <div className={`w-12 rounded-xl flex items-center justify-center text-white text-xl ${
-                                    booking.type === 'hotel' ? 'bg-purple-400' : 'bg-orange-400'
-                                }`}>
+                                <div className={`w-12 rounded-xl flex items-center justify-center text-white text-xl ${booking.type === 'hotel' ? 'bg-purple-400' : 'bg-orange-400'}`}>
                                     <i className={`fa-solid ${getIcon(booking.type)}`}></i>
                                 </div>
-                                <div className="flex-1 flex flex-col justify-between py-1">
-                                    <div>
-                                        <div className="flex justify-between items-start">
-                                            <h3 className="font-bold text-zen-text leading-tight">{booking.title}</h3>
+                                <div className="flex-1">
+                                    <h3 className="font-bold text-zen-text leading-tight">
+                                      <HighlightText text={booking.title} highlight={searchTerm} />
+                                    </h3>
+                                    {booking.subTitle && <div className="text-xs text-gray-400 mt-0.5">
+                                      <HighlightText text={booking.subTitle} highlight={searchTerm} />
+                                    </div>}
+                                    <div className="mt-3 space-y-1">
+                                      {Object.entries(booking.details).map(([k, v]) => (
+                                        <div key={k} className="text-xs font-medium text-gray-500">
+                                          <span className="text-gray-400">{k}:</span> <HighlightText text={v} highlight={searchTerm} />
                                         </div>
-                                        {booking.subTitle && <div className="text-xs text-gray-400 mt-0.5">{booking.subTitle}</div>}
-                                    </div>
-                                    <div className="mt-3 flex flex-col gap-1 text-xs font-medium text-gray-600">
-                                        <div className="flex items-center gap-2"><i className="fa-regular fa-calendar w-4 text-center"></i> {booking.date}</div>
-                                        {booking.details['Check-in'] && (
-                                            <div className="flex items-center gap-2">
-                                                <i className="fa-regular fa-clock w-4 text-center"></i> 
-                                                <span>In: {booking.details['Check-in']} / Out: {booking.details['Check-out'] || '11:00'}</span>
-                                            </div>
-                                        )}
-                                        {booking.details['Phone'] && (
-                                            <div className="flex items-center gap-2"><i className="fa-solid fa-phone w-4 text-center"></i> {booking.details['Phone']}</div>
-                                        )}
+                                      ))}
                                     </div>
                                 </div>
                             </div>
@@ -856,7 +869,6 @@ export const BookingsTab: React.FC = () => {
                     </div>
                 ))}
             </div>
-            
         </div>
     );
 };
