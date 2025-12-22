@@ -130,21 +130,17 @@ const App: React.FC = () => {
       if (!isUnlocked) {
         return (
           <div className="flex flex-col items-center justify-center pt-2 pb-10 animate-fade-in h-[calc(100vh-250px)]">
-            <div className="w-12 h-12 bg-white rounded-2xl shadow-zen flex items-center justify-center text-stone-300 mb-4 border border-stone-50">
-              <i className={`fa-solid ${showError ? 'fa-lock-open text-red-300 animate-bounce' : 'fa-lock'} text-xl`}></i>
-            </div>
-            <h2 className="text-lg font-bold text-zen-text mb-0.5 font-sans">存取受限</h2>
-            <p className="text-[9px] text-stone-400 mb-8 font-black tracking-widest uppercase font-mono">Input Password</p>
+            {/* Lock Icon, Title, and Subtitle removed to eliminate the "gray block" and ensure minimalist design */}
             
-            {/* Dots Display Removed per user request */}
+            <div className="mb-10" />
 
-            {/* Numeric Keypad - Shrunk Grid Gap and Max Width */}
-            <div className="grid grid-cols-3 gap-2.5 w-full max-w-[220px]">
+            {/* Numeric Keypad - Minimal Layout */}
+            <div className="grid grid-cols-3 gap-3 w-full max-w-[240px]">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
                 <button
                   key={num}
                   onClick={() => handleKeypadPress(num.toString())}
-                  className="aspect-square flex items-center justify-center text-xl font-mono font-bold text-zen-text bg-white rounded-xl shadow-zen-sm border border-stone-50 active:scale-90 active:bg-stone-50 transition-all"
+                  className="aspect-square flex items-center justify-center text-2xl font-mono font-bold text-zen-text bg-white rounded-2xl shadow-zen-sm border border-stone-50 active:scale-90 active:bg-stone-50 transition-all"
                 >
                   {num}
                 </button>
@@ -152,27 +148,27 @@ const App: React.FC = () => {
               <div />
               <button
                 onClick={() => handleKeypadPress('0')}
-                className="aspect-square flex items-center justify-center text-xl font-mono font-bold text-zen-text bg-white rounded-xl shadow-zen-sm border border-stone-50 active:scale-90 active:bg-stone-50 transition-all"
+                className="aspect-square flex items-center justify-center text-2xl font-mono font-bold text-zen-text bg-white rounded-2xl shadow-zen-sm border border-stone-50 active:scale-90 active:bg-stone-50 transition-all"
               >
                 0
               </button>
               <button
                 onClick={handleBackspace}
-                className="aspect-square flex items-center justify-center text-lg text-stone-400 active:scale-90 transition-all"
+                className="aspect-square flex items-center justify-center text-xl text-stone-400 active:scale-95 transition-all"
               >
                 <i className="fa-solid fa-delete-left"></i>
               </button>
             </div>
 
             {showError && (
-              <div className="mt-4 text-center text-[9px] text-red-500 font-bold uppercase tracking-widest py-1 animate-fade-in bg-red-50 px-3 rounded-full">
+              <div className="mt-8 text-center text-[10px] text-red-500 font-bold uppercase tracking-widest py-1.5 animate-fade-in bg-red-50 px-5 rounded-full">
                 密碼錯誤
               </div>
             )}
 
             <button 
               onClick={() => setActiveTab('schedule')}
-              className="mt-6 text-stone-400 text-[11px] font-bold hover:text-zen-primary transition-colors flex items-center gap-2 font-sans"
+              className="mt-12 text-stone-400 text-[12px] font-bold hover:text-zen-primary transition-colors flex items-center gap-2 font-sans"
             >
               <i className="fa-solid fa-arrow-left"></i>
               返回行程

@@ -181,7 +181,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
       mapUrl: 'https://maps.app.goo.gl/1Rx3JmBJCNg7nvrz5'
   },
   { 
-      id: 'd2-8', date: '2026-01-05', time: '16:00', title: 'あべのソラ哈', 
+      id: 'd2-8', date: '2026-01-05', time: '16:00', title: 'あべのソ拉哈', 
       location: '大阪 (阿倍野)', category: '購物', categoryColor: 'orange',
       description: '3F Ungrid服飾店',
       businessHours: '10:00 - 21:30',
@@ -414,14 +414,18 @@ const MOCK_BOOKINGS: Booking[] = [
         id: '1',
         type: 'flight',
         title: 'TPE - KIX',
-        subTitle: '星宇航空 JX822',
+        subTitle: '星宇航空',
         referenceNo: 'JX822',
         date: '2026-01-04',
         time: '09:20', 
         details: {
             '飛行時間': '2h 30m', 
             '抵達': '12:50', 
-            '航廈': 'Terminal 1 (TPE)'
+            '航廈': 'Terminal 1 (TPE)',
+            '登機': '08:50',
+            '登機門': 'B6',
+            '座位': '12K',
+            '行李': '2 × 23KG'
         },
         status: 'confirmed'
     },
@@ -429,14 +433,18 @@ const MOCK_BOOKINGS: Booking[] = [
         id: '1-return',
         type: 'flight',
         title: 'KIX - TPE',
-        subTitle: '星宇航空 JX823',
+        subTitle: '星宇航空',
         referenceNo: 'JX823',
         date: '2026-01-10',
         time: '14:00', 
         details: {
             '飛行時間': '3h 15m',
             '抵達': '16:15',
-            '航廈': 'Terminal 1 (TPE)'
+            '航廈': 'Terminal 1 (TPE)',
+            '登機': '13:20',
+            '登機門': 'A3',
+            '座位': '12K',
+            '行李': '2 × 23KG'
         },
         status: 'confirmed'
     },
@@ -640,7 +648,6 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
         </div>
       )}
 
-      {/* Keep the right padding for the container to allow badges to pop out safely */}
       <div 
         className={`relative pl-0 pr-10 mt-4 transition-all duration-300 ${searchTerm ? 'pt-4' : ''}`}
         onTouchStart={onTouchStart}
@@ -695,12 +702,10 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
                         <div 
                             className={`bg-white rounded-2xl p-4 shadow-zen border border-stone-50 transition-all duration-300 relative group ${item.isCompleted ? 'opacity-60 grayscale-[50%]' : ''}`}
                         >
-                            {/* Nested Watermark container with clipping to allow badges on parent to pop out */}
                             <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
                               <i className={`fa-solid ${catIcon} absolute -bottom-4 -right-2 text-[60px] text-stone-50/50 transform -rotate-12 transition-transform group-hover:scale-110 group-hover:rotate-0`}></i>
                             </div>
 
-                            {/* Badges positioned absolutely - Z-index elevated and container overflow visible ensures complete display */}
                             <div className="absolute -top-2 -right-2 z-20 flex flex-col gap-1 items-end pointer-events-none">
                               {item.isKlook && (
                                   <div className="bg-[#FF5E00] text-white text-[8px] font-black px-2 py-1 rounded-lg shadow-sm transform rotate-12 border border-white/50 whitespace-nowrap">KLOOK</div>
@@ -762,13 +767,6 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
                 </div>
                 );
             })}
-
-            {filteredItems.length === 0 && (
-                <div className="text-center py-20 text-stone-300 opacity-60 animate-fade-in">
-                    <i className="fa-regular fa-calendar-plus text-5xl mb-4"></i>
-                    <p className="text-sm font-bold">找不到符合關鍵字的行程。</p>
-                </div>
-            )}
         </div>
       </div>
     </div>
@@ -793,16 +791,10 @@ export const BookingsTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
       const matchType = filter === 'all' || b.type === filter;
       if (!searchTerm) return matchType;
       const term = searchTerm.toLowerCase();
-      
       const matchSearch = 
           b.title.toLowerCase().includes(term) || 
           b.subTitle?.toLowerCase().includes(term) ||
-          b.referenceNo.toLowerCase().includes(term) ||
-          b.type.toLowerCase().includes(term) ||
-          Object.entries(b.details).some(([k, v]) => 
-              k.toLowerCase().includes(term) || String(v).toLowerCase().includes(term)
-          );
-          
+          b.referenceNo.toLowerCase().includes(term);
       return matchType && matchSearch;
     });
 
@@ -833,44 +825,113 @@ export const BookingsTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
                 </div>
             </div>
 
-            <div className="space-y-5 px-1 mt-6">
+            <div className="space-y-6 px-1 mt-6">
                 {filteredBookings.map(booking => (
                     <div key={booking.id} className="relative group animate-fade-in">
                         {booking.type === 'flight' ? (
-                            <div className="bg-white rounded-2xl shadow-zen overflow-hidden relative border border-stone-50 group-hover:shadow-zen-hover transition-all duration-300">
-                                <div className="bg-[#4A90E2] h-1.5"></div>
-                                <div className="p-6">
-                                    <div className="flex justify-between items-start mb-4">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
-                                                <i className="fa-solid fa-plane-up text-[#4A90E2] text-sm"></i>
+                            <div className="bg-white rounded-[2rem] shadow-zen border border-stone-50 group-hover:shadow-zen-hover transition-all duration-500 overflow-visible relative flex items-stretch">
+                                {/* Left Section - Main Ticket */}
+                                <div className="flex-grow p-6 flex flex-col">
+                                    <div className="flex justify-between items-center mb-6">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 rounded-2xl bg-stone-50 flex items-center justify-center border border-stone-100 shadow-inner">
+                                                <i className="fa-solid fa-plane-up text-zen-primary text-sm"></i>
                                             </div>
-                                            <span className="font-bold text-xs tracking-wider text-stone-500">
-                                              <HighlightText text={booking.subTitle || ''} highlight={searchTerm} />
-                                            </span>
-                                        </div>
-                                        <div className="text-[10px] font-black font-mono text-stone-300 tracking-tighter uppercase">PNR: {booking.referenceNo}</div>
-                                    </div>
-                                    <div className="flex justify-between items-center mb-8 mt-10 px-2">
-                                        <div className="text-3xl font-mono font-bold text-zen-text">
-                                          <HighlightText text={booking.title.split(' - ')[0]} highlight={searchTerm} />
-                                        </div>
-                                        <div className="flex-1 border-b-2 border-dashed border-stone-100 mx-5 relative top-1">
-                                            <i className="fa-solid fa-plane absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-stone-200 bg-white px-2 text-sm z-10"></i>
-                                        </div>
-                                        <div className="text-3xl font-mono font-bold text-zen-text">
-                                          <HighlightText text={booking.title.split(' - ')[1]} highlight={searchTerm} />
-                                        </div>
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-y-4 gap-x-2 border-t border-dashed border-stone-100 pt-5 mt-2">
-                                        {Object.entries(booking.details).map(([key, val]) => (
-                                            <div key={key}>
-                                                <div className="text-[9px] text-stone-400 uppercase font-black tracking-widest mb-0.5 font-sans">{key}</div>
-                                                <div className="font-bold text-zen-text text-[13px]">
-                                                  <HighlightText text={val} highlight={searchTerm} />
+                                            <div>
+                                                <div className="text-[9px] font-black font-mono text-stone-300 uppercase leading-none mb-1">Carrier</div>
+                                                <div className="font-black text-[13px] tracking-wide text-zen-text">
+                                                    <HighlightText text={booking.subTitle || ''} highlight={searchTerm} />
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div className="bg-stone-50 px-3 py-1 rounded-xl border border-stone-100">
+                                            <span className="text-[10px] font-black font-mono text-zen-primary uppercase tracking-widest">{booking.referenceNo}</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex justify-between items-center my-6 relative">
+                                        <div className="flex flex-col">
+                                            <div className="text-3xl font-mono font-black text-zen-text leading-tight mb-1">
+                                                <HighlightText text={booking.title.split(' - ')[0]} highlight={searchTerm} />
+                                            </div>
+                                            <div className="text-[20px] font-mono font-black text-zen-primary leading-tight">
+                                                <HighlightText text={booking.time || ''} highlight={searchTerm} />
+                                            </div>
+                                            <div className="text-[9px] font-bold text-stone-300 mt-2 uppercase tracking-tighter">Taiwan Taoyuan</div>
+                                        </div>
+                                        
+                                        <div className="flex-1 flex flex-col items-center justify-center px-4">
+                                            <div className="w-full h-px bg-stone-100 relative mb-4">
+                                                <i className="fa-solid fa-plane absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-zen-primary/40 text-xs"></i>
+                                            </div>
+                                            <div className="bg-stone-50 px-2 py-0.5 rounded text-[8px] font-black text-stone-400 font-mono tracking-widest">{booking.details['飛行時間']}</div>
+                                        </div>
+
+                                        <div className="flex flex-col items-end text-right">
+                                            <div className="text-3xl font-mono font-black text-zen-text leading-tight mb-1">
+                                                <HighlightText text={booking.title.split(' - ')[1]} highlight={searchTerm} />
+                                            </div>
+                                            <div className="text-[20px] font-mono font-black text-stone-500 leading-tight">
+                                                <HighlightText text={booking.details['抵達'] || ''} highlight={searchTerm} />
+                                            </div>
+                                            <div className="text-[9px] font-bold text-stone-300 mt-2 uppercase tracking-tighter">Kansai Int'l</div>
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-4 gap-4 mt-auto pt-6 border-t border-dashed border-stone-100">
+                                        <div>
+                                            <div className="text-[8px] text-stone-300 uppercase font-black tracking-widest mb-1 font-sans">Boarding</div>
+                                            <div className="font-black text-zen-text text-[11px] font-mono leading-none">
+                                                <HighlightText text={booking.details['登機'] || '--:--'} highlight={searchTerm} />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div className="text-[8px] text-stone-300 uppercase font-black tracking-widest mb-1 font-sans">Gate</div>
+                                            <div className="font-black text-zen-text text-[11px] font-mono leading-none flex items-center gap-1">
+                                                <i className="fa-solid fa-door-open text-[8px] text-zen-primary/40"></i>
+                                                <HighlightText text={booking.details['登機門'] || '--'} highlight={searchTerm} />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div className="text-[8px] text-stone-300 uppercase font-black tracking-widest mb-1 font-sans">Seat</div>
+                                            <div className="font-black text-zen-text text-[11px] font-mono leading-none flex items-center gap-1">
+                                                <i className="fa-solid fa-chair text-[8px] text-zen-primary/40"></i>
+                                                <HighlightText text={booking.details['座位'] || '--'} highlight={searchTerm} />
+                                            </div>
+                                        </div>
+                                        <div className="text-right">
+                                            <div className="text-[8px] text-stone-300 uppercase font-black tracking-widest mb-1 font-sans">Baggage</div>
+                                            <div className="font-black text-zen-text text-[11px] font-mono leading-none flex items-center justify-end gap-1">
+                                                <i className="fa-solid fa-suitcase-rolling text-[8px] text-zen-primary/40"></i>
+                                                <HighlightText text={booking.details['行李']?.split(' × ')[0] || '--'} highlight={searchTerm} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Perforation Section */}
+                                <div className="w-[2px] relative flex flex-col items-center justify-between">
+                                    <div className="absolute top-0 -translate-y-1/2 w-5 h-5 bg-zen-bg rounded-full border border-stone-100 z-10 -ml-0.5 shadow-inner"></div>
+                                    <div className="h-full border-l-2 border-dashed border-stone-100 my-4"></div>
+                                    <div className="absolute bottom-0 translate-y-1/2 w-5 h-5 bg-zen-bg rounded-full border border-stone-100 z-10 -ml-0.5 shadow-inner"></div>
+                                </div>
+
+                                {/* Right Section - Ticket Stub */}
+                                <div className="w-24 bg-stone-50/20 rounded-r-[2rem] flex flex-col items-center justify-between p-4 border-l border-stone-50">
+                                    <div className="flex flex-col items-center mt-6">
+                                        <div className="text-[10px] font-black text-stone-200 uppercase tracking-widest font-mono transform -rotate-90 origin-center whitespace-nowrap mb-12">ZEN BOARDING</div>
+                                    </div>
+                                    
+                                    <div className="w-14 h-14 bg-stone-100 rounded-xl border border-stone-200 p-2 grid grid-cols-4 gap-0.5 opacity-30 shadow-inner">
+                                        {Array.from({length: 16}).map((_, i) => (
+                                            <div key={i} className={`rounded-[1px] ${Math.random() > 0.4 ? 'bg-stone-600' : 'bg-transparent'}`}></div>
                                         ))}
+                                    </div>
+
+                                    <div className="mt-4 mb-2">
+                                        <div className="text-[14px] font-black font-mono text-zen-primary tracking-tighter text-center">
+                                            {booking.details['座位']}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -899,13 +960,6 @@ export const BookingsTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
                         )}
                     </div>
                 ))}
-
-                {filteredBookings.length === 0 && (
-                    <div className="text-center py-24 text-stone-300 animate-fade-in">
-                        <i className="fa-solid fa-receipt text-5xl mb-3 opacity-20"></i>
-                        <p className="text-sm font-bold font-sans">目前沒有預訂資料。</p>
-                    </div>
-                )}
             </div>
         </div>
     );
