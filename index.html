@@ -72,7 +72,13 @@
         background-color: #F7F4EB;
         background-image: radial-gradient(#E0E5D5 1px, transparent 1px);
         background-size: 20px 20px; /* Dot pattern */
-        overscroll-behavior-y: none; /* Prevent pull-to-refresh on mobile */
+        overscroll-behavior-y: none; /* Disable global elastic bounce */
+        height: 100%;
+        overflow: hidden; /* Ensure body itself doesn't scroll */
+      }
+      #root {
+        height: 100%;
+        overflow: hidden;
       }
       /* Hide scrollbar for clean horizontal scrolling */
       .no-scrollbar::-webkit-scrollbar {

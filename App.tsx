@@ -18,7 +18,6 @@ const App: React.FC = () => {
   /**
    * 搜尋結果置頂優化：
    * 當使用者輸入搜尋文字時，畫面立即捲動至最上方，確保從搜尋結果的第一筆開始瀏覽。
-   * 使用 'auto' 確保切換瞬間到位，避免平滑捲動帶來的延遲感。
    */
   useEffect(() => {
     if (searchTerm && scrollContainerRef.current) {
@@ -109,17 +108,17 @@ const App: React.FC = () => {
   return (
     <div 
       ref={scrollContainerRef}
-      className="h-screen text-zen-text font-sans max-w-md mx-auto relative shadow-2xl bg-zen-bg overflow-y-auto overflow-x-hidden no-scrollbar"
+      className="h-[100dvh] text-zen-text font-sans max-w-md mx-auto relative shadow-2xl bg-zen-bg overflow-y-auto overflow-x-hidden no-scrollbar overscroll-y-none"
     >
       
-      {/* Header - Sticky with Search Integration */}
+      {/* Header - Fixed Height 108px to match Modules.tsx sticky offset */}
       <header 
         ref={headerRef}
-        className="px-6 pt-10 pb-4 flex flex-col bg-zen-bg sticky top-0 z-40 transition-all duration-500"
+        className="px-6 h-[108px] flex flex-col justify-center bg-zen-bg sticky top-0 z-40 transform-gpu"
       >
         <div className="flex justify-between items-start w-full">
             <div className={`flex flex-col transition-all duration-500 ${isSearchOpen ? 'opacity-0 scale-95 translate-x-[-20px] pointer-events-none' : 'opacity-100 scale-100'}`}>
-                <div className="mb-1">
+                <div className="mb-0.5">
                     <div className="text-2xl font-bold text-[#1a1a1a] tracking-normal leading-none font-sans">旅の禪</div>
                     <h1 className="text-[8px] font-medium tracking-widest uppercase text-stone-400 mt-1 ml-0.5">ZEN TRAVEL</h1>
                 </div>
@@ -128,7 +127,7 @@ const App: React.FC = () => {
                       type="text"
                       value={tripName}
                       onChange={(e) => setTripName(e.target.value)}
-                      className="bg-transparent text-sm font-bold text-zen-primary placeholder-zen-primary/50 focus:outline-none border-b border-transparent focus:border-zen-primary transition-all w-48 mt-1"
+                      className="bg-transparent text-sm font-bold text-zen-primary placeholder-zen-primary/50 focus:outline-none border-b border-transparent focus:border-zen-primary transition-all w-48 mt-0.5"
                       placeholder="Name your trip..."
                   />
                 )}
