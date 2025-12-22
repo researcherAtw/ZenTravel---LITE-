@@ -19,8 +19,8 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen text-zen-text font-sans pb-24 max-w-md mx-auto relative shadow-2xl bg-zen-bg overflow-hidden">
       
-      {/* Top Bar */}
-      <header className="px-6 pt-12 pb-4 flex justify-between items-start bg-gradient-to-b from-zen-bg to-transparent sticky top-0 z-10">
+      {/* Top Bar - Frozen/Sticky */}
+      <header className="px-6 pt-10 pb-2 flex justify-between items-start bg-zen-bg sticky top-0 z-40 border-b border-transparent">
         <div className="flex flex-col">
             <div className="mb-1">
                 <div className="text-2xl font-bold text-[#1a1a1a] tracking-normal leading-none font-sans">旅の禪</div>

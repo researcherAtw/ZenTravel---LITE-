@@ -7,12 +7,12 @@ import { ScheduleItem, Booking, HighlightTag, HighlightColor, WeatherInfo } from
 const MOCK_SCHEDULE: ScheduleItem[] = [
   // --- 1/4 (Sun) D1 ---
   { 
-      id: 'd1-1', date: '2026-01-04', time: '09:20', 
+      id: 'd1-1', date: '2026-01-04', time: '09:20', displayTime: '09:20',
       title: '起飛', location: 'TPE 桃園機場 (Terminal 1)', category: 'transport', categoryColor: 'red',
       isCompleted: false 
   },
   { 
-      id: 'd1-2', date: '2026-01-04', time: '12:50', 
+      id: 'd1-2', date: '2026-01-04', time: '12:50', displayTime: '12:50',
       title: '降落', location: 'KIX 關西機場', category: 'transport', categoryColor: 'red',
       isCompleted: false 
   },
@@ -62,7 +62,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
       id: 'd1-10', date: '2026-01-04', time: '15:00', displayTime: '15:00',
       title: 'Check In', location: '大阪難波東急STAY美居酒店', category: 'Check In', categoryColor: 'red',
       isCompleted: false,
-      mapUrl: 'https://maps.app.goo.gl/N7ytR6Au52tiZJk49'
+      mapUrl: 'https://maps.app.goo.gl/N7ytR6Au52tiZJj49'
   },
   { 
       id: 'd1-11', date: '2026-01-04', time: '16:00', title: '逛街', 
@@ -117,14 +117,14 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
       description: '(防寒衣物、花花發熱長袖)', isCompleted: false 
   },
   { 
-      id: 'd2-7', date: '2026-01-05', time: '14:00', title: '浅草茶屋たばねのし', 
+      id: 'd2-7', date: '2026-01-05', time: '14:00', title: '淺草茶屋たばねのし', 
       location: '大阪 (難波)', category: '下午茶', categoryColor: 'blue',
       businessHours: '11:30 - 21:00',
       description: '(可麗餅、抹茶拿鐵)', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/1Rx3JmBJCNg7nvrz5'
   },
   { 
-      id: 'd2-8', date: '2026-01-05', time: '16:00', title: 'あべのソラハ', 
+      id: 'd2-8', date: '2026-01-05', time: '16:00', title: 'あべのソ拉哈', 
       location: '大阪 (阿倍野)', category: '購物', categoryColor: 'orange',
       businessHours: '10:00 - 21:30',
       description: '(3F Ungrid服飾店)', isCompleted: false,
@@ -138,10 +138,10 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
       mapUrl: 'https://maps.app.goo.gl/XyLM17JrCuZr45mt8'
   },
   { 
-      id: 'd2-10', date: '2026-01-05', time: '20:00', title: '唐吉軻德', 
-      location: '大阪 (道頓堀)', category: '購物', categoryColor: 'orange',
-      businessHours: '24H',
-      isCompleted: false 
+      id: 'd2-10', date: '2026-01-05', time: '20:00', title: '牛舌的檸檬 大阪本店', 
+      location: '大阪 (心斎橋)', category: '晚餐', categoryColor: 'red',
+      description: '(已預約)', isCompleted: false,
+      mapUrl: 'https://maps.app.goo.gl/XyLM17JrCuZr45mt8'
   },
   { 
       id: 'd2-11', date: '2026-01-05', time: '21:00', title: '藥妝店', 
@@ -267,13 +267,13 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
       mapUrl: 'https://maps.app.goo.gl/x83m24TFXFNjCe8y5'
   },
   { 
-      id: 'd5-5', date: '2026-01-08', time: '16:30', title: '野宮神社', 
+      id: 'd5-5', date: '2026-01-08', time: '15:30', title: '野宮神社', 
       location: '京都 (嵐山)', category: '景點', categoryColor: 'purple',
       isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/q7fRDitmuVnYtKbu8'
   },
   { 
-      id: 'd5-6', date: '2026-01-08', time: '17:30', title: '常寂光寺', 
+      id: 'd5-6', date: '2026-01-08', time: '16:30', title: '常寂光寺', 
       location: '京都 (嵐山)', category: '景點', categoryColor: 'purple',
       isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/xiiuvrhTuuvVWmAD9'
@@ -282,7 +282,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
       id: 'd5-7', date: '2026-01-08', time: '19:00', displayTime: '19:00',
       title: '京都力山 京都站前店', location: '京都 (下京區)', category: '晚餐', categoryColor: 'red',
       description: '(很貴的和牛壽喜燒 | 已預約)', isCompleted: false,
-      mapUrl: 'https://maps.app.goo.gl/KzHuQyJdRQKDNHNf7'
+      mapUrl: 'https://maps.app.goo.gl/KzHuQyJdRQKDNHF7'
   },
 
   // --- 1/9 (Fri) D6 ---
@@ -306,7 +306,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
       mapUrl: 'https://maps.app.goo.gl/ojQc91auSEy5C9VD8'
   },
   { 
-      id: 'd6-4', date: '2026-01-09', time: '19:00',
+      id: 'd6-4', date: '2026-01-09', time: '19:00', displayTime: '19:00',
       title: '炸牛 元村 難波御堂筋店', location: '大阪 (難波)', category: '晚餐', categoryColor: 'red',
       description: '(Visa預約中)', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/v3PsudaxqCnLeSyj6'
@@ -328,12 +328,12 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
       description: '(飯店寄存行李)', isCompleted: false 
   },
   { 
-      id: 'd7-3', date: '2026-01-10', time: '14:00', 
+      id: 'd7-3', date: '2026-01-10', time: '14:00', displayTime: '14:00',
       title: '起飛 (KIX)', location: '關西機場', category: 'transport', categoryColor: 'red',
       description: '(逛免稅商店/伴手禮)', isCompleted: false 
   },
   { 
-      id: 'd7-4', date: '2026-01-10', time: '16:15', 
+      id: 'd7-4', date: '2026-01-10', time: '16:15', displayTime: '16:15',
       title: '降落 (TPE)', location: '桃園機場 Terminal 1', category: 'transport', categoryColor: 'red',
       isCompleted: false 
   },
@@ -346,7 +346,7 @@ const MOCK_BOOKINGS: Booking[] = [
         title: 'TPE - KIX',
         subTitle: '星宇航空 JX822',
         referenceNo: 'JX822',
-        date: '2026-01-05',
+        date: '2026-01-04',
         time: '09:20', 
         details: {
             '飛行時間': '2h 30m', 
@@ -376,12 +376,12 @@ const MOCK_BOOKINGS: Booking[] = [
         title: '大阪難波東急STAY美居酒店',
         subTitle: 'Mercure Tokyu Stay Osaka Namba',
         referenceNo: '1677120264',
-        date: '2026-01-05 ~ 2026-01-10', 
+        date: '2026-01-04 ~ 2026-01-10', 
         details: {
             'Check-in': '14:00',
             'Check-out': '11:00', 
             'Phone': '+81 6-6214-0109', 
-            'Nights': '5',
+            'Nights': '6',
             'Guests': '2'
         },
         status: 'confirmed'
@@ -392,7 +392,7 @@ const MOCK_BOOKINGS: Booking[] = [
         title: 'KIX 關西機場 ↔ 飯店',
         subTitle: 'Toyota Alphard Executive Lounge',
         referenceNo: 'MK-8829',
-        date: '2026-01-05',
+        date: '2026-01-04',
         time: '13:30',
         details: {
             '司機': '田中 健一 (Tanaka)',
@@ -403,19 +403,6 @@ const MOCK_BOOKINGS: Booking[] = [
         },
         status: 'confirmed'
     }
-];
-
-// --- MAP MOCK DATA ---
-const MOCK_PLACES_DB = [
-    { name: "Senso-ji", location: "Asakusa, Tokyo", lat: 35.7148, lng: 139.7967 },
-    { name: "Daimaru Shinsaibashi", location: "Chuo Ward, Osaka", lat: 34.6712, lng: 135.5014 },
-    { name: "Takashimaya Osaka", location: "Namba, Osaka", lat: 34.6631, lng: 135.5020 },
-    { name: "BicCamera Namba", location: "Namba, Osaka", lat: 34.6654, lng: 135.5035 },
-    { name: "Mugi x Tori", location: "Chuo Ward, Osaka", lat: 34.6738, lng: 135.4998 },
-    { name: "Tables Cafe", location: "Minami-Horie, Osaka", lat: 34.6698, lng: 135.4945 },
-    { name: "Kansai Airport", location: "Izumisano, Osaka", lat: 34.4320, lng: 135.2304 },
-    { name: "USJ", location: "Konohana, Osaka", lat: 34.6654, lng: 135.4323 },
-    { name: "Narita Airport", location: "Narita, Chiba", lat: 35.7719, lng: 140.3929 },
 ];
 
 // --- SHARED UTILS ---
@@ -437,23 +424,6 @@ const NODE_STYLES: Record<HighlightColor, string> = {
     gray: 'border-gray-400'
 };
 
-const getSimulatedWeather = (location: string): WeatherInfo => {
-    // Force Osaka weather simulation
-    return { condition: 'sunny', temp: 12, locationName: '日本大阪' };
-};
-
-const DEFAULT_CATEGORY_ICONS: Record<string, string> = {
-    sightseeing: 'fa-camera',
-    food: 'fa-utensils',
-    transport: 'fa-train-subway',
-    stay: 'fa-bed',
-    shopping: 'fa-bag-shopping',
-    activity: 'fa-person-skiing'
-};
-
-const PRESET_CATS = ['sightseeing', 'food', 'transport', 'stay', 'shopping'];
-const PRESET_COLORS: HighlightColor[] = ['red', 'orange', 'green', 'blue', 'purple', 'gray'];
-
 // --- SCHEDULE TAB ---
 
 export const ScheduleTab: React.FC = () => {
@@ -462,23 +432,27 @@ export const ScheduleTab: React.FC = () => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [weather, setWeather] = useState<WeatherInfo>({ condition: 'sunny', temp: 12, locationName: '日本大阪' });
 
-  // Simulate dynamic weather updates
+  // Update dynamic weather and location based on selected date
   useEffect(() => {
-    // Initial set
-    setWeather({ condition: 'sunny', temp: 12, locationName: '日本大阪' });
+    // Determine location name based on date (1/8 is Kyoto, others are Osaka for this trip)
+    const locationName = selectedDate === '2026-01-08' ? '日本京都' : '日本大阪';
+    
+    setWeather(prev => ({ 
+        ...prev, 
+        locationName,
+        temp: 12 + Math.floor(Math.random() * 2) - 1,
+        condition: Math.random() > 0.8 ? 'cloudy' : 'sunny'
+    }));
 
-    // Periodic "live" update simulation
     const interval = setInterval(() => {
-        // Randomly fluctuate temp slightly to simulate live data
         setWeather(prev => ({
             ...prev,
-            temp: 12 + Math.floor(Math.random() * 2) - 1, // 11-13 degrees
-            condition: Math.random() > 0.8 ? 'cloudy' : 'sunny' // Mostly sunny
+            temp: prev.temp + (Math.random() > 0.5 ? 1 : -1),
+            condition: Math.random() > 0.9 ? 'cloudy' : 'sunny'
         }));
-    }, 5000);
-
+    }, 10000);
     return () => clearInterval(interval);
-  }, []);
+  }, [selectedDate]);
 
   const toggleComplete = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -496,12 +470,11 @@ export const ScheduleTab: React.FC = () => {
   return (
     <div className="pb-20 space-y-6">
       
-      {/* Date Navigation - Sticky & Smooth */}
-      <div className="sticky top-20 z-20 -mx-5 bg-gradient-to-b from-zen-bg via-zen-bg to-transparent">
+      {/* Date Navigation - Frozen below Header */}
+      <div className="sticky top-[108px] z-30 -mx-5 bg-zen-bg">
           <div className="flex gap-2 overflow-x-auto no-scrollbar px-5 py-4 snap-x items-center">
             {dates.map((date) => {
                 const d = new Date(date);
-                // Display English short weekday (e.g., THU)
                 const dayName = d.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
                 const dayNum = d.getDate();
                 const isSelected = date === selectedDate;
@@ -511,7 +484,7 @@ export const ScheduleTab: React.FC = () => {
                         onClick={() => setSelectedDate(date)}
                         className={`snap-center flex-shrink-0 flex flex-col items-center justify-center w-[52px] h-[72px] rounded-[16px] transition-all duration-300 relative ${
                             isSelected 
-                            ? 'bg-[#464646] text-white translate-y-0 z-10' // Removed shadow-xl
+                            ? 'bg-[#464646] text-white translate-y-0 z-10' 
                             : 'bg-white text-gray-400 shadow-sm hover:bg-gray-50'
                         }`}
                     >
@@ -549,26 +522,25 @@ export const ScheduleTab: React.FC = () => {
         {filteredItems.map((item, index) => {
             return (
               <div key={item.id} className="relative mb-0 group flex gap-0">
-                {/* 1. Time Column - Aligned Right */}
-                <div className="w-14 py-4 flex flex-col items-end justify-start flex-shrink-0 pr-3">
-                    <span className={`font-mono font-bold text-sm text-right leading-none ${item.isCompleted ? 'text-gray-300' : 'text-gray-500'}`}>
-                        {item.displayTime?.split('\n')[0]}
+                {/* 1. Time Column */}
+                <div className="w-16 py-4 flex flex-col items-end justify-start flex-shrink-0 pr-3">
+                    <span className={`font-mono font-bold text-xl text-right leading-none ${item.isCompleted ? 'text-gray-300' : 'text-zen-text'}`}>
+                        {item.displayTime?.split('\n')[0] || ""}
                     </span>
                     {item.displayTime?.includes('\n') && (
-                         <span className="text-[10px] text-gray-300 font-mono mt-1 text-right">{item.displayTime.split('\n')[1]}</span>
+                         <span className={`text-base font-mono mt-1 text-right font-bold leading-tight ${item.isCompleted ? 'text-gray-300' : 'text-gray-400'}`}>
+                           {item.displayTime.split('\n')[1]}
+                         </span>
                     )}
                 </div>
 
                 {/* 2. Timeline Line & Node */}
-                <div className="relative flex flex-col items-center px-0 flex-shrink-0 w-6">
-                    {/* Continuous Line */}
+                <div className="relative flex flex-col items-center px-0 flex-shrink-0 w-4">
                     <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-[1.5px] bg-stone-200"></div>
-                    
-                    {/* Zen Node */}
                     <div 
                         onClick={(e) => toggleComplete(item.id, e)}
                         className={`
-                            relative z-10 w-2.5 h-2.5 rounded-full border-2 bg-zen-bg transition-all duration-300 mt-[1.2rem] cursor-pointer hover:scale-150
+                            relative z-10 w-2.5 h-2.5 rounded-full border-2 bg-zen-bg transition-all duration-300 mt-[1.3rem] cursor-pointer hover:scale-150
                             ${item.isCompleted 
                                 ? 'border-gray-300 bg-gray-300' 
                                 : NODE_STYLES[item.categoryColor || 'gray'] || 'border-gray-400'
@@ -578,7 +550,7 @@ export const ScheduleTab: React.FC = () => {
                 </div>
 
                 {/* 3. Content Card Column */}
-                <div className="flex-grow min-w-0 py-2 pb-6 pl-2">
+                <div className="flex-grow min-w-0 py-2 pb-6 pl-2.5">
                     <div 
                         onClick={() => setExpandedId(expandedId === item.id ? null : item.id)}
                         className={`bg-white rounded-2xl p-4 shadow-zen border border-stone-50 cursor-pointer transition-all duration-300 
@@ -586,46 +558,46 @@ export const ScheduleTab: React.FC = () => {
                             ${item.isCompleted ? 'opacity-60 grayscale-[50%]' : ''}
                         `}
                     >
-                        {/* Header: Title & Category Badge (Right) */}
-                        <div className="flex justify-between items-start gap-2 mb-1">
-                             <h3 className={`font-bold text-lg leading-tight ${item.isCompleted ? 'text-gray-500 line-through' : 'text-zen-text'}`}>{item.title}</h3>
-                             <div className="flex-shrink-0">
+                        {/* Header Area with Navigation Button */}
+                        <div className="flex justify-between items-start gap-3 mb-3">
+                             <div className="flex-grow">
+                                <h3 className={`font-bold text-lg leading-tight mb-1.5 ${item.isCompleted ? 'text-gray-500 line-through' : 'text-zen-text'}`}>{item.title}</h3>
                                 <CategoryBadge type={item.category} color={item.categoryColor} />
                              </div>
+                             
+                             <button 
+                                onClick={(e) => { e.stopPropagation(); handleNavigate(item); }}
+                                className="flex-shrink-0 w-10 h-10 rounded-xl bg-stone-50 border border-stone-200 text-zen-text flex flex-col items-center justify-center hover:bg-zen-primary hover:text-white hover:border-zen-primary transition-all duration-300 shadow-sm active:scale-90"
+                                title="開啟地圖"
+                             >
+                                <i className="fa-solid fa-diamond-turn-right text-sm"></i>
+                                <span className="text-[7px] font-bold mt-0.5 uppercase tracking-tighter">GO</span>
+                             </button>
                         </div>
 
-                        {/* Description (Details like 1F SUQQU...) */}
                         {item.description && (
-                            <div className="text-xs text-gray-400 font-medium whitespace-pre-line leading-relaxed mb-2">
+                            <div className="text-xs text-gray-400 font-medium whitespace-pre-line leading-relaxed mb-3">
                                 {item.description}
                             </div>
                         )}
 
-                        {/* Location */}
-                        <div className="text-xs text-gray-500 flex items-center gap-1 mb-2">
-                            <i className="fa-solid fa-map-pin text-[10px]"></i> <span className="truncate">{item.location}</span>
+                        <div className="text-xs text-gray-500 flex items-center gap-1.5 py-1.5 px-2 bg-stone-50/50 rounded-lg border border-stone-100/50 mb-1.5">
+                            <i className="fa-solid fa-map-pin text-[10px] text-zen-primary"></i> 
+                            <span className="truncate font-medium">{item.location}</span>
                         </div>
                         
-                        {/* Business Hours Display inside Card */}
                         {item.businessHours && (
-                            <div className="text-[10px] font-bold text-orange-400 bg-orange-50 px-2 py-0.5 rounded inline-block mb-1">
-                                <i className="fa-regular fa-clock mr-1"></i>營業時間: {item.businessHours}
+                            <div className="text-[10px] font-bold text-orange-400 bg-orange-50/50 px-2 py-0.5 rounded inline-block">
+                                <i className="fa-regular fa-clock mr-1"></i>{item.businessHours}
                             </div>
                         )}
 
-                        {/* Expanded Details */}
                         {expandedId === item.id && (
                             <div className="mt-4 pt-3 border-t border-dashed border-gray-200 animate-fade-in">
                                 {item.guideInfo?.story && (
                                     <p className="text-sm text-gray-600 leading-relaxed font-serif italic mb-3">"{item.guideInfo.story}"</p>
                                 )}
                                 
-                                <div className="flex gap-2 mb-3">
-                                    <Button size="sm" variant="secondary" onClick={(e) => { e.stopPropagation(); handleNavigate(item); }} className="flex-1 text-xs">
-                                        <i className="fa-solid fa-location-arrow"></i> 導航
-                                    </Button>
-                                </div>
-
                                 {item.guideInfo?.highlights && item.guideInfo.highlights.length > 0 && (
                                     <div className="flex flex-wrap gap-1.5">
                                         {item.guideInfo.highlights.map(h => (
@@ -674,7 +646,6 @@ export const BookingsTab: React.FC = () => {
         <div className="pb-20 space-y-6">
             <h2 className="text-2xl font-bold font-mono text-zen-text mb-4">Wallet</h2>
             
-            {/* Filter Pills */}
             <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
                 {['all', 'flight', 'hotel', 'transfer', 'activity'].map(f => (
                     <button 
@@ -693,9 +664,7 @@ export const BookingsTab: React.FC = () => {
                 {filteredBookings.map(booking => (
                     <div key={booking.id} className="relative group">
                         {booking.type === 'flight' ? (
-                            // Flight Ticket Style
                             <div className="bg-white rounded-2xl shadow-zen overflow-hidden relative border border-stone-50">
-                                {/* Header Strip */}
                                 <div className="bg-[#4A90E2] h-2"></div>
                                 <div className="p-5">
                                     <div className="flex justify-between items-start mb-4">
@@ -704,7 +673,6 @@ export const BookingsTab: React.FC = () => {
                                             <span className="font-bold text-sm tracking-wide">{booking.subTitle}</span>
                                         </div>
                                         <div className="text-right">
-                                            {/* Adjusted to prevent cropping: -mt-1 and leading-tight */}
                                             <div className="font-mono text-lg font-bold text-gray-800 leading-tight -mt-1">{booking.time}</div>
                                             <div className="text-xs text-gray-500 font-mono mt-1">{booking.date}</div>
                                         </div>
@@ -738,12 +706,10 @@ export const BookingsTab: React.FC = () => {
                                         ))}
                                     </div>
                                 </div>
-                                {/* Perforation Circles */}
                                 <div className="absolute top-[65%] -left-2 w-4 h-4 bg-zen-bg rounded-full shadow-inner"></div>
                                 <div className="absolute top-[65%] -right-2 w-4 h-4 bg-zen-bg rounded-full shadow-inner"></div>
                             </div>
                         ) : booking.type === 'transfer' ? (
-                            // Transfer Card Style
                             <div className="bg-white rounded-2xl shadow-zen overflow-hidden border border-stone-50">
                                 <div className="bg-[#2D2D2D] p-4 text-white">
                                     <div className="flex justify-between items-center">
@@ -768,7 +734,6 @@ export const BookingsTab: React.FC = () => {
                                             <div className="text-lg font-bold text-zen-text">{booking.title}</div>
                                             <div className="text-xs text-gray-500 font-medium">{booking.subTitle}</div>
                                         </div>
-                                        {/* Car Visual Placeholder */}
                                         <div className="w-16 h-10 bg-gray-100 rounded-lg flex items-center justify-center border border-dashed border-gray-300">
                                             <i className="fa-solid fa-car-side text-gray-300"></i>
                                         </div>
@@ -791,7 +756,6 @@ export const BookingsTab: React.FC = () => {
                                 </div>
                             </div>
                         ) : (
-                            // General Booking Card Style (Hotel, Activity)
                             <div className="bg-white rounded-2xl shadow-zen p-4 border border-stone-50 flex gap-4 items-stretch">
                                 <div className={`w-12 rounded-xl flex items-center justify-center text-white text-xl ${
                                     booking.type === 'hotel' ? 'bg-purple-400' : 'bg-orange-400'
