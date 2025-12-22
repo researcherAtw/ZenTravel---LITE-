@@ -39,20 +39,33 @@ const App: React.FC = () => {
     // 每次切換分頁如果是去預訂頁，確保錯誤提示清空
     if (activeTab === 'bookings') {
         setShowError(false);
+        setPasswordInput('');
     }
   }, [activeTab]);
 
-  const handlePasswordSubmit = (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    if (passwordInput === '333') {
-      setIsUnlocked(true);
-      setShowError(false);
-    } else {
-      setShowError(true);
-      setPasswordInput('');
-      // Reset error message after a while
-      setTimeout(() => setShowError(false), 3000);
+  const handleKeypadPress = (num: string) => {
+    if (passwordInput.length < 6) {
+      const newVal = passwordInput + num;
+      setPasswordInput(newVal);
+      // Auto-submit if length is 3 (current password is 333)
+      if (newVal === '333') {
+        setIsUnlocked(true);
+        setShowError(false);
+      } else if (newVal.length >= 3) {
+        // Simple error handling for auto-check
+        setTimeout(() => {
+          if (!isUnlocked && newVal.length >= 3 && newVal !== '333') {
+            setShowError(true);
+            setPasswordInput('');
+            setTimeout(() => setShowError(false), 2000);
+          }
+        }, 300);
+      }
     }
+  };
+
+  const handleBackspace = () => {
+    setPasswordInput(prev => prev.slice(0, -1));
   };
 
   /**
@@ -116,36 +129,50 @@ const App: React.FC = () => {
     if (activeTab === 'bookings') {
       if (!isUnlocked) {
         return (
-          <div className="flex flex-col items-center justify-center py-20 animate-fade-in">
-            <div className="w-20 h-20 bg-white rounded-3xl shadow-zen flex items-center justify-center text-zen-primary mb-8 border border-stone-50">
-              <i className="fa-solid fa-lock text-3xl"></i>
+          <div className="flex flex-col items-center justify-center pt-2 pb-10 animate-fade-in h-[calc(100vh-250px)]">
+            <div className="w-12 h-12 bg-white rounded-2xl shadow-zen flex items-center justify-center text-stone-300 mb-4 border border-stone-50">
+              <i className={`fa-solid ${showError ? 'fa-lock-open text-red-300 animate-bounce' : 'fa-lock'} text-xl`}></i>
             </div>
-            <h2 className="text-xl font-bold text-zen-text mb-2 font-sans">存取受限</h2>
-            <p className="text-xs text-stone-400 mb-8 font-bold tracking-widest uppercase">Password Required</p>
+            <h2 className="text-lg font-bold text-zen-text mb-0.5 font-sans">存取受限</h2>
+            <p className="text-[9px] text-stone-400 mb-8 font-black tracking-widest uppercase font-mono">Input Password</p>
             
-            <form onSubmit={handlePasswordSubmit} className="w-full max-w-[240px] flex flex-col gap-4">
-              <div className="flex flex-col gap-2">
-                <input 
-                  type="password"
-                  value={passwordInput}
-                  onChange={(e) => setPasswordInput(e.target.value)}
-                  placeholder="輸入密碼"
-                  className={`w-full h-12 bg-white rounded-2xl px-4 text-center text-lg font-mono tracking-widest border transition-all ${showError ? 'border-red-400 ring-4 ring-red-50 animate-pulse' : 'border-stone-100 focus:border-zen-primary focus:ring-4 ring-zen-primary/10'} shadow-sm outline-none`}
-                />
-                {showError && (
-                  <div className="text-center text-[10px] text-red-500 font-bold uppercase tracking-tighter py-1 animate-fade-in">
-                    密碼錯誤，請重試
-                  </div>
-                )}
+            {/* Dots Display Removed per user request */}
+
+            {/* Numeric Keypad - Shrunk Grid Gap and Max Width */}
+            <div className="grid grid-cols-3 gap-2.5 w-full max-w-[220px]">
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
+                <button
+                  key={num}
+                  onClick={() => handleKeypadPress(num.toString())}
+                  className="aspect-square flex items-center justify-center text-xl font-mono font-bold text-zen-text bg-white rounded-xl shadow-zen-sm border border-stone-50 active:scale-90 active:bg-stone-50 transition-all"
+                >
+                  {num}
+                </button>
+              ))}
+              <div />
+              <button
+                onClick={() => handleKeypadPress('0')}
+                className="aspect-square flex items-center justify-center text-xl font-mono font-bold text-zen-text bg-white rounded-xl shadow-zen-sm border border-stone-50 active:scale-90 active:bg-stone-50 transition-all"
+              >
+                0
+              </button>
+              <button
+                onClick={handleBackspace}
+                className="aspect-square flex items-center justify-center text-lg text-stone-400 active:scale-90 transition-all"
+              >
+                <i className="fa-solid fa-delete-left"></i>
+              </button>
+            </div>
+
+            {showError && (
+              <div className="mt-4 text-center text-[9px] text-red-500 font-bold uppercase tracking-widest py-1 animate-fade-in bg-red-50 px-3 rounded-full">
+                密碼錯誤
               </div>
-              <Button type="submit" className="w-full h-12 rounded-2xl">
-                解鎖頁面
-              </Button>
-            </form>
+            )}
 
             <button 
               onClick={() => setActiveTab('schedule')}
-              className="mt-12 text-stone-400 text-xs font-bold hover:text-zen-primary transition-colors flex items-center gap-2"
+              className="mt-6 text-stone-400 text-[11px] font-bold hover:text-zen-primary transition-colors flex items-center gap-2 font-sans"
             >
               <i className="fa-solid fa-arrow-left"></i>
               返回行程
@@ -176,7 +203,7 @@ const App: React.FC = () => {
             <div className={`flex flex-col transition-all duration-500 ${isSearchOpen ? 'opacity-0 scale-95 translate-x-[-20px] pointer-events-none' : 'opacity-100 scale-100'}`}>
                 <div className="mb-0.5">
                     <div className="text-2xl font-bold text-[#1a1a1a] tracking-normal leading-none font-sans">旅の禪</div>
-                    <h1 className="text-[8px] font-medium tracking-widest uppercase text-stone-400 mt-1 ml-0.5">ZEN TRAVEL</h1>
+                    <h1 className="text-[8px] font-medium tracking-widest uppercase text-stone-400 mt-1 ml-0.5 font-sans">ZEN TRAVEL</h1>
                 </div>
                 {!isSearchOpen && (
                   <input 
@@ -211,7 +238,7 @@ const App: React.FC = () => {
             </div>
             <button 
               onClick={handleCloseSearch}
-              className="text-stone-400 text-xs font-bold hover:text-zen-text px-1"
+              className="text-stone-400 text-xs font-bold hover:text-zen-text px-1 font-sans"
             >
               取消
             </button>
@@ -239,7 +266,7 @@ const App: React.FC = () => {
         <div className="relative flex items-center h-12">
           
           <div 
-            className="absolute h-10 bg-zen-primary/80 rounded-[26px] transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1) shadow-md"
+            className="absolute h-10 bg-zen-primary/80 rounded-[26px] transition-all duration-300 cubic-bezier(0.16, 1, 0.3, 1) shadow-md"
             style={{ 
               width: `${(100 / NAV_ITEMS.length)}%`,
               left: `${(activeIndex * 100) / NAV_ITEMS.length}%`,
@@ -252,7 +279,7 @@ const App: React.FC = () => {
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
-                className={`relative flex-1 flex items-center justify-center gap-2 h-full transition-all duration-500 z-10 ${isActive ? 'text-white' : 'text-stone-400 hover:text-stone-600'}`}
+                className={`relative flex-1 flex items-center justify-center gap-2 h-full transition-all duration-300 z-10 ${isActive ? 'text-white' : 'text-stone-400 hover:text-stone-600'}`}
               >
                 <div className={`text-base transition-transform duration-300 ${isActive ? 'scale-110' : 'scale-100'}`}>
                     <i className={`fa-solid ${item.icon}`}></i>

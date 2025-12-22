@@ -47,6 +47,9 @@ export interface ScheduleItem {
   photos?: string[];
   isCompleted?: boolean;
   isKlook?: boolean;
+  isTabelog?: boolean;
+  isGoogle?: boolean;
+  isTablecheck?: boolean;
 }
 
 export interface Booking {

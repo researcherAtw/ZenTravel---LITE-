@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Card, Button, CategoryBadge } from './UI';
 import { ScheduleItem, Booking, HighlightTag, HighlightColor, WeatherInfo } from '../types';
 
@@ -64,7 +64,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
       location: '大阪 (心斎橋)', category: '購物', categoryColor: 'orange',
       description: '1F SUQQU | 3F Celine | 9F pokemon center',
       businessHours: '10:00 - 20:00', isCompleted: false,
-      mapUrl: 'https://maps.app.goo.gl/BCqeSZqrh5uiRpoy9'
+      mapUrl: 'https://maps.app.goo.gl/BCqeSZqrh5uiRvoy9'
   },
   { 
       id: 'd1-6', date: '2026-01-04', time: '13:00', title: 'Loewe 大丸梅田店', 
@@ -167,7 +167,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
       mapUrl: 'https://maps.app.goo.gl/1Rx3JmBJCNg7nvrz5'
   },
   { 
-      id: 'd2-8', date: '2026-01-05', time: '16:00', title: 'あべのソ拉哈', 
+      id: 'd2-8', date: '2026-01-05', time: '16:00', title: 'あべのソラハ', 
       location: '大阪 (阿倍野)', category: '購物', categoryColor: 'orange',
       description: '3F Ungrid服飾店',
       businessHours: '10:00 - 21:30',
@@ -178,7 +178,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
       id: 'd2-9', date: '2026-01-05', time: '18:00', displayTime: '18:00',
       title: '牛舌的檸檬 大阪本店', 
       location: '大阪 (心斎橋)', category: '晚餐', categoryColor: 'red',
-      isCompleted: false,
+      isCompleted: false, isGoogle: true,
       mapUrl: 'https://maps.app.goo.gl/XyLM17JrCuZr45mt8'
   },
   { 
@@ -213,7 +213,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
   },
   { 
       id: 'd3-3', date: '2026-01-06', time: '12:00', 
-      title: 'エモジ (EMOJI)', location: '大阪 (松屋町)', category: '購物', categoryColor: 'orange',
+      title: 'エモジ', location: '大阪 (松屋町)', category: '購物', categoryColor: 'orange',
       description: '御朱印帳、集章冊',
       businessHours: '12:00 - 18:00', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/MHT3xD2ZRB9dz8E46'
@@ -245,7 +245,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
       id: 'd3-7', date: '2026-01-06', time: '18:30', displayTime: '18:30',
       title: 'YAKINIKUEN 忍鬨', location: '日本橋店', category: '晚餐', categoryColor: 'red',
       description: '燒肉',
-      isCompleted: false,
+      isCompleted: false, isTabelog: true,
       mapUrl: 'https://maps.app.goo.gl/2DAibjATzeB2CVxWA'
   },
   { 
@@ -265,7 +265,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
   { 
       id: 'd4-2', date: '2026-01-07', time: '09:00', title: '好萊塢美夢·乘車遊~逆轉世界~', 
       location: 'USJ', category: '設施', categoryColor: 'purple',
-      isCompleted: false, isKlook: true,
+      isCompleted: false, isKlook: false, 
       mapUrl: 'https://maps.app.goo.gl/m6eZWZhHxoUsrnha8'
   },
   { 
@@ -339,7 +339,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
       id: 'd5-7', date: '2026-01-08', time: '19:00', displayTime: '19:00',
       title: '京都力山 京都站前店', location: '京都 (下京區)', category: '晚餐', categoryColor: 'red',
       description: '很貴的和牛壽喜燒',
-      isCompleted: false,
+      isCompleted: false, isGoogle: true,
       mapUrl: 'https://maps.app.goo.gl/KzHuQyJdRQKDNHF7'
   },
 
@@ -363,7 +363,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
       id: 'd6-4', date: '2026-01-09', time: '19:00', displayTime: '19:00',
       title: '炸牛 元村 難波御堂筋店', location: '大阪 (難波)', category: '晚餐', categoryColor: 'red',
       description: '1 × 炸牛排套餐3種小碗 195g\n1 × 炸牛排套餐3種小碗 260g',
-      isCompleted: false,
+      isCompleted: false, isTablecheck: true,
       mapUrl: 'https://maps.app.goo.gl/v3PsudaxqCnLeSyj6'
   },
 
@@ -482,7 +482,7 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
   const touchStartPos = useRef<number | null>(null);
   const dateRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
 
-  const dates = Array.from(new Set(items.map(i => i.date))).sort() as string[];
+  const dates = useMemo(() => Array.from(new Set(items.map(i => i.date))).sort() as string[], [items]);
   const currentIndex = dates.indexOf(selectedDate);
 
   useEffect(() => {
@@ -521,11 +521,7 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
   const handleDateChange = (newDate: string) => {
     if (newDate === selectedDate) return;
     const newIndex = dates.indexOf(newDate);
-    if (newIndex > currentIndex) {
-        setSlideDirection('right');
-    } else if (newIndex < currentIndex) {
-        setSlideDirection('left');
-    }
+    setSlideDirection(newIndex > currentIndex ? 'right' : 'left');
     setSelectedDate(newDate);
   };
 
@@ -549,7 +545,7 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
     touchStartPos.current = null;
   };
 
-  const filteredItems = items.filter(i => {
+  const filteredItems = useMemo(() => items.filter(i => {
     const matchDate = i.date === selectedDate;
     if (!searchTerm) return matchDate;
 
@@ -563,8 +559,8 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
         i.businessHours?.toLowerCase().includes(term) ||
         i.displayTime?.toLowerCase().includes(term);
     
-    return searchTerm ? matchSearch : matchDate;
-  });
+    return matchSearch;
+  }), [items, selectedDate, searchTerm]);
 
   const handleNavigate = (item: ScheduleItem) => {
       const url = item.mapUrl || `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(item.location)}`;
@@ -578,17 +574,11 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
         <div className="sticky top-[108px] z-30 -mx-5 px-5 bg-zen-bg pt-2 pb-2 transform-gpu">
             <div className="relative overflow-x-auto no-scrollbar py-2 snap-x items-center">
               <div className="flex gap-[6px] min-w-max relative px-1">
-                {/* 
-                   Sliding Background Indicator Fix:
-                   Button Width: 58px. Gap: 6px. Total Step: 64px.
-                   left: 4px matches px-1 (4px).
-                */}
                 <div 
-                  className="absolute h-[78px] w-[58px] rounded-[24px] bg-[#464646] transition-all duration-500 cubic-bezier pointer-events-none z-0"
+                  className="absolute h-[78px] w-[58px] rounded-[24px] bg-[#464646] transition-transform duration-300 cubic-bezier pointer-events-none z-0"
                   style={{ 
                     left: '4px', 
                     transform: `translateX(${currentIndex * 64}px)`,
-                    boxShadow: 'none'
                   }}
                 />
                 
@@ -603,13 +593,11 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
                             ref={(el) => { if (el) dateRefs.current.set(date, el); }}
                             onClick={() => handleDateChange(date)}
                             className={`snap-center flex-shrink-0 flex flex-col items-center justify-center w-[58px] h-[78px] rounded-[24px] transition-all duration-300 relative z-10 ${
-                                isSelected 
-                                ? 'text-white bg-transparent' 
-                                : 'bg-white text-stone-400 hover:bg-stone-50'
+                                isSelected ? 'text-white' : 'bg-white text-stone-400'
                             }`}
                         >
-                            <span className={`text-[10px] font-black tracking-widest mb-1 font-sans transition-colors duration-300 ${isSelected ? 'text-white' : 'text-stone-400'}`}>{dayName}</span>
-                            <span className={`text-[24px] font-bold font-mono leading-none transition-colors duration-300 ${isSelected ? 'text-white' : 'text-stone-400'}`}>{dayNum}</span>
+                            <span className={`text-[10px] font-black tracking-widest mb-1 font-sans`}>{dayName}</span>
+                            <span className={`text-[24px] font-bold font-mono leading-none`}>{dayNum}</span>
                         </button>
                     )
                 })}
@@ -618,7 +606,7 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
 
             <div className="flex justify-between items-end px-1 mt-10 mb-2">
                <div className="relative">
-                  <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Day Plan</div>
+                  <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 font-sans">Day Plan</div>
                   <h2 className="text-3xl font-mono font-bold text-zen-text leading-tight">{selectedDate}</h2>
                   <div className="flex items-center gap-2 mt-1 text-gray-500 text-sm">
                       <i className="fa-solid fa-location-dot text-zen-primary"></i> 
@@ -638,14 +626,15 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
         </div>
       )}
 
+      {/* Increased right padding to pr-6 to fully accommodate badges moving to -right-2 */}
       <div 
-        className={`relative pl-1 pr-2 mt-4 overflow-x-hidden min-h-[400px] transition-all duration-300 ${searchTerm ? 'pt-4' : ''}`}
+        className={`relative pl-0 pr-6 mt-4 overflow-x-hidden min-h-[400px] transition-all duration-300 ${searchTerm ? 'pt-4' : ''}`}
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
         {searchTerm && (
           <div className="mb-6 px-1">
-             <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">搜尋結果</div>
+             <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 font-sans">搜尋結果</div>
              <div className="text-sm font-bold text-zen-text">找到了 {filteredItems.length} 個符合的行程</div>
           </div>
         )}
@@ -659,7 +648,7 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
 
                 return (
                 <div key={item.id} className="relative mb-0 group flex gap-0">
-                    <div className="w-16 py-4 flex flex-col items-end justify-start flex-shrink-0 pr-2">
+                    <div className="w-12 py-4 flex flex-col items-end justify-start flex-shrink-0 pr-1.5">
                         <div className="flex flex-col items-end gap-0.5">
                             {timeLines.map((time, idx) => {
                                 const isPrimary = idx === 0;
@@ -667,7 +656,7 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
                                     <span 
                                         key={idx} 
                                         className={`font-mono font-bold text-right leading-none transition-all ${
-                                            isPrimary ? 'text-xl' : 'text-[13px] opacity-80 mt-0.5'
+                                            isPrimary ? 'text-lg' : 'text-[11px] opacity-80 mt-0.5'
                                         } ${item.isCompleted ? 'text-gray-300' : 'text-zen-text'}`}
                                     >
                                         {time}
@@ -677,20 +666,30 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
                         </div>
                     </div>
 
-                    <div className="relative flex flex-col items-center px-0 flex-shrink-0 w-4">
+                    <div className="relative flex flex-col items-center px-0 flex-shrink-0 w-3">
                         <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-[1.5px] bg-stone-200"></div>
                         <div 
                             onClick={(e) => toggleComplete(item.id, e)}
-                            className={`relative z-10 w-2.5 h-2.5 rounded-full border-2 bg-zen-bg transition-all duration-300 mt-[1.3rem] cursor-pointer hover:scale-150 ${item.isCompleted ? 'border-gray-300 bg-gray-300' : NODE_STYLES[item.categoryColor || 'gray'] || 'border-gray-400'}`}
+                            className={`relative z-10 w-2 h-2 rounded-full border-2 bg-zen-bg transition-all duration-300 mt-[1.3rem] cursor-pointer hover:scale-150 ${item.isCompleted ? 'border-gray-300 bg-gray-300' : NODE_STYLES[item.categoryColor || 'gray'] || 'border-gray-400'}`}
                         ></div>
                     </div>
 
-                    <div className="flex-grow min-w-0 py-2 pb-6 pl-4">
+                    {/* Increased top padding (py-4) and pl-3 to prevent badge clipping on top and left */}
+                    <div className="flex-grow min-w-0 py-4 pb-6 pl-3">
                         <div 
                             className={`bg-white rounded-2xl p-4 shadow-zen border border-stone-50 transition-all duration-300 relative ${item.isCompleted ? 'opacity-60 grayscale-[50%]' : ''}`}
                         >
                             {item.isKlook && (
-                                <div className="absolute -top-2 -right-2 z-10 bg-[#FF5E00] text-white text-[8px] font-black px-2 py-1 rounded-lg shadow-sm transform rotate-12 border border-white/50">KLOOK</div>
+                                <div className="absolute -top-2 -right-2 z-10 bg-[#FF5E00] text-white text-[8px] font-black px-2 py-1 rounded-lg shadow-sm transform rotate-12 border border-white/50 whitespace-nowrap">KLOOK</div>
+                            )}
+                            {item.isTabelog && (
+                                <div className="absolute -top-2 -right-2 z-10 bg-[#FF6B00] text-white text-[8px] font-black px-2 py-1 rounded-lg shadow-sm transform rotate-12 border border-white/50 whitespace-nowrap">Tabélog</div>
+                            )}
+                            {item.isGoogle && (
+                                <div className="absolute -top-2 -right-2 z-10 bg-[#4285F4] text-white text-[8px] font-black px-2 py-1 rounded-lg shadow-sm transform rotate-12 border border-white/50 whitespace-nowrap">Google</div>
+                            )}
+                            {item.isTablecheck && (
+                                <div className="absolute -top-2 -right-2 z-10 bg-[#312E81] text-white text-[8px] font-black px-2 py-1 rounded-lg shadow-sm transform rotate-12 border border-white/50 whitespace-nowrap">TableCheck</div>
                             )}
                             
                             <div className="mb-3 pr-8">
@@ -784,7 +783,7 @@ export const BookingsTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
         <div className="pb-20">
             <div className="sticky top-[108px] z-30 -mx-5 px-5 bg-zen-bg pt-2 pb-5 transform-gpu">
                 <div className="flex justify-between items-center mb-5 px-1">
-                    <h2 className="text-3xl font-mono font-bold text-zen-text leading-tight">Wallet</h2>
+                    <h2 className="text-3xl font-mono font-bold text-zen-text leading-tight font-sans">Wallet</h2>
                     <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-zen-primary border border-white">
                         <i className="fa-solid fa-wallet text-lg"></i>
                     </div>
@@ -795,7 +794,7 @@ export const BookingsTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
                         <button 
                             key={f} 
                             onClick={() => setFilter(f as any)} 
-                            className={`px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap shadow-sm border ${
+                            className={`px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap shadow-sm border font-sans ${
                                 filter === f 
                                 ? 'bg-[#464646] text-white border-[#464646]' 
                                 : 'bg-white text-stone-400 border-stone-100 hover:border-stone-200'
@@ -839,7 +838,7 @@ export const BookingsTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
                                     <div className="grid grid-cols-2 gap-y-4 gap-x-2 border-t border-dashed border-stone-100 pt-5 mt-2">
                                         {Object.entries(booking.details).map(([key, val]) => (
                                             <div key={key}>
-                                                <div className="text-[9px] text-stone-400 uppercase font-black tracking-widest mb-0.5">{key}</div>
+                                                <div className="text-[9px] text-stone-400 uppercase font-black tracking-widest mb-0.5 font-sans">{key}</div>
                                                 <div className="font-bold text-zen-text text-[13px]">
                                                   <HighlightText text={val} highlight={searchTerm} />
                                                 </div>
@@ -863,8 +862,8 @@ export const BookingsTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
                                     <div className="grid grid-cols-1 gap-1.5">
                                       {Object.entries(booking.details).map(([k, v]) => (
                                         <div key={k} className="text-[11px] font-bold text-stone-500 flex items-center gap-2">
-                                          <span className="text-stone-300 uppercase tracking-tighter min-w-[60px]">{k}:</span> 
-                                          <span className="text-zen-text"><HighlightText text={v} highlight={searchTerm} /></span>
+                                          <span className="text-stone-300 uppercase tracking-tighter min-w-[60px] font-sans">{k}:</span> 
+                                          <span className="text-zen-text font-sans"><HighlightText text={v} highlight={searchTerm} /></span>
                                         </div>
                                       ))}
                                     </div>
@@ -877,7 +876,7 @@ export const BookingsTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
                 {filteredBookings.length === 0 && (
                     <div className="text-center py-24 text-stone-300">
                         <i className="fa-solid fa-receipt text-5xl mb-3 opacity-20"></i>
-                        <p className="text-sm font-bold">目前沒有預訂資料。</p>
+                        <p className="text-sm font-bold font-sans">目前沒有預訂資料。</p>
                     </div>
                 )}
             </div>
