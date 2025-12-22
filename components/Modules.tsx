@@ -539,7 +539,7 @@ export const ScheduleTab: React.FC = () => {
                         onClick={() => handleDateChange(date)}
                         className={`snap-center flex-shrink-0 flex flex-col items-center justify-center w-[52px] h-[72px] rounded-[16px] transition-all duration-300 relative ${
                             isSelected 
-                            ? 'bg-[#464646] text-white translate-y-0 z-10' 
+                            ? 'bg-[#464646] text-white scale-105 shadow-lg z-10' 
                             : 'bg-white text-gray-400 shadow-sm hover:bg-gray-50'
                         }`}
                     >
@@ -574,13 +574,14 @@ export const ScheduleTab: React.FC = () => {
 
       {/* Timeline Content - Added touch handlers and overflow-hidden for animation container */}
       <div 
-        className="relative pl-1 pr-2 mt-6 overflow-hidden"
+        className="relative pl-1 pr-2 mt-6 overflow-x-hidden"
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
         <div 
             key={selectedDate}
             className={`
+                will-change-transform
                 ${slideDirection === 'right' ? 'animate-slide-in-right' : ''}
                 ${slideDirection === 'left' ? 'animate-slide-in-left' : ''}
                 ${!slideDirection ? 'animate-fade-in' : ''}
