@@ -17,10 +17,10 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen text-zen-text font-sans pb-24 max-w-md mx-auto relative shadow-2xl bg-zen-bg overflow-hidden">
+    <div className="h-screen text-zen-text font-sans max-w-md mx-auto relative shadow-2xl bg-zen-bg overflow-y-auto overflow-x-hidden no-scrollbar">
       
-      {/* Top Bar - Frozen/Sticky */}
-      <header className="px-6 pt-10 pb-2 flex justify-between items-start bg-zen-bg sticky top-0 z-40 border-b border-transparent">
+      {/* Top Bar - Sticky (Frozen) */}
+      <header className="px-6 pt-10 pb-4 flex justify-between items-start bg-zen-bg sticky top-0 z-40">
         <div className="flex flex-col">
             <div className="mb-1">
                 <div className="text-2xl font-bold text-[#1a1a1a] tracking-normal leading-none font-sans">旅の禪</div>
@@ -42,8 +42,8 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="px-5 min-h-screen">
+      {/* Main Content Area */}
+      <main className="px-5 pb-32">
         {renderContent()}
       </main>
 

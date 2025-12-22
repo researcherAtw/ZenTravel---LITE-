@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card, Button, CategoryBadge } from './UI';
 import { ScheduleItem, Booking, HighlightTag, HighlightColor, WeatherInfo } from '../types';
 
@@ -431,27 +431,45 @@ export const ScheduleTab: React.FC = () => {
   const [items, setItems] = useState(MOCK_SCHEDULE);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [weather, setWeather] = useState<WeatherInfo>({ condition: 'sunny', temp: 12, locationName: '日本大阪' });
+  const [slideDirection, setSlideDirection] = useState<'left' | 'right' | null>(null);
+  
+  // Ref for swipe tracking
+  const touchStartPos = useRef<number | null>(null);
+  // Ref for date buttons to implement auto-centering
+  const dateRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
+
+  const dates = Array.from(new Set(items.map(i => i.date))).sort() as string[];
+  const currentIndex = dates.indexOf(selectedDate);
 
   // Update dynamic weather and location based on selected date
   useEffect(() => {
-    // Determine location name based on date (1/8 is Kyoto, others are Osaka for this trip)
     const locationName = selectedDate === '2026-01-08' ? '日本京都' : '日本大阪';
-    
     setWeather(prev => ({ 
         ...prev, 
         locationName,
         temp: 12 + Math.floor(Math.random() * 2) - 1,
         condition: Math.random() > 0.8 ? 'cloudy' : 'sunny'
     }));
+  }, [selectedDate]);
 
-    const interval = setInterval(() => {
-        setWeather(prev => ({
-            ...prev,
-            temp: prev.temp + (Math.random() > 0.5 ? 1 : -1),
-            condition: Math.random() > 0.9 ? 'cloudy' : 'sunny'
-        }));
-    }, 10000);
-    return () => clearInterval(interval);
+  // AUTO-SCROLL selected date into view (Center)
+  useEffect(() => {
+    const activeBtn = dateRefs.current.get(selectedDate);
+    if (activeBtn) {
+      activeBtn.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center'
+      });
+    }
+  }, [selectedDate]);
+
+  // AUTO-SCROLL main container to top when selectedDate changes - No animation
+  useEffect(() => {
+    const scrollContainer = document.querySelector('.overflow-y-auto');
+    if (scrollContainer) {
+      scrollContainer.scrollTo({ top: 0, behavior: 'auto' });
+    }
   }, [selectedDate]);
 
   const toggleComplete = (id: string, e: React.MouseEvent) => {
@@ -459,7 +477,39 @@ export const ScheduleTab: React.FC = () => {
     setItems(prev => prev.map(item => item.id === id ? { ...item, isCompleted: !item.isCompleted } : item));
   };
 
-  const dates = Array.from(new Set(items.map(i => i.date))).sort() as string[];
+  const handleDateChange = (newDate: string) => {
+    const newIndex = dates.indexOf(newDate);
+    if (newIndex > currentIndex) {
+        setSlideDirection('right'); // New content comes from right
+    } else if (newIndex < currentIndex) {
+        setSlideDirection('left');  // New content comes from left
+    }
+    setSelectedDate(newDate);
+  };
+
+  // --- Swipe Gesture Logic ---
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartPos.current = e.touches[0].clientX;
+  };
+
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartPos.current === null) return;
+    const touchEndPos = e.changedTouches[0].clientX;
+    const distance = touchStartPos.current - touchEndPos;
+    const minDistance = 50;
+
+    if (Math.abs(distance) > minDistance) {
+        if (distance > 0 && currentIndex < dates.length - 1) {
+            // Swipe Left -> Next Day
+            handleDateChange(dates[currentIndex + 1]);
+        } else if (distance < 0 && currentIndex > 0) {
+            // Swipe Right -> Prev Day
+            handleDateChange(dates[currentIndex - 1]);
+        }
+    }
+    touchStartPos.current = null;
+  };
+
   const filteredItems = items.filter(i => i.date === selectedDate);
 
   const handleNavigate = (item: ScheduleItem) => {
@@ -468,11 +518,12 @@ export const ScheduleTab: React.FC = () => {
   };
 
   return (
-    <div className="pb-20 space-y-6">
+    <div className="pb-20">
       
-      {/* Date Navigation - Frozen below Header */}
-      <div className="sticky top-[108px] z-30 -mx-5 bg-zen-bg">
-          <div className="flex gap-2 overflow-x-auto no-scrollbar px-5 py-4 snap-x items-center">
+      {/* 凍結上方區塊 (Frozen Upper Block) */}
+      <div className="sticky top-[108px] z-30 -mx-5 px-5 bg-zen-bg/95 backdrop-blur-sm pt-2 pb-4">
+          {/* Date Navigation */}
+          <div className="flex gap-2 overflow-x-auto no-scrollbar py-2 snap-x items-center">
             {dates.map((date) => {
                 const d = new Date(date);
                 const dayName = d.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
@@ -481,7 +532,11 @@ export const ScheduleTab: React.FC = () => {
                 return (
                     <button
                         key={date}
-                        onClick={() => setSelectedDate(date)}
+                        ref={(el) => {
+                          if (el) dateRefs.current.set(date, el);
+                          else dateRefs.current.delete(date);
+                        }}
+                        onClick={() => handleDateChange(date)}
                         className={`snap-center flex-shrink-0 flex flex-col items-center justify-center w-[52px] h-[72px] rounded-[16px] transition-all duration-300 relative ${
                             isSelected 
                             ? 'bg-[#464646] text-white translate-y-0 z-10' 
@@ -494,137 +549,150 @@ export const ScheduleTab: React.FC = () => {
                 )
             })}
           </div>
+
+          {/* Date Header Info */}
+          <div className="flex justify-between items-end px-1 mt-4">
+             <div>
+                <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Day Plan</div>
+                <h2 className="text-3xl font-mono font-bold text-zen-text leading-tight">{selectedDate}</h2>
+                <div className="flex items-center gap-2 mt-1 text-gray-500 text-sm">
+                    <i className="fa-solid fa-location-dot text-zen-primary"></i> 
+                    <span className="font-bold">{weather.locationName}</span>
+                </div>
+             </div>
+             <div className="bg-white/80 border border-white p-2 px-3 rounded-2xl shadow-sm flex flex-col items-center min-w-[70px]">
+                <div className="text-xl mb-0.5">
+                    {weather.condition === 'sunny' && <i className="fa-solid fa-sun text-orange-400 animate-spin-slow"></i>}
+                    {weather.condition === 'cloudy' && <i className="fa-solid fa-cloud text-gray-400"></i>}
+                    {weather.condition === 'rain' && <i className="fa-solid fa-cloud-rain text-blue-400"></i>}
+                    {weather.condition === 'snow' && <i className="fa-regular fa-snowflake text-blue-200"></i>}
+                </div>
+                <div className="text-xs font-black font-mono">{weather.temp}°C</div>
+             </div>
+          </div>
       </div>
 
-      {/* Date Header Info */}
-      <div className="flex justify-between items-end px-2">
-         <div>
-            <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Day Plan</div>
-            <h2 className="text-3xl font-mono font-bold text-zen-text">{selectedDate}</h2>
-            <div className="flex items-center gap-2 mt-1 text-gray-500 text-sm">
-                <i className="fa-solid fa-location-dot text-zen-primary"></i> 
-                <span>{weather.locationName}</span>
-            </div>
-         </div>
-         <div className="bg-white/60 backdrop-blur-md border border-white p-3 rounded-2xl shadow-sm flex flex-col items-center min-w-[80px]">
-            <div className="text-2xl mb-1">
-                {weather.condition === 'sunny' && <i className="fa-solid fa-sun text-orange-400 animate-spin-slow"></i>}
-                {weather.condition === 'cloudy' && <i className="fa-solid fa-cloud text-gray-400"></i>}
-                {weather.condition === 'rain' && <i className="fa-solid fa-cloud-rain text-blue-400"></i>}
-                {weather.condition === 'snow' && <i className="fa-regular fa-snowflake text-blue-200"></i>}
-            </div>
-            <div className="text-sm font-bold font-mono">{weather.temp}°C</div>
-         </div>
-      </div>
-
-      {/* Timeline */}
-      <div className="relative pr-2">
-        {filteredItems.map((item, index) => {
-            return (
-              <div key={item.id} className="relative mb-0 group flex gap-0">
-                {/* 1. Time Column */}
-                <div className="w-16 py-4 flex flex-col items-end justify-start flex-shrink-0 pr-3">
-                    <span className={`font-mono font-bold text-xl text-right leading-none ${item.isCompleted ? 'text-gray-300' : 'text-zen-text'}`}>
-                        {item.displayTime?.split('\n')[0] || ""}
-                    </span>
-                    {item.displayTime?.includes('\n') && (
-                         <span className={`text-base font-mono mt-1 text-right font-bold leading-tight ${item.isCompleted ? 'text-gray-300' : 'text-gray-400'}`}>
-                           {item.displayTime.split('\n')[1]}
-                         </span>
-                    )}
-                </div>
-
-                {/* 2. Timeline Line & Node */}
-                <div className="relative flex flex-col items-center px-0 flex-shrink-0 w-4">
-                    <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-[1.5px] bg-stone-200"></div>
-                    <div 
-                        onClick={(e) => toggleComplete(item.id, e)}
-                        className={`
-                            relative z-10 w-2.5 h-2.5 rounded-full border-2 bg-zen-bg transition-all duration-300 mt-[1.3rem] cursor-pointer hover:scale-150
-                            ${item.isCompleted 
-                                ? 'border-gray-300 bg-gray-300' 
-                                : NODE_STYLES[item.categoryColor || 'gray'] || 'border-gray-400'
-                            }
-                        `}
-                    ></div>
-                </div>
-
-                {/* 3. Content Card Column */}
-                <div className="flex-grow min-w-0 py-2 pb-6 pl-2.5">
-                    <div 
-                        onClick={() => setExpandedId(expandedId === item.id ? null : item.id)}
-                        className={`bg-white rounded-2xl p-4 shadow-zen border border-stone-50 cursor-pointer transition-all duration-300 
-                            ${expandedId === item.id ? 'ring-2 ring-zen-primary/20' : 'hover:translate-y-[-2px]'}
-                            ${item.isCompleted ? 'opacity-60 grayscale-[50%]' : ''}
-                        `}
-                    >
-                        {/* Header Area with Navigation Button */}
-                        <div className="flex justify-between items-start gap-3 mb-3">
-                             <div className="flex-grow">
-                                <h3 className={`font-bold text-lg leading-tight mb-1.5 ${item.isCompleted ? 'text-gray-500 line-through' : 'text-zen-text'}`}>{item.title}</h3>
-                                <CategoryBadge type={item.category} color={item.categoryColor} />
-                             </div>
-                             
-                             <button 
-                                onClick={(e) => { e.stopPropagation(); handleNavigate(item); }}
-                                className="flex-shrink-0 w-10 h-10 rounded-xl bg-stone-50 border border-stone-200 text-zen-text flex flex-col items-center justify-center hover:bg-zen-primary hover:text-white hover:border-zen-primary transition-all duration-300 shadow-sm active:scale-90"
-                                title="開啟地圖"
-                             >
-                                <i className="fa-solid fa-diamond-turn-right text-sm"></i>
-                                <span className="text-[7px] font-bold mt-0.5 uppercase tracking-tighter">GO</span>
-                             </button>
-                        </div>
-
-                        {item.description && (
-                            <div className="text-xs text-gray-400 font-medium whitespace-pre-line leading-relaxed mb-3">
-                                {item.description}
-                            </div>
-                        )}
-
-                        <div className="text-xs text-gray-500 flex items-center gap-1.5 py-1.5 px-2 bg-stone-50/50 rounded-lg border border-stone-100/50 mb-1.5">
-                            <i className="fa-solid fa-map-pin text-[10px] text-zen-primary"></i> 
-                            <span className="truncate font-medium">{item.location}</span>
-                        </div>
-                        
-                        {item.businessHours && (
-                            <div className="text-[10px] font-bold text-orange-400 bg-orange-50/50 px-2 py-0.5 rounded inline-block">
-                                <i className="fa-regular fa-clock mr-1"></i>{item.businessHours}
-                            </div>
-                        )}
-
-                        {expandedId === item.id && (
-                            <div className="mt-4 pt-3 border-t border-dashed border-gray-200 animate-fade-in">
-                                {item.guideInfo?.story && (
-                                    <p className="text-sm text-gray-600 leading-relaxed font-serif italic mb-3">"{item.guideInfo.story}"</p>
-                                )}
-                                
-                                {item.guideInfo?.highlights && item.guideInfo.highlights.length > 0 && (
-                                    <div className="flex flex-wrap gap-1.5">
-                                        {item.guideInfo.highlights.map(h => (
-                                            <span key={h.id} className={`text-[10px] px-2 py-1 rounded border font-bold ${TAG_COLORS[h.color]}`}>{h.text}</span>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
+      {/* Timeline Content - Added touch handlers and overflow-hidden for animation container */}
+      <div 
+        className="relative pl-1 pr-2 mt-6 overflow-hidden"
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+      >
+        <div 
+            key={selectedDate}
+            className={`
+                ${slideDirection === 'right' ? 'animate-slide-in-right' : ''}
+                ${slideDirection === 'left' ? 'animate-slide-in-left' : ''}
+                ${!slideDirection ? 'animate-fade-in' : ''}
+            `}
+        >
+            {filteredItems.map((item, index) => {
+                return (
+                <div key={item.id} className="relative mb-0 group flex gap-0">
+                    {/* 1. Time Column - Width increased to w-16 to fix clipping */}
+                    <div className="w-16 py-4 flex flex-col items-end justify-start flex-shrink-0 pr-2">
+                        <span className={`font-mono font-bold text-xl text-right leading-none ${item.isCompleted ? 'text-gray-300' : 'text-zen-text'}`}>
+                            {item.displayTime?.split('\n')[0] || ""}
+                        </span>
+                        {item.displayTime?.includes('\n') && (
+                            <span className={`text-base font-mono mt-1 text-right font-bold leading-tight ${item.isCompleted ? 'text-gray-300' : 'text-gray-400'}`}>
+                            {item.displayTime.split('\n')[1]}
+                            </span>
                         )}
                     </div>
-                </div>
-              </div>
-            );
-        })}
 
-        {filteredItems.length === 0 && (
-            <div className="text-center py-10 text-gray-400 opacity-60">
-                <i className="fa-regular fa-calendar-plus text-4xl mb-2"></i>
-                <p className="text-sm">No plans for this day yet.</p>
-            </div>
-        )}
+                    {/* 2. Timeline Line & Node - Width adjusted to w-4 */}
+                    <div className="relative flex flex-col items-center px-0 flex-shrink-0 w-4">
+                        <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-[1.5px] bg-stone-200"></div>
+                        <div 
+                            onClick={(e) => toggleComplete(item.id, e)}
+                            className={`
+                                relative z-10 w-2.5 h-2.5 rounded-full border-2 bg-zen-bg transition-all duration-300 mt-[1.3rem] cursor-pointer hover:scale-150
+                                ${item.isCompleted 
+                                    ? 'border-gray-300 bg-gray-300' 
+                                    : NODE_STYLES[item.categoryColor || 'gray'] || 'border-gray-400'
+                                }
+                            `}
+                        ></div>
+                    </div>
+
+                    {/* 3. Content Card Column - Optimized padding to pl-4 */}
+                    <div className="flex-grow min-w-0 py-2 pb-6 pl-4">
+                        <div 
+                            onClick={() => setExpandedId(expandedId === item.id ? null : item.id)}
+                            className={`bg-white rounded-2xl p-4 shadow-zen border border-stone-50 cursor-pointer transition-all duration-300 relative
+                                ${expandedId === item.id ? 'ring-2 ring-zen-primary/20' : 'hover:translate-y-[-2px]'}
+                                ${item.isCompleted ? 'opacity-60 grayscale-[50%]' : ''}
+                            `}
+                        >
+                            {/* Title Area */}
+                            <div className="mb-3 pr-8">
+                                <h3 className={`font-bold text-lg leading-tight mb-2 ${item.isCompleted ? 'text-gray-500 line-through' : 'text-zen-text'}`}>{item.title}</h3>
+                                <CategoryBadge type={item.category} color={item.categoryColor} />
+                            </div>
+
+                            {item.description && (
+                                <div className="text-xs text-gray-400 font-medium whitespace-pre-line leading-relaxed mb-3">
+                                    {item.description}
+                                </div>
+                            )}
+
+                            {/* Location & Navigation Button (Bottom-Right) */}
+                            <div className="flex justify-between items-end gap-2 mt-auto">
+                                <div className="flex-grow min-w-0">
+                                    <div className="text-xs text-gray-500 flex items-center gap-1.5 py-1.5 px-2 bg-stone-50/50 rounded-lg border border-stone-100/50">
+                                        <i className="fa-solid fa-map-pin text-[10px] text-zen-primary flex-shrink-0"></i> 
+                                        <span className="truncate font-medium">{item.location}</span>
+                                    </div>
+                                    {item.businessHours && (
+                                        <div className="text-[9px] font-bold text-orange-400 bg-orange-50/50 px-2 py-0.5 rounded mt-1 inline-block">
+                                            <i className="fa-regular fa-clock mr-1"></i>{item.businessHours}
+                                        </div>
+                                    )}
+                                </div>
+
+                                <button 
+                                    onClick={(e) => { e.stopPropagation(); handleNavigate(item); }}
+                                    className="flex-shrink-0 w-10 h-10 rounded-xl bg-stone-50 border border-stone-200 text-zen-text flex flex-col items-center justify-center hover:bg-zen-primary hover:text-white hover:border-zen-primary transition-all duration-300 shadow-sm active:scale-90"
+                                    title="開啟地圖"
+                                >
+                                    <i className="fa-solid fa-diamond-turn-right text-sm"></i>
+                                    <span className="text-[7px] font-bold mt-0.5 uppercase tracking-tighter">GO</span>
+                                </button>
+                            </div>
+
+                            {expandedId === item.id && (
+                                <div className="mt-4 pt-3 border-t border-dashed border-gray-200 animate-fade-in">
+                                    {item.guideInfo?.story && (
+                                        <p className="text-sm text-gray-600 leading-relaxed font-serif italic mb-3">"{item.guideInfo.story}"</p>
+                                    )}
+                                    
+                                    {item.guideInfo?.highlights && item.guideInfo.highlights.length > 0 && (
+                                        <div className="flex flex-wrap gap-1.5">
+                                            {item.guideInfo.highlights.map(h => (
+                                                <span key={h.id} className={`text-[10px] px-2 py-1 rounded border font-bold ${TAG_COLORS[h.color]}`}>{h.text}</span>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+                );
+            })}
+
+            {filteredItems.length === 0 && (
+                <div className="text-center py-10 text-gray-400 opacity-60">
+                    <i className="fa-regular fa-calendar-plus text-4xl mb-2"></i>
+                    <p className="text-sm">No plans for this day yet.</p>
+                </div>
+            )}
+        </div>
       </div>
     </div>
   );
 };
-
-// --- BOOKINGS TAB ---
 
 export const BookingsTab: React.FC = () => {
     const [bookings] = useState<Booking[]>(MOCK_BOOKINGS);
@@ -644,9 +712,9 @@ export const BookingsTab: React.FC = () => {
 
     return (
         <div className="pb-20 space-y-6">
-            <h2 className="text-2xl font-bold font-mono text-zen-text mb-4">Wallet</h2>
+            <h2 className="text-2xl font-bold font-mono text-zen-text mb-4 px-1">Wallet</h2>
             
-            <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
+            <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2 px-1">
                 {['all', 'flight', 'hotel', 'transfer', 'activity'].map(f => (
                     <button 
                         key={f}
@@ -660,7 +728,7 @@ export const BookingsTab: React.FC = () => {
                 ))}
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-4 px-1">
                 {filteredBookings.map(booking => (
                     <div key={booking.id} className="relative group">
                         {booking.type === 'flight' ? (
