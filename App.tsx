@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { NAV_ITEMS } from './constants';
 import { TabType } from './types';
 import { ScheduleTab, BookingsTab } from './components/Modules';
+import { Button } from './components/UI';
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('schedule');
@@ -10,14 +11,18 @@ const App: React.FC = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   
+  // Password Logic
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [passwordInput, setPasswordInput] = useState('');
+  const [showError, setShowError] = useState(false);
+  
   const headerRef = useRef<HTMLElement>(null);
   const searchBtnRef = useRef<HTMLButtonElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const lastScrollPos = useRef<number>(0);
 
   /**
-   * 搜尋結果置頂優化：
-   * 當使用者輸入搜尋文字時，畫面立即捲動至最上方，確保從搜尋結果的第一筆開始瀏覽。
+   * 搜尋結果置頂優化
    */
   useEffect(() => {
     if (searchTerm && scrollContainerRef.current) {
@@ -32,18 +37,32 @@ const App: React.FC = () => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollTo({ top: 0, behavior: 'auto' });
     }
+    // 每次切換分頁如果是去預訂頁，確保錯誤提示清空
+    if (activeTab === 'bookings') {
+        setShowError(false);
+    }
   }, [activeTab]);
 
+  const handlePasswordSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (passwordInput === '333') {
+      setIsUnlocked(true);
+      setShowError(false);
+    } else {
+      setShowError(true);
+      setPasswordInput('');
+      // Shake effect placeholder
+      setTimeout(() => setShowError(false), 2000);
+    }
+  };
+
   /**
-   * 處理關閉搜尋：
-   * 1. 關閉搜尋模式並清空關鍵字。
-   * 2. 恢復到進入搜尋前的捲動位置，確保瀏覽連續性。
+   * 處理關閉搜尋
    */
   const handleCloseSearch = () => {
     setIsSearchOpen(false);
     setSearchTerm('');
     
-    // 透過延遲確保內容已渲染回原始狀態（例如日期選擇器已出現）後再恢復捲動位置
     setTimeout(() => {
       if (scrollContainerRef.current) {
         scrollContainerRef.current.scrollTo({ 
@@ -55,8 +74,7 @@ const App: React.FC = () => {
   };
 
   /**
-   * 點擊搜尋按鈕：
-   * 開啟時記錄當前捲動座標，關閉時執行恢復邏輯。
+   * 點擊搜尋按鈕
    */
   const handleToggleSearch = () => {
     if (isSearchOpen) {
@@ -80,7 +98,6 @@ const App: React.FC = () => {
         const clickedOutsideSearchBtn = searchBtnRef.current && !searchBtnRef.current.contains(target);
 
         if (clickedOutsideHeader && clickedOutsideSearchBtn) {
-          // 若搜尋框為空，點擊外部即視為取消搜尋
           if (!searchTerm) {
             handleCloseSearch();
           }
@@ -96,11 +113,47 @@ const App: React.FC = () => {
    */
   const renderContent = () => {
     const currentSearch = isSearchOpen ? searchTerm : '';
-    switch (activeTab) {
-      case 'schedule': return <ScheduleTab searchTerm={currentSearch} />;
-      case 'bookings': return <BookingsTab searchTerm={currentSearch} />;
-      default: return <ScheduleTab searchTerm={currentSearch} />;
+    
+    if (activeTab === 'bookings') {
+      if (!isUnlocked) {
+        return (
+          <div className="flex flex-col items-center justify-center py-20 animate-fade-in">
+            <div className="w-20 h-20 bg-white rounded-3xl shadow-zen flex items-center justify-center text-zen-primary mb-8 border border-stone-50">
+              <i className="fa-solid fa-lock text-3xl"></i>
+            </div>
+            <h2 className="text-xl font-bold text-zen-text mb-2 font-sans">存取受限</h2>
+            <p className="text-xs text-stone-400 mb-8 font-bold tracking-widest uppercase">Password Required</p>
+            
+            <form onSubmit={handlePasswordSubmit} className="w-full max-w-[240px] space-y-4">
+              <div className="relative">
+                <input 
+                  type="password"
+                  value={passwordInput}
+                  onChange={(e) => setPasswordInput(e.target.value)}
+                  placeholder="輸入密碼"
+                  className={`w-full h-12 bg-white rounded-2xl px-4 text-center text-lg font-mono tracking-widest border transition-all ${showError ? 'border-red-400 ring-4 ring-red-50 animate-pulse' : 'border-stone-100 focus:border-zen-primary focus:ring-4 ring-zen-primary/10'} shadow-sm outline-none`}
+                />
+                {showError && <div className="absolute -bottom-6 left-0 right-0 text-center text-[10px] text-red-500 font-bold uppercase tracking-tighter">密碼錯誤，請重試</div>}
+              </div>
+              <Button type="submit" className="w-full h-12 rounded-2xl">
+                解鎖頁面
+              </Button>
+            </form>
+
+            <button 
+              onClick={() => setActiveTab('schedule')}
+              className="mt-12 text-stone-400 text-xs font-bold hover:text-zen-primary transition-colors flex items-center gap-2"
+            >
+              <i className="fa-solid fa-arrow-left"></i>
+              返回行程
+            </button>
+          </div>
+        );
+      }
+      return <BookingsTab searchTerm={currentSearch} />;
     }
+    
+    return <ScheduleTab searchTerm={currentSearch} />;
   };
 
   const activeIndex = NAV_ITEMS.findIndex(item => item.id === activeTab);
@@ -111,7 +164,7 @@ const App: React.FC = () => {
       className="h-[100dvh] text-zen-text font-sans max-w-md mx-auto relative shadow-2xl bg-zen-bg overflow-y-auto overflow-x-hidden no-scrollbar overscroll-y-none"
     >
       
-      {/* Header - Fixed Height 108px to match Modules.tsx sticky offset */}
+      {/* Header */}
       <header 
         ref={headerRef}
         className="px-6 h-[108px] flex flex-col justify-center bg-zen-bg sticky top-0 z-40 transform-gpu"
@@ -133,7 +186,6 @@ const App: React.FC = () => {
                 )}
             </div>
 
-            {/* User Avatar */}
             <div className={`pt-1 transition-all duration-500 ${isSearchOpen ? 'opacity-0 scale-95' : 'opacity-100'}`}>
                 <div className="w-10 h-10 rounded-full border-2 border-white shadow-sm overflow-hidden bg-stone-200">
                     <img className="w-full h-full object-cover" src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix" alt="User" />
@@ -141,7 +193,6 @@ const App: React.FC = () => {
             </div>
         </div>
 
-        {/* Search Input Bar */}
         {isSearchOpen && (
           <div className="absolute inset-x-6 bottom-4 animate-fade-in flex items-center gap-3">
             <div className="relative flex-1">

@@ -730,8 +730,9 @@ export const BookingsTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
           b.subTitle?.toLowerCase().includes(term) ||
           b.referenceNo.toLowerCase().includes(term) ||
           b.type.toLowerCase().includes(term) ||
+          // Fixed the issue where v might be inferred as unknown in Object.entries
           Object.entries(b.details).some(([k, v]) => 
-              k.toLowerCase().includes(term) || v.toLowerCase().includes(term)
+              k.toLowerCase().includes(term) || String(v).toLowerCase().includes(term)
           );
           
       return matchType && matchSearch;
