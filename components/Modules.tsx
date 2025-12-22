@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Card, Button, CategoryBadge } from './UI';
 import { ScheduleItem, Booking, HighlightTag, HighlightColor, WeatherInfo } from '../types';
@@ -389,7 +390,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
       description: '雞白湯拉麵',
       isCompleted: false,
       businessHours: '10:30 - 22:00',
-      mapUrl: 'https://maps.app.goo.gl/5MiUPJFxft7bBrtXA'
+      mapUrl: 'https://maps.app.goo.gl/5MiUPJFxft7BrtXA'
   },
   { 
       id: 'd7-2', date: '2026-01-10', time: '11:00', displayTime: '11:00',
@@ -648,8 +649,9 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
         </div>
       )}
 
+      {/* Reduced pr-10 to pr-1 to release more space for cards */}
       <div 
-        className={`relative pl-0 pr-10 mt-4 transition-all duration-300 ${searchTerm ? 'pt-4' : ''}`}
+        className={`relative pl-0 pr-1 mt-4 transition-all duration-300 ${searchTerm ? 'pt-4' : ''}`}
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
@@ -767,6 +769,13 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
                 </div>
                 );
             })}
+
+            {filteredItems.length === 0 && (
+                <div className="text-center py-20 text-stone-300 opacity-60 animate-fade-in">
+                    <i className="fa-regular fa-calendar-plus text-5xl mb-4"></i>
+                    <p className="text-sm font-bold">找不到符合關鍵字的行程。</p>
+                </div>
+            )}
         </div>
       </div>
     </div>
