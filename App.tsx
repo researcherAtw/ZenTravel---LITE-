@@ -47,19 +47,21 @@ const App: React.FC = () => {
     if (passwordInput.length < 6) {
       const newVal = passwordInput + num;
       setPasswordInput(newVal);
-      // Auto-submit if length is 3 (current password is 333)
+      
+      // Correct password is 333 - Unlock INSTANTLY
       if (newVal === '333') {
         setIsUnlocked(true);
         setShowError(false);
-      } else if (newVal.length >= 3) {
-        // Simple error handling for auto-check
-        setTimeout(() => {
-          if (!isUnlocked && newVal.length >= 3 && newVal !== '333') {
-            setShowError(true);
-            setPasswordInput('');
-            setTimeout(() => setShowError(false), 2000);
-          }
-        }, 300);
+        setPasswordInput('');
+        return;
+      } 
+      
+      // Auto-error check if length reaches 3 but incorrect
+      if (newVal.length >= 3) {
+        setShowError(true);
+        setPasswordInput('');
+        const timer = setTimeout(() => setShowError(false), 1500);
+        return () => clearTimeout(timer);
       }
     }
   };
@@ -130,8 +132,6 @@ const App: React.FC = () => {
       if (!isUnlocked) {
         return (
           <div className="flex flex-col items-center justify-center pt-2 pb-10 animate-fade-in h-[calc(100vh-250px)]">
-            {/* Lock Icon, Title, and Subtitle removed to eliminate the "gray block" and ensure minimalist design */}
-            
             <div className="mb-10" />
 
             {/* Numeric Keypad - Minimal Layout */}

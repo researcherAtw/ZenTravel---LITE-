@@ -521,7 +521,7 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
     const activeBtn = dateRefs.current.get(selectedDate);
     if (activeBtn) {
       activeBtn.scrollIntoView({
-        behavior: 'smooth',
+        behavior: 'auto', // Changed from smooth to auto for instant response
         block: 'nearest',
         inline: 'center'
       });
@@ -597,7 +597,7 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
             <div className="relative overflow-x-auto no-scrollbar py-2 snap-x items-center">
               <div className="flex gap-[6px] min-w-max relative px-1">
                 <div 
-                  className="absolute h-[78px] w-[58px] rounded-[24px] bg-[#464646] transition-transform duration-300 cubic-bezier pointer-events-none z-0"
+                  className="absolute h-[78px] w-[58px] rounded-[24px] bg-[#464646] transition-transform duration-200 cubic-bezier pointer-events-none z-0"
                   style={{ 
                     left: '4px', 
                     transform: `translateX(${currentIndex * 64}px)`,
@@ -614,7 +614,7 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
                             key={date}
                             ref={(el) => { if (el) dateRefs.current.set(date, el); }}
                             onClick={() => handleDateChange(date)}
-                            className={`snap-center flex-shrink-0 flex flex-col items-center justify-center w-[58px] h-[78px] rounded-[24px] transition-all duration-300 relative z-10 ${
+                            className={`snap-center flex-shrink-0 flex flex-col items-center justify-center w-[58px] h-[78px] rounded-[24px] transition-all duration-200 relative z-10 ${
                                 isSelected ? 'text-white' : 'bg-white text-stone-400'
                             }`}
                         >
@@ -649,7 +649,7 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
       )}
 
       <div 
-        className={`relative pl-0 pr-1 mt-4 transition-all duration-300 ${searchTerm ? 'pt-4' : ''}`}
+        className={`relative pl-0 pr-1 mt-4 transition-all duration-200 ${searchTerm ? 'pt-4' : ''}`}
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
@@ -692,7 +692,7 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
                         <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-[1.5px] bg-stone-200"></div>
                         <div 
                             onClick={(e) => toggleComplete(item.id, e)}
-                            className={`relative z-10 w-2.5 h-2.5 rounded-full border-2 bg-zen-bg transition-all duration-300 mt-[1.35rem] cursor-pointer hover:scale-150 ${item.isCompleted ? 'border-stone-300 bg-stone-300' : NODE_STYLES[item.categoryColor || 'gray'] || 'border-stone-400'}`}
+                            className={`relative z-10 w-2.5 h-2.5 rounded-full border-2 bg-zen-bg transition-all duration-200 mt-[1.35rem] cursor-pointer hover:scale-150 ${item.isCompleted ? 'border-stone-300 bg-stone-300' : NODE_STYLES[item.categoryColor || 'gray'] || 'border-stone-400'}`}
                         >
                           {item.isCompleted && <i className="fa-solid fa-check text-white text-[5px] absolute inset-0 flex items-center justify-center"></i>}
                         </div>
@@ -700,7 +700,7 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
 
                     <div className="flex-grow min-w-0 py-4 pb-6 pl-3 overflow-visible">
                         <div 
-                            className={`bg-white rounded-2xl p-4 shadow-zen border border-stone-50 transition-all duration-300 relative group ${item.isCompleted ? 'opacity-60 grayscale-[50%]' : ''}`}
+                            className={`bg-white rounded-2xl p-4 shadow-zen border border-stone-50 transition-all duration-200 relative group ${item.isCompleted ? 'opacity-60 grayscale-[50%]' : ''}`}
                         >
                             <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
                               <i className={`fa-solid ${catIcon} absolute -bottom-4 -right-2 text-[60px] text-stone-50/50 transform -rotate-12 transition-transform group-hover:scale-110 group-hover:rotate-0`}></i>
@@ -833,7 +833,7 @@ export const BookingsTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
                     <div className="flex gap-2 min-w-max relative">
                         {/* Sliding Background Indicator */}
                         <div 
-                          className="absolute h-full rounded-2xl bg-[#464646] transition-all duration-300 cubic-bezier pointer-events-none z-0"
+                          className="absolute h-full rounded-2xl bg-[#464646] transition-all duration-200 cubic-bezier pointer-events-none z-0"
                           style={{ 
                             left: indicatorStyle.left, 
                             width: indicatorStyle.width,
@@ -846,7 +846,7 @@ export const BookingsTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
                                 key={f} 
                                 ref={(el) => { if (el) filterRefs.current.set(f, el); }}
                                 onClick={() => setFilter(f as any)} 
-                                className={`relative z-10 px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-colors duration-300 whitespace-nowrap border font-sans ${
+                                className={`relative z-10 px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-colors duration-200 whitespace-nowrap border font-sans ${
                                     filter === f 
                                     ? 'text-white border-transparent' 
                                     : 'bg-white text-stone-400 border-stone-100 hover:border-stone-200'
