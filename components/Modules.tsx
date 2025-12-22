@@ -4,7 +4,6 @@ import { ScheduleItem, Booking, HighlightTag, HighlightColor, WeatherInfo } from
 
 // --- HELPERS ---
 
-// Helper to escape regex special characters
 const escapeRegExp = (string: string) => {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 };
@@ -56,36 +55,42 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
   { 
       id: 'd1-4', date: '2026-01-04', time: '13:00', title: '大阪高島屋店', 
       location: '大阪 (難波)', category: '購物', categoryColor: 'orange',
+      description: '1F SUQQU | 2F Dior | 3-4F Polo',
       businessHours: '10:00 - 20:00', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/jv8vH9DvuRvfqx1U8'
   },
   { 
       id: 'd1-5', date: '2026-01-04', time: '13:00', title: '大丸心齋橋店 本館', 
       location: '大阪 (心斎橋)', category: '購物', categoryColor: 'orange',
+      description: '1F SUQQU | 3F Celine | 9F pokemon center',
       businessHours: '10:00 - 20:00', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/BCqeSZqrh5uiRpoy9'
   },
   { 
       id: 'd1-6', date: '2026-01-04', time: '13:00', title: 'Loewe 大丸梅田店', 
       location: '大阪 (梅田)', category: '購物', categoryColor: 'orange',
+      description: '3F LOEWE男子',
       businessHours: '10:00 - 20:00', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/fQjzaNz4cygtSEmSA'
   },
   { 
       id: 'd1-7', date: '2026-01-04', time: '13:00', title: 'Loewe 阪急男士大阪店', 
       location: '大阪 (梅田)', category: '購物', categoryColor: 'orange',
+      description: '2F LOEWE男子',
       businessHours: '10:00 - 20:00', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/oNoJb8b498ZQfhGbA'
   },
   { 
       id: 'd1-8', date: '2026-01-04', time: '13:00', title: 'Tables Cafe', 
       location: '大阪 (堀江)', category: '下午茶', categoryColor: 'blue',
+      description: '草莓蛋糕',
       businessHours: '11:00 - 20:00', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/xvZvhNF7KLUSNVAz7'
   },
   { 
       id: 'd1-9', date: '2026-01-04', time: '13:00', title: 'BicCamera 難波店', 
       location: '大阪 (難波)', category: '購物', categoryColor: 'orange',
+      description: 'Sony 相機鏡頭',
       businessHours: '10:00 - 21:00', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/2QzAfgJhk68BKUBt7'
   },
@@ -104,6 +109,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
   { 
       id: 'd1-12', date: '2026-01-04', time: '18:00', title: '麥×鷄', 
       location: '大阪 (心斎橋)', category: '晚餐', categoryColor: 'green',
+      description: '雞白湯拉麵',
       businessHours: '18:00 - 22:00', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/3x5qTHVEmY1XCb4f9'
   },
@@ -112,6 +118,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
   { 
       id: 'd2-1', date: '2026-01-05', time: '09:00', title: 'COLONY by EQI', 
       location: '大阪 (西心斎橋)', category: '早午餐', categoryColor: 'green',
+      description: '鬆餅',
       businessHours: '11:00 - 23:00',
       isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/Lfg2wRUuyf1fDih46'
@@ -147,19 +154,22 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
   { 
       id: 'd2-6', date: '2026-01-05', time: '12:30', title: 'Uniqlo', 
       location: '大阪', category: '購物', categoryColor: 'orange',
+      description: '防寒衣物、花花發熱長袖',
       isCompleted: false,
       mapUrl: 'https://www.google.com/maps'
   },
   { 
       id: 'd2-7', date: '2026-01-05', time: '14:00', title: '淺草茶屋たばねのし', 
       location: '大阪 (難波)', category: '下午茶', categoryColor: 'blue',
+      description: '可麗餅、抹茶拿鐵',
       businessHours: '11:30 - 21:00',
       isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/1Rx3JmBJCNg7nvrz5'
   },
   { 
-      id: 'd2-8', date: '2026-01-05', time: '16:00', title: 'あべのソラハ', 
+      id: 'd2-8', date: '2026-01-05', time: '16:00', title: 'あべのソ拉哈', 
       location: '大阪 (阿倍野)', category: '購物', categoryColor: 'orange',
+      description: '3F Ungrid服飾店',
       businessHours: '10:00 - 21:30',
       isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/KmBGoBB2fNMsXQdd7'
@@ -181,6 +191,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
   { 
       id: 'd2-11', date: '2026-01-05', time: '21:00', title: '藥妝店', 
       location: '大阪', category: '購物', categoryColor: 'orange',
+      description: '量車藥、感冒藥、過敏藥補貨',
       isCompleted: false,
       mapUrl: 'https://www.google.com/maps'
   },
@@ -189,18 +200,21 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
   { 
       id: 'd3-1', date: '2026-01-06', time: '11:00', 
       title: 'Tart Square', location: '大阪 (堀江)', category: '早午餐', categoryColor: 'green',
+      description: '和牛鹹塔/甜食塔',
       businessHours: '11:00 - 19:00', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/iKP9MLJs7AbywHKQ8'
   },
   { 
       id: 'd3-2', date: '2026-01-06', time: '11:30', title: 'LiLo Coffee Roasters', 
       location: '大阪 (心斎橋)', category: '外帶咖啡', categoryColor: 'blue',
+      description: '咖啡廳 | 現金Only',
       isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/kr7uR73TsLyrguqRA'
   },
   { 
       id: 'd3-3', date: '2026-01-06', time: '12:00', 
       title: 'エモジ (EMOJI)', location: '大阪 (松屋町)', category: '購物', categoryColor: 'orange',
+      description: '御朱印帳、集章冊',
       businessHours: '12:00 - 18:00', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/MHT3xD2ZRB9dz8E46'
   },
@@ -214,6 +228,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
   { 
       id: 'd3-5', date: '2026-01-06', time: '14:30', title: 'COLONY by EQI', 
       location: '心斎橋アメ村店', category: '下午茶', categoryColor: 'blue',
+      description: '舒芙蕾',
       businessHours: '11:00 - 23:00',
       isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/eZc5Hi3E5zW9A4sX6'
@@ -221,6 +236,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
   { 
       id: 'd3-6', date: '2026-01-06', time: '16:00', title: '道頓堀大觀覽車', 
       location: '道頓堀', category: '景點', categoryColor: 'purple',
+      description: '唐吉訶德摩天輪\n週二定期維修會延後至13:00開放',
       businessHours: '11:00 - 21:30',
       isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/XtcYSxdr8Cnjb1Ua9'
@@ -228,6 +244,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
   { 
       id: 'd3-7', date: '2026-01-06', time: '18:30', displayTime: '18:30',
       title: 'YAKINIKUEN 忍鬨', location: '日本橋店', category: '晚餐', categoryColor: 'red',
+      description: '燒肉',
       isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/2DAibjATzeB2CVxWA'
   },
@@ -242,36 +259,37 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
   { 
       id: 'd4-1', date: '2026-01-07', time: '08:00', title: '超商早餐', 
       location: '環球影城', category: '早餐', categoryColor: 'green',
-      isCompleted: false,
+      isCompleted: false, isKlook: false,
       mapUrl: 'https://www.google.com/maps'
   },
   { 
       id: 'd4-2', date: '2026-01-07', time: '09:00', title: '好萊塢美夢·乘車遊~逆轉世界~', 
       location: 'USJ', category: '設施', categoryColor: 'purple',
-      isCompleted: false,
+      isCompleted: false, isKlook: true,
       mapUrl: 'https://maps.app.goo.gl/m6eZWZhHxoUsrnha8'
   },
   { 
       id: 'd4-3', date: '2026-01-07', time: '15:00', displayTime: '15:00\n16:00',
       title: '超級任天堂園區入場卷', location: 'USJ', category: 'Express', categoryColor: 'red',
-      isCompleted: false,
+      isCompleted: false, isKlook: true,
       mapUrl: 'https://maps.app.goo.gl/m6eZWZhHxoUsrnha8'
   },
   { 
       id: 'd4-4', date: '2026-01-07', time: '15:00', displayTime: '15:00\n15:30',
       title: '瑪利歐賽車：庫巴的挑戰賽', location: 'USJ', category: 'Express', categoryColor: 'red',
-      isCompleted: false,
+      isCompleted: false, isKlook: true,
       mapUrl: 'https://maps.app.goo.gl/m6eZWZhHxoUsrnha8'
   },
   { 
       id: 'd4-5', date: '2026-01-07', time: '15:30', displayTime: '15:30\n16:00',
       title: '咚奇剛的瘋狂礦車™', location: 'USJ', category: 'Express', categoryColor: 'red',
-      isCompleted: false,
+      isCompleted: false, isKlook: true,
       mapUrl: 'https://maps.app.goo.gl/m6eZWZhHxoUsrnha8'
   },
   { 
       id: 'd4-6', date: '2026-01-07', time: '18:00',
       title: '燃えよ麺助', location: '大阪 (福島)', category: '晚餐', categoryColor: 'green',
+      description: '蔥鴨拉麵、金色貝拉麵',
       businessHours: '18:00 - 21:00', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/qKVRK9EiqsuWwL5k7'
   },
@@ -280,12 +298,14 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
   { 
       id: 'd5-1', date: '2026-01-08', time: '12:00', 
       title: 'ろじうさぎ (Roji Usagi)', location: '京都 (宮川町)', category: '早午餐', categoryColor: 'green',
+      description: '日式料理',
       businessHours: '12:00 - 15:30', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/uJkpfNgAksJ5cWeM7'
   },
   { 
       id: 'd5-2', date: '2026-01-08', time: '13:30', title: '湯葉チーズ本舗', 
       location: '京都 (嵐山)', category: '點心', categoryColor: 'blue',
+      description: '炸豆皮起司',
       businessHours: '11:00 - 17:30',
       isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/Mgt5YJiAe2frMuYo6'
@@ -318,6 +338,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
   { 
       id: 'd5-7', date: '2026-01-08', time: '19:00', displayTime: '19:00',
       title: '京都力山 京都站前店', location: '京都 (下京區)', category: '晚餐', categoryColor: 'red',
+      description: '很貴的和牛壽喜燒',
       isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/KzHuQyJdRQKDNHF7'
   },
@@ -326,6 +347,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
   { 
       id: 'd6-1', date: '2026-01-09', time: '10:00', title: '今宮戎神社', 
       location: '大阪 (浪速區)', category: '景點', categoryColor: 'purple',
+      description: '中午前會有獻鯛儀式',
       businessHours: '09:00 - 17:00',
       isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/Sww1UwU92RM9SPvQ7'
@@ -333,6 +355,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
   { 
       id: 'd6-3', date: '2026-01-09', time: '11:00', 
       title: 'pâtisserie accueil', location: '大阪 (西區)', category: '下午茶', categoryColor: 'blue',
+      description: '法式甜點店',
       businessHours: '11:00 - 19:00', isCompleted: false,
       mapUrl: 'https://maps.app.goo.gl/ojQc91auSEy5C9VD8'
   },
@@ -349,6 +372,7 @@ const MOCK_SCHEDULE: ScheduleItem[] = [
       id: 'd7-1', date: '2026-01-10', time: '10:30', 
       title: '雞Soba 座銀 本店', 
       location: '大阪 (肥後橋)', category: '早午餐', categoryColor: 'green',
+      description: '雞白湯拉麵',
       isCompleted: false,
       businessHours: '10:30 - 22:00',
       mapUrl: 'https://maps.app.goo.gl/5MiUPJFxft7bBrtXA'
@@ -438,15 +462,6 @@ const MOCK_BOOKINGS: Booking[] = [
 ];
 
 // --- SHARED UTILS ---
-const TAG_COLORS: Record<HighlightColor, string> = {
-    red: 'bg-red-50 text-red-600 border-red-200',
-    orange: 'bg-orange-50 text-orange-600 border-orange-200',
-    green: 'bg-green-50 text-green-600 border-green-200',
-    blue: 'bg-blue-50 text-blue-600 border-blue-200',
-    purple: 'bg-purple-50 text-purple-600 border-purple-200',
-    gray: 'bg-gray-50 text-gray-600 border-gray-200'
-};
-
 const NODE_STYLES: Record<HighlightColor, string> = {
     red: 'border-red-400',
     orange: 'border-orange-400',
@@ -540,7 +555,6 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
 
     const term = searchTerm.toLowerCase();
     
-    // Comprehensive check of essential fields
     const matchSearch = 
         i.title.toLowerCase().includes(term) || 
         i.location.toLowerCase().includes(term) || 
@@ -561,33 +575,49 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
     <div className="pb-20">
       
       {!searchTerm && (
-        <div className="sticky top-[108px] z-30 -mx-5 px-5 bg-zen-bg pt-2 pb-4 transform-gpu">
-            <div className="flex gap-2 overflow-x-auto no-scrollbar py-2 snap-x items-center">
-              {dates.map((date) => {
-                  const d = new Date(date);
-                  const dayName = d.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
-                  const dayNum = d.getDate();
-                  const isSelected = date === selectedDate;
-                  return (
-                      <button
-                          key={date}
-                          ref={(el) => { if (el) dateRefs.current.set(date, el); }}
-                          onClick={() => handleDateChange(date)}
-                          className={`snap-center flex-shrink-0 flex flex-col items-center justify-center w-[52px] h-[72px] rounded-[16px] transition-all duration-300 relative ${
-                              isSelected 
-                              ? 'bg-[#464646] text-white scale-105 z-10' 
-                              : 'bg-white text-gray-400 hover:bg-gray-50'
-                          }`}
-                      >
-                          <span className={`text-[9px] font-black tracking-widest mb-1 font-sans ${isSelected ? 'text-white' : 'text-gray-400'}`}>{dayName}</span>
-                          <span className={`text-[20px] font-bold font-sans leading-none ${isSelected ? 'text-white' : 'text-gray-400'}`}>{dayNum}</span>
-                      </button>
-                  )
-              })}
+        <div className="sticky top-[108px] z-30 -mx-5 px-5 bg-zen-bg pt-2 pb-2 transform-gpu">
+            <div className="relative overflow-x-auto no-scrollbar py-2 snap-x items-center">
+              <div className="flex gap-[6px] min-w-max relative px-1">
+                {/* 
+                   Sliding Background Indicator Fix:
+                   Button Width: 58px. Gap: 6px. Total Step: 64px.
+                   left: 4px matches px-1 (4px).
+                */}
+                <div 
+                  className="absolute h-[78px] w-[58px] rounded-[24px] bg-[#464646] transition-all duration-500 cubic-bezier pointer-events-none z-0"
+                  style={{ 
+                    left: '4px', 
+                    transform: `translateX(${currentIndex * 64}px)`,
+                    boxShadow: 'none'
+                  }}
+                />
+                
+                {dates.map((date) => {
+                    const d = new Date(date);
+                    const dayName = d.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
+                    const dayNum = d.getDate();
+                    const isSelected = date === selectedDate;
+                    return (
+                        <button
+                            key={date}
+                            ref={(el) => { if (el) dateRefs.current.set(date, el); }}
+                            onClick={() => handleDateChange(date)}
+                            className={`snap-center flex-shrink-0 flex flex-col items-center justify-center w-[58px] h-[78px] rounded-[24px] transition-all duration-300 relative z-10 ${
+                                isSelected 
+                                ? 'text-white bg-transparent' 
+                                : 'bg-white text-stone-400 hover:bg-stone-50'
+                            }`}
+                        >
+                            <span className={`text-[10px] font-black tracking-widest mb-1 font-sans transition-colors duration-300 ${isSelected ? 'text-white' : 'text-stone-400'}`}>{dayName}</span>
+                            <span className={`text-[24px] font-bold font-mono leading-none transition-colors duration-300 ${isSelected ? 'text-white' : 'text-stone-400'}`}>{dayNum}</span>
+                        </button>
+                    )
+                })}
+              </div>
             </div>
 
-            <div className="flex justify-between items-end px-1 mt-4">
-               <div>
+            <div className="flex justify-between items-end px-1 mt-10 mb-2">
+               <div className="relative">
                   <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Day Plan</div>
                   <h2 className="text-3xl font-mono font-bold text-zen-text leading-tight">{selectedDate}</h2>
                   <div className="flex items-center gap-2 mt-1 text-gray-500 text-sm">
@@ -609,7 +639,7 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
       )}
 
       <div 
-        className={`relative pl-1 pr-2 mt-6 overflow-x-hidden min-h-[400px] transition-all duration-300 ${searchTerm ? 'pt-4' : ''}`}
+        className={`relative pl-1 pr-2 mt-4 overflow-x-hidden min-h-[400px] transition-all duration-300 ${searchTerm ? 'pt-4' : ''}`}
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
       >
@@ -659,6 +689,10 @@ export const ScheduleTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
                         <div 
                             className={`bg-white rounded-2xl p-4 shadow-zen border border-stone-50 transition-all duration-300 relative ${item.isCompleted ? 'opacity-60 grayscale-[50%]' : ''}`}
                         >
+                            {item.isKlook && (
+                                <div className="absolute -top-2 -right-2 z-10 bg-[#FF5E00] text-white text-[8px] font-black px-2 py-1 rounded-lg shadow-sm transform rotate-12 border border-white/50">KLOOK</div>
+                            )}
+                            
                             <div className="mb-3 pr-8">
                                 <h3 className={`font-bold text-lg leading-tight mb-2 ${item.isCompleted ? 'text-gray-500 line-through' : 'text-zen-text'}`}>
                                   <HighlightText text={item.title} highlight={searchTerm} />
@@ -739,7 +773,6 @@ export const BookingsTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
           b.subTitle?.toLowerCase().includes(term) ||
           b.referenceNo.toLowerCase().includes(term) ||
           b.type.toLowerCase().includes(term) ||
-          // Fixed the issue where v might be inferred as unknown in Object.entries
           Object.entries(b.details).some(([k, v]) => 
               k.toLowerCase().includes(term) || String(v).toLowerCase().includes(term)
           );
@@ -749,7 +782,6 @@ export const BookingsTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
 
     return (
         <div className="pb-20">
-            {/* Frozen (Sticky) Top Section with transform-gpu to prevent bouncing */}
             <div className="sticky top-[108px] z-30 -mx-5 px-5 bg-zen-bg pt-2 pb-5 transform-gpu">
                 <div className="flex justify-between items-center mb-5 px-1">
                     <h2 className="text-3xl font-mono font-bold text-zen-text leading-tight">Wallet</h2>
@@ -775,7 +807,6 @@ export const BookingsTab: React.FC<{ searchTerm?: string }> = ({ searchTerm = ''
                 </div>
             </div>
 
-            {/* Scrollable List Content */}
             <div className="space-y-5 px-1 mt-6">
                 {filteredBookings.map(booking => (
                     <div key={booking.id} className="relative group animate-fade-in">

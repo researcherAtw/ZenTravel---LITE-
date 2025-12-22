@@ -1,4 +1,3 @@
-
 export type TabType = 'schedule' | 'bookings';
 
 // Changed from union to string to allow custom categories
@@ -47,6 +46,7 @@ export interface ScheduleItem {
   guideInfo?: GuideInfo;
   photos?: string[];
   isCompleted?: boolean;
+  isKlook?: boolean;
 }
 
 export interface Booking {
