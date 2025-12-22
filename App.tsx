@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NAV_ITEMS } from './constants';
-import { TabType } from './types';
+import { TabType, ZenTripData, ScheduleItem } from './types';
 import { ScheduleTab, BookingsTab } from './components/Modules';
-import { Button } from './components/UI';
+import { ZenDB } from './services/db';
+import { INITIAL_TRIP_DATA } from './data/initialData';
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('schedule');
-  const [tripName, setTripName] = useState('日本大阪7天6夜');
+  const [tripData, setTripData] = useState<ZenTripData | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isSyncing, setIsSyncing] = useState(false);
   
   // Password Logic
   const [isUnlocked, setIsUnlocked] = useState(false);
@@ -20,23 +22,60 @@ const App: React.FC = () => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const lastScrollPos = useRef<number>(0);
 
-  /**
-   * 搜尋結果置頂優化
-   */
+  // Initialize and Load Data
+  useEffect(() => {
+    const init = async () => {
+      let data = await ZenDB.loadTrip();
+      if (!data) {
+        await ZenDB.saveTrip(INITIAL_TRIP_DATA);
+        data = INITIAL_TRIP_DATA;
+      }
+      setTripData(data);
+    };
+    init();
+  }, []);
+
+  // Persistence handler
+  const updateTripData = async (newData: ZenTripData) => {
+    setTripData(newData);
+    setIsSyncing(true);
+    try {
+      await ZenDB.saveTrip(newData);
+    } catch (e) {
+      console.error('Failed to save trip:', e);
+    } finally {
+      setTimeout(() => setIsSyncing(false), 800);
+    }
+  };
+
+  const handleUpdateSchedule = (newSchedule: ScheduleItem[]) => {
+    if (!tripData) return;
+    updateTripData({
+      ...tripData,
+      schedule: newSchedule,
+      lastUpdated: Date.now()
+    });
+  };
+
+  const handleUpdateTripName = (newName: string) => {
+    if (!tripData) return;
+    updateTripData({
+      ...tripData,
+      tripName: newName,
+      lastUpdated: Date.now()
+    });
+  };
+
   useEffect(() => {
     if (searchTerm && scrollContainerRef.current) {
       scrollContainerRef.current.scrollTo({ top: 0, behavior: 'auto' });
     }
   }, [searchTerm]);
 
-  /**
-   * 分頁切換時，同樣將捲動位置重置。
-   */
   useEffect(() => {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollTo({ top: 0, behavior: 'auto' });
     }
-    // 每次切換分頁如果是去預訂頁，確保錯誤提示清空
     if (activeTab === 'bookings') {
         setShowError(false);
         setPasswordInput('');
@@ -47,16 +86,12 @@ const App: React.FC = () => {
     if (passwordInput.length < 6) {
       const newVal = passwordInput + num;
       setPasswordInput(newVal);
-      
-      // Correct password is 333 - Unlock INSTANTLY
       if (newVal === '333') {
         setIsUnlocked(true);
         setShowError(false);
         setPasswordInput('');
         return;
       } 
-      
-      // Auto-error check if length reaches 3 but incorrect
       if (newVal.length >= 3) {
         setShowError(true);
         setPasswordInput('');
@@ -70,13 +105,9 @@ const App: React.FC = () => {
     setPasswordInput(prev => prev.slice(0, -1));
   };
 
-  /**
-   * 處理關閉搜尋
-   */
   const handleCloseSearch = () => {
     setIsSearchOpen(false);
     setSearchTerm('');
-    
     setTimeout(() => {
       if (scrollContainerRef.current) {
         scrollContainerRef.current.scrollTo({ 
@@ -87,9 +118,6 @@ const App: React.FC = () => {
     }, 10);
   };
 
-  /**
-   * 點擊搜尋按鈕
-   */
   const handleToggleSearch = () => {
     if (isSearchOpen) {
       handleCloseSearch();
@@ -101,16 +129,12 @@ const App: React.FC = () => {
     }
   };
 
-  /**
-   * 點擊外部自動收合搜尋列
-   */
   useEffect(() => {
     if (isSearchOpen) {
       const handleClickOutside = (event: MouseEvent) => {
         const target = event.target as Node;
         const clickedOutsideHeader = headerRef.current && !headerRef.current.contains(target);
         const clickedOutsideSearchBtn = searchBtnRef.current && !searchBtnRef.current.contains(target);
-
         if (clickedOutsideHeader && clickedOutsideSearchBtn) {
           if (!searchTerm) {
             handleCloseSearch();
@@ -122,90 +146,33 @@ const App: React.FC = () => {
     }
   }, [isSearchOpen, searchTerm]);
 
-  /**
-   * 渲染內容區域
-   */
-  const renderContent = () => {
-    const currentSearch = isSearchOpen ? searchTerm : '';
-    
-    if (activeTab === 'bookings') {
-      if (!isUnlocked) {
-        return (
-          <div className="flex flex-col items-center justify-center pt-2 pb-10 animate-fade-in h-[calc(100vh-250px)]">
-            <div className="mb-10" />
-
-            {/* Numeric Keypad - Minimal Layout */}
-            <div className="grid grid-cols-3 gap-3 w-full max-w-[240px]">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
-                <button
-                  key={num}
-                  onClick={() => handleKeypadPress(num.toString())}
-                  className="aspect-square flex items-center justify-center text-2xl font-mono font-bold text-zen-text bg-white rounded-2xl shadow-zen-sm border border-stone-50 active:scale-90 active:bg-stone-50 transition-all"
-                >
-                  {num}
-                </button>
-              ))}
-              <div />
-              <button
-                onClick={() => handleKeypadPress('0')}
-                className="aspect-square flex items-center justify-center text-2xl font-mono font-bold text-zen-text bg-white rounded-2xl shadow-zen-sm border border-stone-50 active:scale-90 active:bg-stone-50 transition-all"
-              >
-                0
-              </button>
-              <button
-                onClick={handleBackspace}
-                className="aspect-square flex items-center justify-center text-xl text-stone-400 active:scale-95 transition-all"
-              >
-                <i className="fa-solid fa-delete-left"></i>
-              </button>
-            </div>
-
-            {showError && (
-              <div className="mt-8 text-center text-[10px] text-red-500 font-bold uppercase tracking-widest py-1.5 animate-fade-in bg-red-50 px-5 rounded-full">
-                密碼錯誤
-              </div>
-            )}
-
-            <button 
-              onClick={() => setActiveTab('schedule')}
-              className="mt-12 text-stone-400 text-[12px] font-bold hover:text-zen-primary transition-colors flex items-center gap-2 font-sans"
-            >
-              <i className="fa-solid fa-arrow-left"></i>
-              返回行程
-            </button>
-          </div>
-        );
-      }
-      return <BookingsTab searchTerm={currentSearch} />;
-    }
-    
-    return <ScheduleTab searchTerm={currentSearch} />;
-  };
-
   const activeIndex = NAV_ITEMS.findIndex(item => item.id === activeTab);
+
+  if (!tripData) return null;
 
   return (
     <div 
       ref={scrollContainerRef}
       className="h-[100dvh] text-zen-text font-sans max-w-md mx-auto relative shadow-2xl bg-zen-bg overflow-y-auto overflow-x-hidden no-scrollbar overscroll-y-none"
     >
-      
-      {/* Header */}
       <header 
         ref={headerRef}
         className="px-6 h-[108px] flex flex-col justify-center bg-zen-bg sticky top-0 z-40 transform-gpu"
       >
         <div className="flex justify-between items-start w-full">
             <div className={`flex flex-col transition-all duration-500 ${isSearchOpen ? 'opacity-0 scale-95 translate-x-[-20px] pointer-events-none' : 'opacity-100 scale-100'}`}>
-                <div className="mb-0.5">
+                <div className="mb-0.5 flex items-center gap-2">
                     <div className="text-2xl font-bold text-[#1a1a1a] tracking-normal leading-none font-sans">旅の禪</div>
-                    <h1 className="text-[8px] font-medium tracking-widest uppercase text-stone-400 mt-1 ml-0.5 font-sans">ZEN TRAVEL</h1>
+                    {isSyncing && (
+                      <div className="w-1.5 h-1.5 rounded-full bg-zen-secondary animate-pulse mt-0.5"></div>
+                    )}
                 </div>
+                <h1 className="text-[8px] font-medium tracking-widest uppercase text-stone-400 mt-1 ml-0.5 font-sans">ZEN TRAVEL | SYNCED LOCAL</h1>
                 {!isSearchOpen && (
                   <input 
                       type="text"
-                      value={tripName}
-                      onChange={(e) => setTripName(e.target.value)}
+                      value={tripData.tripName}
+                      onChange={(e) => handleUpdateTripName(e.target.value)}
                       className="bg-transparent text-sm font-bold text-zen-primary placeholder-zen-primary/50 focus:outline-none border-b border-transparent focus:border-zen-primary transition-all w-48 mt-0.5"
                       placeholder="Name your trip..."
                   />
@@ -242,12 +209,54 @@ const App: React.FC = () => {
         )}
       </header>
 
-      {/* Main Content Area */}
       <main className="px-5 pb-32">
-        {renderContent()}
+        {activeTab === 'schedule' ? (
+          <ScheduleTab searchTerm={searchTerm} items={tripData.schedule} onUpdateItems={handleUpdateSchedule} />
+        ) : isUnlocked ? (
+          <BookingsTab searchTerm={searchTerm} bookings={tripData.bookings} />
+        ) : (
+          <div className="flex flex-col items-center justify-center pt-2 pb-10 animate-fade-in h-[calc(100vh-250px)]">
+            <div className="mb-10" />
+            <div className="grid grid-cols-3 gap-3 w-full max-w-[240px]">
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
+                <button
+                  key={num}
+                  onClick={() => handleKeypadPress(num.toString())}
+                  className="aspect-square flex items-center justify-center text-2xl font-mono font-bold text-zen-text bg-white rounded-2xl shadow-zen-sm border border-stone-50 active:scale-90 active:bg-stone-50 transition-all"
+                >
+                  {num}
+                </button>
+              ))}
+              <div />
+              <button
+                onClick={() => handleKeypadPress('0')}
+                className="aspect-square flex items-center justify-center text-2xl font-mono font-bold text-zen-text bg-white rounded-2xl shadow-zen-sm border border-stone-50 active:scale-90 active:bg-stone-50 transition-all"
+              >
+                0
+              </button>
+              <button
+                onClick={handleBackspace}
+                className="aspect-square flex items-center justify-center text-xl text-stone-400 active:scale-95 transition-all"
+              >
+                <i className="fa-solid fa-delete-left"></i>
+              </button>
+            </div>
+            {showError && (
+              <div className="mt-8 text-center text-[10px] text-red-500 font-bold uppercase tracking-widest py-1.5 animate-fade-in bg-red-50 px-5 rounded-full">
+                密碼錯誤
+              </div>
+            )}
+            <button 
+              onClick={() => setActiveTab('schedule')}
+              className="mt-12 text-stone-400 text-[12px] font-bold hover:text-zen-primary transition-colors flex items-center gap-2 font-sans"
+            >
+              <i className="fa-solid fa-arrow-left"></i>
+              返回行程
+            </button>
+          </div>
+        )}
       </main>
 
-      {/* Floating Search Button */}
       <button 
         ref={searchBtnRef}
         onClick={handleToggleSearch}
@@ -257,10 +266,8 @@ const App: React.FC = () => {
         <i className={`fa-solid ${isSearchOpen ? 'fa-xmark' : 'fa-magnifying-glass'} text-xl group-hover:scale-110 transition-transform`}></i>
       </button>
 
-      {/* Floating Bottom Navigation */}
       <nav className="fixed bottom-8 left-12 right-12 bg-white/10 backdrop-blur-3xl rounded-[32px] p-1 z-50 max-w-[calc(448px-6rem)] mx-auto shadow-[0_25px_50px_rgba(0,0,0,0.08)] border border-white/20">
         <div className="relative flex items-center h-12">
-          
           <div 
             className="absolute h-10 bg-zen-primary/80 rounded-[26px] transition-all duration-300 cubic-bezier(0.16, 1, 0.3, 1) shadow-md"
             style={{ 
@@ -268,7 +275,6 @@ const App: React.FC = () => {
               left: `${(activeIndex * 100) / NAV_ITEMS.length}%`,
             }}
           />
-
           {NAV_ITEMS.map((item) => {
             const isActive = activeTab === item.id;
             return (

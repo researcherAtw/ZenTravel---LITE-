@@ -1,6 +1,5 @@
 export type TabType = 'schedule' | 'bookings';
 
-// Changed from union to string to allow custom categories
 export type CategoryType = string; 
 
 export type HighlightColor = 'red' | 'orange' | 'green' | 'blue' | 'purple' | 'gray';
@@ -29,19 +28,25 @@ export interface GuideInfo {
   tip: string;
 }
 
+export interface CheckListItem {
+  id: string;
+  text: string;
+  isCompleted: boolean;
+}
+
 export interface ScheduleItem {
   id: string;
   date: string; // YYYY-MM-DD
-  time: string; // HH:mm (Internal use or fallback)
-  displayTime?: string; // Visual display (e.g. "11:00\n20:00")
+  time: string; // HH:mm
+  displayTime?: string;
   title: string;
   location: string;
-  mapQuery?: string; // Custom query for Google Maps
-  mapUrl?: string; // Direct URL for navigation
-  businessHours?: string; // e.g. "10:00 - 20:00"
+  mapQuery?: string;
+  mapUrl?: string;
+  businessHours?: string;
   category: CategoryType;
-  categoryColor?: HighlightColor; // User selected color
-  description?: string; // Subtext like "1F SUQQU..."
+  categoryColor?: HighlightColor;
+  description?: string;
   coordinates?: { lat: number; lng: number };
   guideInfo?: GuideInfo;
   photos?: string[];
@@ -50,6 +55,7 @@ export interface ScheduleItem {
   isTabelog?: boolean;
   isGoogle?: boolean;
   isTablecheck?: boolean;
+  checkList?: CheckListItem[];
 }
 
 export interface Booking {
@@ -60,7 +66,14 @@ export interface Booking {
   referenceNo: string;
   date: string; // YYYY-MM-DD
   time?: string;
-  details: Record<string, string>; // label -> value
+  details: Record<string, string>;
   fileUrl?: string;
   status: 'confirmed' | 'pending';
+}
+
+export interface ZenTripData {
+  tripName: string;
+  schedule: ScheduleItem[];
+  bookings: Booking[];
+  lastUpdated: number;
 }
