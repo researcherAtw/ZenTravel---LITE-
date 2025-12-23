@@ -72,6 +72,12 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         mapUrl: 'https://maps.app.goo.gl/N7ytR6Au52tiZJJ49'
     },
     { 
+        id: 'd1-adidas', date: '2026-01-04', time: '15:30', title: 'Adidas 心齋橋大阪店', 
+        location: '大阪 (心斎橋)', category: '購物', categoryColor: 'orange',
+        businessHours: '11:00 - 21:00', isCompleted: false,
+        mapUrl: 'https://maps.app.goo.gl/2ow8dYyDiHvFk8o17'
+    },
+    { 
         id: 'd1-11', date: '2026-01-04', time: '16:00', title: '逛街', 
         location: '心斎橋', category: '逛街', categoryColor: 'purple',
         isCompleted: false,
