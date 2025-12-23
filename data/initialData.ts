@@ -18,35 +18,56 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         id: 'd1-3', date: '2026-01-04', time: '13:00', title: 'Dior 心斎橋', 
         location: '大阪 (心斎橋)', category: '購物', categoryColor: 'orange',
         businessHours: '11:00 - 20:00', isCompleted: false,
-        mapUrl: 'https://maps.app.goo.gl/n9RXpreTK4BmtSKX7'
+        mapUrl: 'https://maps.app.goo.gl/n9RXpreTK4BmtSKX7',
+        checkList: [
+          { id: 'd1-3-c1', text: '日本限定色｜女用卡夾/短夾 X1', isCompleted: false },
+          { id: 'd1-3-c2', text: '女用雙面皮帶', isCompleted: false },
+          { id: 'd1-3-c3', text: '男用皮帶', isCompleted: false }
+        ]
     },
     { 
         id: 'd1-4', date: '2026-01-04', time: '13:00', title: '大阪高島屋店', 
         location: '大阪 (難波)', category: '購物', categoryColor: 'orange',
         description: '1F SUQQU | 2F Dior | 3-4F Polo',
         businessHours: '10:00 - 20:00', isCompleted: false,
-        mapUrl: 'https://maps.app.goo.gl/jv8vH9DvuRvfqx1U8'
+        mapUrl: 'https://maps.app.goo.gl/jv8vH9DvuRvfqx1U8',
+        checkList: [
+          { id: 'd1-4-c1', text: '[DIOR美妝] 有色潤唇膏 #021 玫瑰木', isCompleted: false },
+          { id: 'd1-4-c2', text: '[DIOR美妝] 微醺腮紅露 #01 玫瑰甜茶', isCompleted: false },
+          { id: 'd1-4-c3', text: '[DIOR美妝] 豐漾俏唇蜜 #212 閃耀柔粉色', isCompleted: false }
+        ]
     },
     { 
         id: 'd1-5', date: '2026-01-04', time: '13:00', title: '大丸心齋橋店 本館', 
         location: '大阪 (心斎橋)', category: '購物', categoryColor: 'orange',
         description: '1F SUQQU | 3F Celine | 9F pokemon center',
         businessHours: '10:00 - 20:00', isCompleted: false,
-        mapUrl: 'https://maps.app.goo.gl/BCqeSZqrh5uiRvoy9'
+        mapUrl: 'https://maps.app.goo.gl/BCqeSZqrh5uiRvoy9',
+        checkList: [
+          { id: 'd1-5-c1', text: '[DIOR美妝] 有色潤唇膏 #021 玫瑰木', isCompleted: false },
+          { id: 'd1-5-c2', text: '[DIOR美妝] 微醺腮紅露 #01 玫瑰甜茶', isCompleted: false },
+          { id: 'd1-5-c3', text: '[DIOR美妝] 豐漾俏唇蜜 #212 閃耀柔粉色', isCompleted: false }
+        ]
     },
     { 
         id: 'd1-6', date: '2026-01-04', time: '13:00', title: 'Loewe 大丸梅田店', 
         location: '大阪 (梅田)', category: '購物', categoryColor: 'orange',
         description: '3F LOEWE男子',
         businessHours: '10:00 - 20:00', isCompleted: false,
-        mapUrl: 'https://maps.app.goo.gl/fQjzaNz4cygtSEmSA'
+        mapUrl: 'https://maps.app.goo.gl/fQjzaNz4cygtSEmSA',
+        checkList: [
+          { id: 'd1-6-c1', text: '男用卡夾/黑 X1', isCompleted: false }
+        ]
     },
     { 
         id: 'd1-7', date: '2026-01-04', time: '13:00', title: 'Loewe 阪急男士大阪店', 
         location: '大阪 (梅田)', category: '購物', categoryColor: 'orange',
         description: '2F LOEWE男子',
         businessHours: '10:00 - 20:00', isCompleted: false,
-        mapUrl: 'https://maps.app.goo.gl/oNoJb8b498ZQfhGbA'
+        mapUrl: 'https://maps.app.goo.gl/oNoJb8b498ZQfhGbA',
+        checkList: [
+          { id: 'd1-7-c1', text: '男用卡夾/黑 X1', isCompleted: false }
+        ]
     },
     { 
         id: 'd1-8', date: '2026-01-04', time: '13:00', title: 'Tables Cafe', 
@@ -62,7 +83,8 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         businessHours: '10:00 - 21:00', isCompleted: false,
         mapUrl: 'https://maps.app.goo.gl/2QzAfgJhk68BKUBt7',
         checkList: [
-          { id: 'd1-9-c1', text: 'KOIZUMI KHR-6430 無線瀏海整髮梳二代', isCompleted: false }
+          { id: 'd1-9-c1', text: 'KOIZUMI KHR-6430 無線瀏海整髮梳二代', isCompleted: false },
+          { id: 'd1-9-c2', text: 'KOIZUMI 無線離子夾 KHS-8660/白 X2', isCompleted: false }
         ]
     },
     { 
@@ -74,8 +96,15 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
     { 
         id: 'd1-adidas', date: '2026-01-04', time: '15:30', title: 'Adidas 心齋橋大阪店', 
         location: '大阪 (心斎橋)', category: '購物', categoryColor: 'orange',
+        description: '(外套、裙子、拖鞋)',
         businessHours: '11:00 - 21:00', isCompleted: false,
-        mapUrl: 'https://maps.app.goo.gl/2ow8dYyDiHvFk8o17'
+        mapUrl: 'https://maps.app.goo.gl/2ow8dYyDiHvFk8o17',
+        checkList: [
+          { id: 'd1-adidas-c1', text: '白色針織外套/S', isCompleted: false },
+          { id: 'd1-adidas-c2', text: '蓬蓬長裙/黑 or 白', isCompleted: false },
+          { id: 'd1-adidas-c3', text: '立領白色外套', isCompleted: false },
+          { id: 'd1-adidas-c4', text: '黑色包頭拖鞋', isCompleted: false }
+        ]
     },
     { 
         id: 'd1-11', date: '2026-01-04', time: '16:00', title: '逛街', 
@@ -110,14 +139,30 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         location: '大阪 (心斎橋)', category: '購物', categoryColor: 'orange',
         businessHours: '11:00 - 21:00',
         isCompleted: false,
-        mapUrl: 'https://maps.app.goo.gl/fR5yQ1eUrYacsSmc6'
+        mapUrl: 'https://maps.app.goo.gl/fR5yQ1eUrYacsSmc6',
+        checkList: [
+          { id: 'd2-3-c1', text: '硬幣收納包/灰 X1', isCompleted: false },
+          { id: 'd2-3-c2', text: '可拆式美髮梳 X1', isCompleted: false },
+          { id: 'd2-3-c3', text: '腰間防盜小包/灰 X1', isCompleted: false },
+          { id: 'd2-3-c4', text: '外套掛帶/白 X2｜黑 X1', isCompleted: false },
+          { id: 'd2-3-c5', text: 'LED隨身鏡 X2', isCompleted: false },
+          { id: 'd2-3-c6', text: 'LED桌上立鏡 X1', isCompleted: false }
+        ]
     },
     { 
         id: 'd2-4', date: '2026-01-05', time: '11:00', title: '3COINS', 
         location: '大阪 (難波/心斎橋)', category: '購物', categoryColor: 'orange',
         businessHours: '11:00 - 21:00',
         isCompleted: false,
-        mapUrl: 'https://maps.app.goo.gl/xr7GvpuohiGVhw7K8'
+        mapUrl: 'https://maps.app.goo.gl/xr7GvpuohiGVhw7K8',
+        checkList: [
+          { id: 'd2-4-c1', text: '硬幣收納包/灰 X1', isCompleted: false },
+          { id: 'd2-4-c2', text: '可拆式美髮梳 X1', isCompleted: false },
+          { id: 'd2-4-c3', text: '腰間防盜小包/灰 X1', isCompleted: false },
+          { id: 'd2-4-c4', text: '外套掛帶/白 X2｜黑 X1', isCompleted: false },
+          { id: 'd2-4-c5', text: 'LED隨身鏡 X2', isCompleted: false },
+          { id: 'd2-4-c6', text: 'LED桌上立鏡 X1', isCompleted: false }
+        ]
     },
     { 
         id: 'd2-5', date: '2026-01-05', time: '11:30', title: '靴下屋', 
@@ -131,7 +176,11 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         location: '大阪', category: '購物', categoryColor: 'orange',
         description: '防寒衣物、花花發熱長袖',
         isCompleted: false,
-        mapUrl: 'https://www.google.com/maps'
+        mapUrl: 'https://www.google.com/maps',
+        checkList: [
+          { id: 'd2-6-c1', text: '[妹代購] 花邊發熱衣/M/白黑淺灰 X1（或者一般黑 X3）', isCompleted: false },
+          { id: 'd2-6-c2', text: '[ISA] 花邊發熱衣/M/白黑 X1', isCompleted: false }
+        ]
     },
     { 
         id: 'd2-7', date: '2026-01-05', time: '14:00', title: '淺草茶屋たばねのし', 
@@ -161,14 +210,26 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         location: '大阪 (心斎橋)', category: '購物', categoryColor: 'orange',
         businessHours: '24H',
         isCompleted: false,
-        mapUrl: 'https://www.google.com/maps'
+        mapUrl: 'https://www.google.com/maps',
+        checkList: [
+          { id: 'd2-10-c1', text: '鼻炎過敏藥 X2', isCompleted: false },
+          { id: 'd2-10-c2', text: 'Pro感冒藥 X3-4', isCompleted: false },
+          { id: 'd2-10-c3', text: '結膜炎眼藥水 X3', isCompleted: false },
+          { id: 'd2-10-c4', text: 'KUMARGIC EYE 黑眼圈專用眼霜 X1', isCompleted: false }
+        ]
     },
     { 
         id: 'd2-11', date: '2026-01-05', time: '21:00', title: '藥妝店', 
         location: '大阪', category: '購物', categoryColor: 'orange',
         description: '量車藥、感冒藥、過敏藥補貨',
         isCompleted: false,
-        mapUrl: 'https://www.google.com/maps'
+        mapUrl: 'https://www.google.com/maps',
+        checkList: [
+          { id: 'd2-11-c1', text: '鼻炎過敏藥 X2', isCompleted: false },
+          { id: 'd2-11-c2', text: 'Pro感冒藥 X3-4', isCompleted: false },
+          { id: 'd2-11-c3', text: '結膜炎眼藥水 X3', isCompleted: false },
+          { id: 'd2-11-c4', text: 'KUMARGIC EYE 黑眼圈專用眼霜 X1', isCompleted: false }
+        ]
     },
     { 
         id: 'd3-1', date: '2026-01-06', time: '11:00', 
@@ -189,7 +250,11 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         title: 'エモジ', location: '大阪 (松屋町)', category: '購物', categoryColor: 'orange',
         description: '御朱印帳、集章冊',
         businessHours: '12:00 - 18:00', isCompleted: false,
-        mapUrl: 'https://maps.app.goo.gl/MHT3xD2ZRB9dz8E46'
+        mapUrl: 'https://maps.app.goo.gl/MHT3xD2ZRB9dz8E46',
+        checkList: [
+          { id: 'd3-3-c1', text: '御朱印帳 X1-2', isCompleted: false },
+          { id: 'd3-3-c2', text: '集章冊 X2-3', isCompleted: false }
+        ]
     },
     { 
         id: 'd3-4', date: '2026-01-06', time: '13:00', title: '難波八阪神社', 
