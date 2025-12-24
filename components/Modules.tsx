@@ -285,14 +285,15 @@ export const ScheduleTab: React.FC<ScheduleTabProps> = ({ searchTerm = '', items
                               <i className={`fa-solid ${catIcon} absolute -bottom-4 -right-2 text-[60px] text-stone-50/50 transform -rotate-12 transition-transform group-hover:scale-110 group-hover:rotate-0`}></i>
                             </div>
 
-                            <div className="absolute -top-2 -right-2 z-20 flex flex-col gap-1 items-end pointer-events-none">
-                              {item.isKlook && <div className="bg-[#FF5E00] text-white text-[8px] font-black px-2 py-1 rounded-lg shadow-sm transform rotate-12 border border-white/50 whitespace-nowrap">KLOOK</div>}
-                              {item.isTabelog && <div className="bg-[#FF6B00] text-white text-[8px] font-black px-2 py-1 rounded-lg shadow-sm transform rotate-12 border border-white/50 whitespace-nowrap">Tabélog</div>}
-                              {item.isGoogle && <div className="bg-[#4285F4] text-white text-[8px] font-black px-2 py-1 rounded-lg shadow-sm transform rotate-12 border border-white/50 whitespace-nowrap">Google</div>}
-                              {item.isTablecheck && <div className="bg-[#312E81] text-white text-[8px] font-black px-2 py-1 rounded-lg shadow-sm transform rotate-12 border border-white/50 whitespace-nowrap">Tablecheck</div>}
+                            {/* Badges Container - Adjusted to be more inside to prevent clipping */}
+                            <div className="absolute top-1.5 right-1.5 z-20 flex flex-col gap-1 items-end pointer-events-none">
+                              {item.isKlook && <div className="bg-[#FF5E00] text-white text-[7px] font-black px-1.5 py-0.5 rounded shadow-sm border border-white/30 whitespace-nowrap transform rotate-3">KLOOK</div>}
+                              {item.isTabelog && <div className="bg-[#FF6B00] text-white text-[7px] font-black px-1.5 py-0.5 rounded shadow-sm border border-white/30 whitespace-nowrap transform rotate-3">Tabélog</div>}
+                              {item.isGoogle && <div className="bg-[#4285F4] text-white text-[7px] font-black px-1.5 py-0.5 rounded shadow-sm border border-white/30 whitespace-nowrap transform rotate-3">Google</div>}
+                              {item.isTablecheck && <div className="bg-[#312E81] text-white text-[7px] font-black px-1.5 py-0.5 rounded shadow-sm border border-white/30 whitespace-nowrap transform rotate-3">Tablecheck</div>}
                             </div>
                             
-                            <div className="mb-3 pr-8 relative z-10">
+                            <div className="mb-3 pr-10 relative z-10">
                                 <div className="flex items-center gap-2 mb-1">
                                   <i className={`fa-solid ${catIcon} text-[10px] text-stone-300`}></i>
                                   <h3 className={`font-bold text-lg leading-tight ${item.isCompleted ? 'text-stone-400 line-through' : 'text-zen-text'}`}>
