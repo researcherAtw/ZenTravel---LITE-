@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef, useMemo, useLayoutEffect } from 'react';
+
+import React, { useState, useEffect, useRef, useMemo, useLayoutEffect, useCallback } from 'react';
 import { Card, Button, CategoryBadge } from './UI';
 import { ScheduleItem, Booking, HighlightColor, WeatherInfo } from '../types';
 
@@ -8,8 +9,9 @@ const escapeRegExp = (string: string) => {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 };
 
-const HighlightText: React.FC<{ text: string; highlight: string }> = ({ text, highlight }) => {
-  if (!highlight.trim()) return <>{text}</>;
+// Memoized HighlightText with early exit
+const HighlightText = React.memo<{ text: string; highlight: string }>(({ text, highlight }) => {
+  if (!highlight || !highlight.trim()) return <>{text}</>;
   
   const escapedHighlight = escapeRegExp(highlight);
   const regex = new RegExp(`(${escapedHighlight})`, 'gi');
@@ -31,7 +33,7 @@ const HighlightText: React.FC<{ text: string; highlight: string }> = ({ text, hi
       )}
     </>
   );
-};
+});
 
 // Helper for category icons
 const getCategoryIcon = (category: string): string => {
@@ -47,7 +49,6 @@ const getCategoryIcon = (category: string): string => {
   return 'fa-location-dot';
 };
 
-// --- SHARED UTILS ---
 const NODE_STYLES: Record<HighlightColor, string> = {
     red: 'border-red-400',
     orange: 'border-orange-400',
@@ -77,41 +78,34 @@ export const ScheduleTab: React.FC<ScheduleTabProps> = ({ searchTerm = '', items
 
   const currentIndex = dates.indexOf(selectedDate);
 
+  // Optimize weather effect
   useEffect(() => {
     const locationName = selectedDate === '2026-01-08' ? '日本京都' : '日本大阪';
-    setWeather(prev => ({ 
-        ...prev, 
+    setWeather({ 
         locationName,
         temp: 12 + Math.floor(Math.random() * 2) - 1,
         condition: Math.random() > 0.8 ? 'cloudy' : 'sunny'
-    }));
+    });
   }, [selectedDate]);
 
   useEffect(() => {
     const activeBtn = dateRefs.current.get(selectedDate);
     if (activeBtn) {
-      activeBtn.scrollIntoView({
-        behavior: 'auto', 
-        block: 'nearest',
-        inline: 'center'
-      });
+      activeBtn.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'center' });
     }
   }, [selectedDate]);
 
   useEffect(() => {
-    const scrollContainer = document.querySelector('.overflow-y-auto');
-    if (scrollContainer) {
-      scrollContainer.scrollTo({ top: 0, behavior: 'auto' });
-    }
     setExpandedId(null);
   }, [selectedDate]);
 
-  const toggleComplete = (id: string, e: React.MouseEvent) => {
+  // Memoized handlers
+  const toggleComplete = useCallback((id: string, e: React.MouseEvent) => {
     e.stopPropagation();
     onUpdateItems(items.map(item => item.id === id ? { ...item, isCompleted: !item.isCompleted } : item));
-  };
+  }, [items, onUpdateItems]);
 
-  const toggleCheckListItem = (itemId: string, checkId: string, e: React.MouseEvent) => {
+  const toggleCheckListItem = useCallback((itemId: string, checkId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     onUpdateItems(items.map(item => {
       if (item.id === itemId && item.checkList) {
@@ -122,14 +116,14 @@ export const ScheduleTab: React.FC<ScheduleTabProps> = ({ searchTerm = '', items
       }
       return item;
     }));
-  };
+  }, [items, onUpdateItems]);
 
-  const handleDateChange = (newDate: string) => {
+  const handleDateChange = useCallback((newDate: string) => {
     if (newDate === selectedDate) return;
     const newIndex = dates.indexOf(newDate);
     setSlideDirection(newIndex > currentIndex ? 'right' : 'left');
     setSelectedDate(newDate);
-  };
+  }, [selectedDate, currentIndex, dates]);
 
   const onTouchStart = (e: React.TouchEvent) => {
     touchStartPos.current = e.touches[0].clientX;
@@ -156,31 +150,28 @@ export const ScheduleTab: React.FC<ScheduleTabProps> = ({ searchTerm = '', items
     if (!searchTerm) return matchDate;
 
     const term = searchTerm.toLowerCase();
-    
-    const matchSearch = 
+    return (
         i.title.toLowerCase().includes(term) || 
         i.location.toLowerCase().includes(term) || 
         i.category.toLowerCase().includes(term) ||
         i.description?.toLowerCase().includes(term) ||
         i.businessHours?.toLowerCase().includes(term) ||
         i.displayTime?.toLowerCase().includes(term) ||
-        i.checkList?.some(cl => cl.text.toLowerCase().includes(term));
-    
-    return matchSearch;
+        i.checkList?.some(cl => cl.text.toLowerCase().includes(term))
+    );
   }), [items, selectedDate, searchTerm]);
 
-  const handleNavigate = (item: ScheduleItem) => {
+  const handleNavigate = useCallback((item: ScheduleItem) => {
       const url = item.mapUrl || `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(item.location)}`;
       window.open(url, '_blank');
-  };
+  }, []);
 
-  const handleCardClick = (id: string) => {
+  const handleCardClick = useCallback((id: string) => {
     setExpandedId(prev => (prev === id ? null : id));
-  };
+  }, []);
 
   return (
     <div className="pb-20">
-      
       {!searchTerm && (
         <div className="sticky top-[108px] z-30 -mx-5 px-5 bg-zen-bg pt-2 pb-2 transform-gpu">
             <div className="relative overflow-x-auto no-scrollbar py-2 snap-x items-center">
@@ -207,8 +198,8 @@ export const ScheduleTab: React.FC<ScheduleTabProps> = ({ searchTerm = '', items
                                 isSelected ? 'text-white' : 'bg-white text-stone-400'
                             }`}
                         >
-                            <span className={`text-[10px] font-black tracking-widest mb-1 font-sans`}>{dayName}</span>
-                            <span className={`text-[24px] font-bold font-mono leading-none`}>{dayNum}</span>
+                            <span className="text-[10px] font-black tracking-widest mb-1 font-sans">{dayName}</span>
+                            <span className="text-[24px] font-bold font-mono leading-none">{dayNum}</span>
                         </button>
                     )
                 })}
@@ -259,22 +250,19 @@ export const ScheduleTab: React.FC<ScheduleTabProps> = ({ searchTerm = '', items
                 const isExpanded = expandedId === item.id;
 
                 return (
-                <div key={item.id} className="relative mb-0 group flex gap-0">
+                <div key={item.id} className="relative mb-0 group flex gap-0 [content-visibility:auto]">
                     <div className="w-12 py-4 flex flex-col items-end justify-start flex-shrink-0 pr-1.5">
                         <div className="flex flex-col items-end gap-0.5">
-                            {timeLines.map((time, idx) => {
-                                const isPrimary = idx === 0;
-                                return (
-                                    <span 
-                                        key={idx} 
-                                        className={`font-mono font-bold text-right leading-none transition-all ${
-                                            isPrimary ? 'text-lg' : 'text-[11px] opacity-80 mt-0.5'
-                                        } ${item.isCompleted ? 'text-gray-300' : 'text-zen-text'}`}
-                                    >
-                                        {time}
-                                    </span>
-                                );
-                            })}
+                            {timeLines.map((time, idx) => (
+                                <span 
+                                    key={idx} 
+                                    className={`font-mono font-bold text-right leading-none transition-all ${
+                                        idx === 0 ? 'text-lg' : 'text-[11px] opacity-80 mt-0.5'
+                                    } ${item.isCompleted ? 'text-gray-300' : 'text-zen-text'}`}
+                                >
+                                    {time}
+                                </span>
+                            ))}
                         </div>
                     </div>
 
@@ -298,18 +286,10 @@ export const ScheduleTab: React.FC<ScheduleTabProps> = ({ searchTerm = '', items
                             </div>
 
                             <div className="absolute -top-2 -right-2 z-20 flex flex-col gap-1 items-end pointer-events-none">
-                              {item.isKlook && (
-                                  <div className="bg-[#FF5E00] text-white text-[8px] font-black px-2 py-1 rounded-lg shadow-sm transform rotate-12 border border-white/50 whitespace-nowrap">KLOOK</div>
-                              )}
-                              {item.isTabelog && (
-                                  <div className="bg-[#FF6B00] text-white text-[8px] font-black px-2 py-1 rounded-lg shadow-sm transform rotate-12 border border-white/50 whitespace-nowrap">Tabélog</div>
-                              )}
-                              {item.isGoogle && (
-                                  <div className="bg-[#4285F4] text-white text-[8px] font-black px-2 py-1 rounded-lg shadow-sm transform rotate-12 border border-white/50 whitespace-nowrap">Google</div>
-                              )}
-                              {item.isTablecheck && (
-                                  <div className="bg-[#312E81] text-white text-[8px] font-black px-2 py-1 rounded-lg shadow-sm transform rotate-12 border border-white/50 whitespace-nowrap">Tablecheck</div>
-                              )}
+                              {item.isKlook && <div className="bg-[#FF5E00] text-white text-[8px] font-black px-2 py-1 rounded-lg shadow-sm transform rotate-12 border border-white/50 whitespace-nowrap">KLOOK</div>}
+                              {item.isTabelog && <div className="bg-[#FF6B00] text-white text-[8px] font-black px-2 py-1 rounded-lg shadow-sm transform rotate-12 border border-white/50 whitespace-nowrap">Tabélog</div>}
+                              {item.isGoogle && <div className="bg-[#4285F4] text-white text-[8px] font-black px-2 py-1 rounded-lg shadow-sm transform rotate-12 border border-white/50 whitespace-nowrap">Google</div>}
+                              {item.isTablecheck && <div className="bg-[#312E81] text-white text-[8px] font-black px-2 py-1 rounded-lg shadow-sm transform rotate-12 border border-white/50 whitespace-nowrap">Tablecheck</div>}
                             </div>
                             
                             <div className="mb-3 pr-8 relative z-10">
@@ -321,7 +301,6 @@ export const ScheduleTab: React.FC<ScheduleTabProps> = ({ searchTerm = '', items
                                 </div>
                                 <div className="flex flex-wrap items-center gap-2 mt-2">
                                   <CategoryBadge type={item.category} color={item.categoryColor} icon={catIcon} />
-                                  
                                   {item.businessHours && (
                                       <div className="flex items-center gap-1.5 text-[9px] font-mono font-black text-stone-400 bg-stone-50 px-2 py-0.5 rounded-md border border-stone-100/50">
                                           <i className="fa-regular fa-clock text-[8px]"></i>
@@ -339,7 +318,6 @@ export const ScheduleTab: React.FC<ScheduleTabProps> = ({ searchTerm = '', items
                                 </div>
                             )}
 
-                            {/* Expanded Checklist */}
                             {isExpanded && item.checkList && (
                                 <div className="mb-4 space-y-2 animate-fade-in relative z-10">
                                     <div className="h-px bg-stone-100 w-full mb-3"></div>
@@ -369,7 +347,7 @@ export const ScheduleTab: React.FC<ScheduleTabProps> = ({ searchTerm = '', items
                                         </span>
                                     </div>
                                 </div>
-                                <button onClick={(e) => { e.stopPropagation(); handleNavigate(item); }} className="flex-shrink-0 w-10 h-10 rounded-xl bg-white border border-stone-200 text-zen-text flex flex-col items-center justify-center hover:bg-zen-primary hover:text-white transition-all shadow-sm active:scale-90 group-hover:border-zen-primary/30">
+                                <button onClick={(e) => { e.stopPropagation(); handleNavigate(item); }} className="flex-shrink-0 w-10 h-10 rounded-xl bg-white border border-stone-200 text-zen-text flex flex-col items-center justify-center hover:bg-zen-primary hover:text-white transition-all shadow-sm active:scale-90">
                                     <i className="fa-solid fa-diamond-turn-right text-sm"></i>
                                     <span className="text-[7px] font-bold mt-0.5 uppercase tracking-tighter">GO</span>
                                 </button>
@@ -426,16 +404,16 @@ export const BookingsTab: React.FC<BookingsTabProps> = ({ searchTerm = '', booki
         }
     };
 
-    const filteredBookings = bookings.filter(b => {
+    const filteredBookings = useMemo(() => bookings.filter(b => {
       const matchType = filter === 'all' || b.type === filter;
       if (!searchTerm) return matchType;
       const term = searchTerm.toLowerCase();
-      const matchSearch = 
+      return matchType && (
           b.title.toLowerCase().includes(term) || 
           b.subTitle?.toLowerCase().includes(term) ||
-          b.referenceNo.toLowerCase().includes(term);
-      return matchType && matchSearch;
-    });
+          b.referenceNo.toLowerCase().includes(term)
+      );
+    }), [bookings, filter, searchTerm]);
 
     return (
         <div className="pb-20">
@@ -478,7 +456,7 @@ export const BookingsTab: React.FC<BookingsTabProps> = ({ searchTerm = '', booki
 
             <div className="space-y-6 px-1 mt-6">
                 {filteredBookings.map(booking => (
-                    <div key={booking.id} className="relative group animate-fade-in">
+                    <div key={booking.id} className="relative group animate-fade-in [content-visibility:auto]">
                         {booking.type === 'flight' ? (
                             <div className="bg-white rounded-[2rem] shadow-zen border border-stone-50 group-hover:shadow-zen-hover transition-all duration-500 overflow-visible relative flex items-stretch">
                                 <div className="flex-grow p-6 flex flex-col">

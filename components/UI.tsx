@@ -2,13 +2,13 @@
 import React from 'react';
 import { HighlightColor } from '../types';
 
-// Zen Card Component
+// Zen Card Component - Memoized
 interface CardProps {
   children: React.ReactNode;
   className?: string;
   onClick?: () => void;
 }
-export const Card: React.FC<CardProps> = ({ children, className = "", onClick }) => {
+export const Card = React.memo<CardProps>(({ children, className = "", onClick }) => {
   return (
     <div 
       onClick={onClick}
@@ -17,14 +17,14 @@ export const Card: React.FC<CardProps> = ({ children, className = "", onClick })
       {children}
     </div>
   );
-};
+});
 
-// Zen Button Component
+// Zen Button Component - Memoized
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'danger' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
 }
-export const Button: React.FC<ButtonProps> = ({ children, variant = 'primary', size = 'md', className = "", ...props }) => {
+export const Button = React.memo<ButtonProps>(({ children, variant = 'primary', size = 'md', className = "", ...props }) => {
   const baseStyle = "font-mono font-bold rounded-xl transition-all duration-200 active:scale-95 flex items-center justify-center gap-2";
   
   const variants = {
@@ -48,10 +48,10 @@ export const Button: React.FC<ButtonProps> = ({ children, variant = 'primary', s
       {children}
     </button>
   );
-};
+});
 
-// Category Badge with built-in Icon support
-export const CategoryBadge: React.FC<{ type: string; color?: HighlightColor; icon?: string }> = ({ type, color, icon }) => {
+// Category Badge - Memoized
+export const CategoryBadge = React.memo<{ type: string; color?: HighlightColor; icon?: string }>(({ type, color, icon }) => {
   const defaultStyles: Record<string, string> = {
     transport: "bg-red-50 text-red-700 border-red-100",
     購物: "bg-orange-50 text-orange-700 border-orange-100",
@@ -82,4 +82,4 @@ export const CategoryBadge: React.FC<{ type: string; color?: HighlightColor; ico
       {type}
     </span>
   );
-};
+});

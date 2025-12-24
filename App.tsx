@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { NAV_ITEMS } from './constants';
 import { TabType, ZenTripData, ScheduleItem } from './types';
 import { ScheduleTab, BookingsTab } from './components/Modules';
@@ -35,8 +36,8 @@ const App: React.FC = () => {
     init();
   }, []);
 
-  // Persistence handler
-  const updateTripData = async (newData: ZenTripData) => {
+  // Memoized Persistence handler
+  const updateTripData = useCallback(async (newData: ZenTripData) => {
     setTripData(newData);
     setIsSyncing(true);
     try {
@@ -44,27 +45,35 @@ const App: React.FC = () => {
     } catch (e) {
       console.error('Failed to save trip:', e);
     } finally {
-      setTimeout(() => setIsSyncing(false), 800);
+      setTimeout(() => setIsSyncing(false), 500);
     }
-  };
+  }, []);
 
-  const handleUpdateSchedule = (newSchedule: ScheduleItem[]) => {
-    if (!tripData) return;
-    updateTripData({
-      ...tripData,
-      schedule: newSchedule,
-      lastUpdated: Date.now()
+  const handleUpdateSchedule = useCallback((newSchedule: ScheduleItem[]) => {
+    setTripData(prev => {
+      if (!prev) return null;
+      const updated = {
+        ...prev,
+        schedule: newSchedule,
+        lastUpdated: Date.now()
+      };
+      updateTripData(updated);
+      return updated;
     });
-  };
+  }, [updateTripData]);
 
-  const handleUpdateTripName = (newName: string) => {
-    if (!tripData) return;
-    updateTripData({
-      ...tripData,
-      tripName: newName,
-      lastUpdated: Date.now()
+  const handleUpdateTripName = useCallback((newName: string) => {
+    setTripData(prev => {
+      if (!prev) return null;
+      const updated = {
+        ...prev,
+        tripName: newName,
+        lastUpdated: Date.now()
+      };
+      updateTripData(updated);
+      return updated;
     });
-  };
+  }, [updateTripData]);
 
   useEffect(() => {
     if (searchTerm && scrollContainerRef.current) {
@@ -73,9 +82,6 @@ const App: React.FC = () => {
   }, [searchTerm]);
 
   useEffect(() => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTo({ top: 0, behavior: 'auto' });
-    }
     if (activeTab === 'bookings') {
         setShowError(false);
         setPasswordInput('');
@@ -105,20 +111,18 @@ const App: React.FC = () => {
     setPasswordInput(prev => prev.slice(0, -1));
   };
 
-  const handleCloseSearch = () => {
+  const handleCloseSearch = useCallback(() => {
     setIsSearchOpen(false);
     setSearchTerm('');
-    setTimeout(() => {
-      if (scrollContainerRef.current) {
-        scrollContainerRef.current.scrollTo({ 
-          top: lastScrollPos.current, 
-          behavior: 'smooth' 
-        });
-      }
-    }, 10);
-  };
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({ 
+        top: lastScrollPos.current, 
+        behavior: 'smooth' 
+      });
+    }
+  }, []);
 
-  const handleToggleSearch = () => {
+  const handleToggleSearch = useCallback(() => {
     if (isSearchOpen) {
       handleCloseSearch();
     } else {
@@ -127,7 +131,7 @@ const App: React.FC = () => {
       }
       setIsSearchOpen(true);
     }
-  };
+  }, [isSearchOpen, handleCloseSearch]);
 
   useEffect(() => {
     if (isSearchOpen) {
@@ -144,7 +148,7 @@ const App: React.FC = () => {
       document.addEventListener('mousedown', handleClickOutside);
       return () => document.removeEventListener('mousedown', handleClickOutside);
     }
-  }, [isSearchOpen, searchTerm]);
+  }, [isSearchOpen, searchTerm, handleCloseSearch]);
 
   const activeIndex = NAV_ITEMS.findIndex(item => item.id === activeTab);
 
