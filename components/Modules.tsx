@@ -248,6 +248,7 @@ export const ScheduleTab: React.FC<ScheduleTabProps> = ({ searchTerm = '', items
                 const timeLines = item.displayTime?.split('\n') || [];
                 const catIcon = getCategoryIcon(item.category);
                 const isExpanded = expandedId === item.id;
+                const hasChecklist = item.checkList && item.checkList.length > 0;
 
                 return (
                 <div key={item.id} className="relative mb-0 group flex gap-0 [content-visibility:auto]">
@@ -279,13 +280,13 @@ export const ScheduleTab: React.FC<ScheduleTabProps> = ({ searchTerm = '', items
                     <div className="flex-grow min-w-0 py-4 pb-6 pl-3 overflow-visible">
                         <div 
                             onClick={() => handleCardClick(item.id)}
-                            className={`bg-white rounded-2xl p-4 shadow-zen border border-stone-50 transition-all duration-200 relative group cursor-pointer ${item.isCompleted ? 'opacity-60 grayscale-[50%]' : ''} ${isExpanded ? 'ring-2 ring-zen-primary/20' : ''}`}
+                            className={`bg-white rounded-2xl p-4 shadow-zen border border-stone-50 transition-all duration-300 ease-out relative group cursor-pointer active:scale-[0.98] active:shadow-zen-sm ${item.isCompleted ? 'opacity-60 grayscale-[50%]' : ''} ${isExpanded ? 'ring-2 ring-zen-primary/30 shadow-zen-hover !border-zen-primary/20' : ''}`}
                         >
                             <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
-                              <i className={`fa-solid ${catIcon} absolute -bottom-4 -right-2 text-[60px] text-stone-50/50 transform -rotate-12 transition-transform group-hover:scale-110 group-hover:rotate-0`}></i>
+                              <i className={`fa-solid ${catIcon} absolute -bottom-4 -right-2 text-[60px] text-stone-50/50 transform -rotate-12 transition-transform duration-500 ${isExpanded ? 'scale-125 rotate-0 opacity-80' : 'group-hover:scale-110 group-hover:rotate-0'}`}></i>
                             </div>
 
-                            {/* Badges Container - Adjusted to be more inside to prevent clipping */}
+                            {/* Badges Container */}
                             <div className="absolute top-1.5 right-1.5 z-20 flex flex-col gap-1 items-end pointer-events-none">
                               {item.isKlook && <div className="bg-[#FF5E00] text-white text-[7px] font-black px-1.5 py-0.5 rounded shadow-sm border border-white/30 whitespace-nowrap transform rotate-3">KLOOK</div>}
                               {item.isTabelog && <div className="bg-[#FF6B00] text-white text-[7px] font-black px-1.5 py-0.5 rounded shadow-sm border border-white/30 whitespace-nowrap transform rotate-3">Tabélog</div>}
@@ -296,9 +297,14 @@ export const ScheduleTab: React.FC<ScheduleTabProps> = ({ searchTerm = '', items
                             <div className="mb-3 pr-10 relative z-10">
                                 <div className="flex items-center gap-2 mb-1">
                                   <i className={`fa-solid ${catIcon} text-[10px] text-stone-300`}></i>
-                                  <h3 className={`font-bold text-lg leading-tight ${item.isCompleted ? 'text-stone-400 line-through' : 'text-zen-text'}`}>
-                                    <HighlightText text={item.title} highlight={searchTerm} />
-                                  </h3>
+                                  <div className="flex-1 flex items-center gap-2 overflow-hidden">
+                                    <h3 className={`font-bold text-lg leading-tight transition-all duration-300 ${item.isCompleted ? 'text-stone-400 line-through' : 'text-zen-text'} ${isExpanded ? 'text-zen-primary' : ''}`}>
+                                      <HighlightText text={item.title} highlight={searchTerm} />
+                                    </h3>
+                                    {hasChecklist && (
+                                      <i className={`fa-solid fa-chevron-down text-[10px] text-stone-300 transition-transform duration-300 ${isExpanded ? 'rotate-180 text-zen-primary' : ''}`}></i>
+                                    )}
+                                  </div>
                                 </div>
                                 <div className="flex flex-wrap items-center gap-2 mt-2">
                                   <CategoryBadge type={item.category} color={item.categoryColor} icon={catIcon} />
@@ -319,25 +325,28 @@ export const ScheduleTab: React.FC<ScheduleTabProps> = ({ searchTerm = '', items
                                 </div>
                             )}
 
-                            {isExpanded && item.checkList && (
-                                <div className="mb-4 space-y-2 animate-fade-in relative z-10">
-                                    <div className="h-px bg-stone-100 w-full mb-3"></div>
-                                    {item.checkList.map(ci => (
+                            {/* Checklist with smooth expansion animation using CSS grid-rows trick */}
+                            <div className={`grid transition-all duration-300 ease-in-out relative z-10 ${isExpanded && hasChecklist ? 'grid-rows-[1fr] opacity-100 mb-4' : 'grid-rows-[0fr] opacity-0 mb-0'}`}>
+                              <div className="overflow-hidden">
+                                <div className="h-px bg-stone-100 w-full my-3"></div>
+                                <div className="space-y-2">
+                                    {item.checkList?.map(ci => (
                                         <div 
                                           key={ci.id} 
                                           onClick={(e) => toggleCheckListItem(item.id, ci.id, e)}
-                                          className="flex items-center gap-3 p-2.5 bg-stone-50/50 rounded-xl border border-stone-100/50 transition-colors hover:bg-stone-100/50"
+                                          className="flex items-center gap-3 p-2.5 bg-stone-50/50 rounded-xl border border-stone-100/50 transition-all hover:bg-stone-100/50 active:scale-95"
                                         >
                                             <div className={`w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-all ${ci.isCompleted ? 'bg-zen-primary border-zen-primary' : 'bg-white border-stone-200'}`}>
                                                 {ci.isCompleted && <i className="fa-solid fa-check text-white text-[10px]"></i>}
                                             </div>
-                                            <span className={`text-[11px] font-bold leading-tight ${ci.isCompleted ? 'text-stone-300 line-through' : 'text-stone-600'}`}>
+                                            <span className={`text-[11px] font-bold leading-tight flex-1 ${ci.isCompleted ? 'text-stone-300 line-through' : 'text-stone-600'}`}>
                                                 <HighlightText text={ci.text} highlight={searchTerm} />
                                             </span>
                                         </div>
                                     ))}
                                 </div>
-                            )}
+                              </div>
+                            </div>
 
                             <div className="flex justify-between items-end gap-2 mt-auto relative z-10">
                                 <div className="flex-grow min-w-0">
