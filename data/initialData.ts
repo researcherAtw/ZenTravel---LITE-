@@ -32,9 +32,13 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         businessHours: '10:00 - 20:00', isCompleted: false,
         mapUrl: 'https://maps.app.goo.gl/jv8vH9DvuRvfqx1U8',
         checkList: [
-          { id: 'd1-4-c1', text: '[DIOR美妝] 有色潤唇膏 #021 玫瑰木', isCompleted: false },
-          { id: 'd1-4-c2', text: '[DIOR美妝] 微醺腮紅露 #01 玫瑰甜茶', isCompleted: false },
-          { id: 'd1-4-c3', text: '[DIOR美妝] 豐漾俏唇蜜 #212 閃耀柔粉色', isCompleted: false }
+          { id: 'd1-4-c6', text: '[CALARINS 克蘭詩] 彈潤植萃固態美唇油 #03野木薔薇 X1', isCompleted: false },
+          { id: 'd1-4-c4', text: '[CALARINS 克蘭詩] 彈潤植萃美唇油 #01天然蜜糖 X4', isCompleted: false },
+          { id: 'd1-4-c5', text: '[CALARINS 克蘭詩] 彈潤植萃美唇油 #09誘人可可 X1', isCompleted: false },
+          { id: 'd1-4-c1', text: '[DIOR美妝] 有色潤唇膏 #012 玫瑰木', isCompleted: false },
+          { id: 'd1-4-c2', text: '[DIOR美妝] 粉漾緹花頰彩棒 #012 玫瑰粉 X1', isCompleted: false },
+          { id: 'd1-4-c7', text: '[DIOR美妝] 經典五色眼影 #429法式印花 X1', isCompleted: false },
+          { id: 'd1-4-c3', text: '[DIOR美妝] 豐漾俏唇蜜 #009玫瑰木(釉光) X1', isCompleted: false }
         ]
     },
     { 
@@ -44,9 +48,13 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         businessHours: '10:00 - 20:00', isCompleted: false,
         mapUrl: 'https://maps.app.goo.gl/BCqeSZqrh5uiRvoy9',
         checkList: [
-          { id: 'd1-5-c1', text: '[DIOR美妝] 有色潤唇膏 #021 玫瑰木', isCompleted: false },
-          { id: 'd1-5-c2', text: '[DIOR美妝] 微醺腮紅露 #01 玫瑰甜茶', isCompleted: false },
-          { id: 'd1-5-c3', text: '[DIOR美妝] 豐漾俏唇蜜 #212 閃耀柔粉色', isCompleted: false }
+          { id: 'd1-5-c6', text: '[CALARINS 克蘭詩] 彈潤植萃固態美唇油 #03野木薔薇 X1', isCompleted: false },
+          { id: 'd1-5-c4', text: '[CALARINS 克蘭詩] 彈潤植萃美唇油 #01天然蜜糖 X4', isCompleted: false },
+          { id: 'd1-5-c5', text: '[CALARINS 克蘭詩] 彈潤植萃美唇油 #09誘人可可 X1', isCompleted: false },
+          { id: 'd1-5-c1', text: '[DIOR美妝] 有色潤唇膏 #012 玫瑰木', isCompleted: false },
+          { id: 'd1-5-c2', text: '[DIOR美妝] 粉漾緹花頰彩棒 #012 玫瑰粉 X1', isCompleted: false },
+          { id: 'd1-5-c7', text: '[DIOR美妝] 經典五色眼影 #429法式印花 X1', isCompleted: false },
+          { id: 'd1-5-c3', text: '[DIOR美妝] 豐漾俏唇蜜 #009玫瑰木(釉光) X1', isCompleted: false }
         ]
     },
     { 
@@ -158,7 +166,7 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         checkList: [
           { id: 'd2-4-c1', text: '硬幣收納包/灰 X1', isCompleted: false },
           { id: 'd2-4-c2', text: '可拆式美髮梳 X1', isCompleted: false },
-          { id: 'd2-4-c3', text: '腰間防盜小包/灰 X1', isCompleted: false },
+          { id: 'd2-3-c3', text: '腰間防盜小包/灰 X1', isCompleted: false },
           { id: 'd2-4-c4', text: '外套掛帶/白 X2｜黑 X1', isCompleted: false },
           { id: 'd2-4-c5', text: 'LED隨身鏡 X2', isCompleted: false },
           { id: 'd2-4-c6', text: 'LED桌上立鏡 X1', isCompleted: false }
@@ -317,7 +325,7 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         mapUrl: 'https://maps.app.goo.gl/m6eZWZhHxoUsrnha8'
     },
     { 
-        id: 'd4-5', date: '2026-01-07', time: '15:30', displayTime: '15:30\n16:00',
+        id: 'd4-5', date: '2026-01-07', time: '15:00', displayTime: '15:30\n16:00',
         title: '咚奇剛的瘋狂礦車™', location: 'USJ', category: 'Express', categoryColor: 'red',
         isCompleted: false, isKlook: true,
         mapUrl: 'https://maps.app.goo.gl/m6eZWZhHxoUsrnha8'
