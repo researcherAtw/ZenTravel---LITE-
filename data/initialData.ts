@@ -15,7 +15,7 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         isCompleted: false 
     },
     { 
-        id: 'd1-3', date: '2026-01-04', time: '13:00', title: 'Dior 心斎橋', 
+        id: 'd1-3', date: '2026-01-04', time: '13:00', displayTime: '', title: 'Dior 心斎橋', 
         location: '大阪 (心斎橋)', category: '購物', categoryColor: 'orange',
         businessHours: '11:00 - 20:00', isCompleted: false,
         mapUrl: 'https://maps.app.goo.gl/n9RXpreTK4BmtSKX7',
@@ -26,37 +26,29 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         ]
     },
     { 
-        id: 'd1-4', date: '2026-01-04', time: '13:00', title: '大阪高島屋店', 
+        id: 'd1-4', date: '2026-01-04', time: '13:00', displayTime: '', title: '大阪高島屋店', 
         location: '大阪 (難波)', category: '購物', categoryColor: 'orange',
         description: '1F 美妝 | 2F Dior | 3F ANAYI (essence)、POLO',
         businessHours: '10:00 - 20:00', isCompleted: false,
         mapUrl: 'https://maps.app.goo.gl/jv8vH9DvuRvfqx1U8',
         checkList: [
           { id: 'd1-4-anayi', text: '[ANAYI] 印花摺襉抓皺傘狀裙', isCompleted: false },
-          { id: 'd1-4-c4', text: '[CALARINS 克蘭詩] 彈潤植萃美唇油 #01天然蜜糖 X4', isCompleted: false },
-          { id: 'd1-4-c1', text: '[DIOR美妝] 有色潤唇膏 #012 玫瑰木', isCompleted: false },
-          { id: 'd1-4-c2', text: '[DIOR美妝] 粉漾緹花頰彩棒 #012 玫瑰粉 X1', isCompleted: false },
-          { id: 'd1-4-c7', text: '[DIOR美妝] 經典五色眼影 #429法式印花 X1', isCompleted: false },
-          { id: 'd1-4-c3', text: '[DIOR美妝] 豐漾俏唇蜜 #009玫瑰木(釉光) X1', isCompleted: false }
+          { id: 'd1-4-c7', text: '[DIOR美妝] 經典五色眼影 #429法式印花 X1', isCompleted: false }
         ]
     },
     { 
-        id: 'd1-5', date: '2026-01-04', time: '13:00', title: '大丸心齋橋店 本館', 
+        id: 'd1-5', date: '2026-01-04', time: '13:00', displayTime: '', title: '大丸心齋橋店 本館', 
         location: '大阪 (心斎橋)', category: '購物', categoryColor: 'orange',
         description: '1F 美妝 | 4F ANAYI | 9F pokemon center',
         businessHours: '10:00 - 20:00', isCompleted: false,
         mapUrl: 'https://maps.app.goo.gl/BCqeSZqrh5uiRvoy9',
         checkList: [
           { id: 'd1-5-anayi', text: '[ANAYI] 印花摺襉抓皺傘狀裙', isCompleted: false },
-          { id: 'd1-5-c4', text: '[CALARINS 克蘭詩] 彈潤植萃美唇油 #01天然蜜糖 X4', isCompleted: false },
-          { id: 'd1-5-c1', text: '[DIOR美妝] 有色潤唇膏 #012 玫瑰木', isCompleted: false },
-          { id: 'd1-5-c2', text: '[DIOR美妝] 粉漾緹花頰彩棒 #012 玫瑰粉 X1', isCompleted: false },
-          { id: 'd1-5-c7', text: '[DIOR美妝] 經典五色眼影 #429法式印花 X1', isCompleted: false },
-          { id: 'd1-5-c3', text: '[DIOR美妝] 豐漾俏唇蜜 #009玫瑰木(釉光) X1', isCompleted: false }
+          { id: 'd1-5-c7', text: '[DIOR美妝] 經典五色眼影 #429法式印花 X1', isCompleted: false }
         ]
     },
     { 
-        id: 'd1-6', date: '2026-01-04', time: '13:00', title: 'Loewe 大丸梅田店', 
+        id: 'd1-6', date: '2026-01-04', time: '13:00', displayTime: '', title: 'Loewe 大丸梅田店', 
         location: '大阪 (梅田)', category: '購物', categoryColor: 'orange',
         description: '3F LOEWE男子',
         businessHours: '10:00 - 20:00', isCompleted: false,
@@ -66,7 +58,7 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         ]
     },
     { 
-        id: 'd1-7', date: '2026-01-04', time: '13:00', title: 'Loewe 阪急男士大阪店', 
+        id: 'd1-7', date: '2026-01-04', time: '13:00', displayTime: '', title: 'Loewe 阪急男士大阪店', 
         location: '大阪 (梅田)', category: '購物', categoryColor: 'orange',
         description: '2F LOEWE男子',
         businessHours: '10:00 - 20:00', isCompleted: false,
@@ -76,7 +68,7 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         ]
     },
     { 
-        id: 'd1-anayi-hankyu', date: '2026-01-04', time: '13:00', displayTime: '10:00\n20:00',
+        id: 'd1-anayi-hankyu', date: '2026-01-04', time: '13:00', displayTime: '',
         title: 'ANAYI 阪急本店', location: '大阪 (梅田)', category: '購物', categoryColor: 'orange',
         description: '(4F)',
         businessHours: '10:00 - 20:00', isCompleted: false,
@@ -86,14 +78,14 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         ]
     },
     { 
-        id: 'd1-8', date: '2026-01-04', time: '13:00', title: 'Tables Cafe', 
+        id: 'd1-8', date: '2026-01-04', time: '13:00', displayTime: '', title: 'Tables Cafe', 
         location: '大阪 (堀江)', category: '下午茶', categoryColor: 'blue',
         description: '草莓蛋糕',
         businessHours: '11:00 - 20:00', isCompleted: false,
         mapUrl: 'https://maps.app.goo.gl/xvZvhNF7KLUSNVAz7'
     },
     { 
-        id: 'd1-9', date: '2026-01-04', time: '13:00', title: 'BicCamera 難波店', 
+        id: 'd1-9', date: '2026-01-04', time: '13:00', displayTime: '', title: 'BicCamera 難波店', 
         location: '大阪 (難波)', category: '購物', categoryColor: 'orange',
         description: 'Sony 相機鏡頭',
         businessHours: '10:00 - 21:00', isCompleted: false,
@@ -110,7 +102,7 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         mapUrl: 'https://maps.app.goo.gl/N7ytR6Au52tiZJJ49'
     },
     { 
-        id: 'd1-adidas', date: '2026-01-04', time: '15:30', title: 'Adidas 心齋橋大阪店', 
+        id: 'd1-adidas', date: '2026-01-04', time: '15:30', displayTime: '', title: 'Adidas 心齋橋大阪店', 
         location: '大阪 (心斎橋)', category: '購物', categoryColor: 'orange',
         description: '(外套、裙子、拖鞋)',
         businessHours: '11:00 - 21:00', isCompleted: false,
@@ -123,20 +115,20 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         ]
     },
     { 
-        id: 'd1-11', date: '2026-01-04', time: '16:00', title: '逛街', 
+        id: 'd1-11', date: '2026-01-04', time: '16:00', displayTime: '', title: '逛街', 
         location: '心斎橋', category: '逛街', categoryColor: 'purple',
         isCompleted: false,
         mapUrl: 'https://maps.app.goo.gl/Etpv8i3X6dN1ArEe8'
     },
     { 
-        id: 'd1-12', date: '2026-01-04', time: '18:00', title: '麥×鷄', 
+        id: 'd1-12', date: '2026-01-04', time: '18:00', displayTime: '', title: '麥×鷄', 
         location: '大阪 (心斎橋)', category: '晚餐', categoryColor: 'green',
         description: '雞白湯拉麵',
         businessHours: '18:00 - 22:00', isCompleted: false,
         mapUrl: 'https://maps.app.goo.gl/3x5qTHVEmY1XCb4f9'
     },
     { 
-        id: 'd2-1', date: '2026-01-05', time: '09:00', title: 'COLONY by EQI', 
+        id: 'd2-1', date: '2026-01-05', time: '09:00', displayTime: '', title: 'COLONY by EQI', 
         location: '大阪 (西心斎橋)', category: '早午餐', categoryColor: 'green',
         description: '鬆餅',
         businessHours: '11:00 - 23:00',
@@ -144,14 +136,14 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         mapUrl: 'https://maps.app.goo.gl/Lfg2wRUuyf1fDih46'
     },
     { 
-        id: 'd2-2', date: '2026-01-05', time: '09:30', title: 'MAZE CAFE', 
+        id: 'd2-2', date: '2026-01-05', time: '09:30', displayTime: '', title: 'MAZE CAFE', 
         location: '大阪 (西心斎橋)', category: '早午餐', categoryColor: 'green',
         businessHours: '08:00 - 16:00',
         isCompleted: false,
         mapUrl: 'https://maps.app.goo.gl/MQyHYzPZ8BCgt4PK7'
     },
     { 
-        id: 'd2-3', date: '2026-01-05', time: '10:30', title: '3COINS+plus', 
+        id: 'd2-3', date: '2026-01-05', time: '10:30', displayTime: '', title: '3COINS+plus', 
         location: '大阪 (心斎橋)', category: '購物', categoryColor: 'orange',
         businessHours: '11:00 - 21:00',
         isCompleted: false,
@@ -166,7 +158,7 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         ]
     },
     { 
-        id: 'd2-4', date: '2026-01-05', time: '11:00', title: '3COINS', 
+        id: 'd2-4', date: '2026-01-05', time: '11:00', displayTime: '', title: '3COINS', 
         location: '大阪 (難波/心斎橋)', category: '購物', categoryColor: 'orange',
         businessHours: '11:00 - 21:00',
         isCompleted: false,
@@ -181,14 +173,14 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         ]
     },
     { 
-        id: 'd2-5', date: '2026-01-05', time: '11:30', title: '靴下屋', 
+        id: 'd2-5', date: '2026-01-05', time: '11:30', displayTime: '', title: '靴下屋', 
         location: '大阪', category: '購物', categoryColor: 'orange',
         businessHours: '11:00 - 21:00',
         isCompleted: false,
         mapUrl: 'https://www.google.com/maps'
     },
     { 
-        id: 'd2-6', date: '2026-01-05', time: '12:30', title: 'Uniqlo', 
+        id: 'd2-6', date: '2026-01-05', time: '12:30', displayTime: '', title: 'Uniqlo', 
         location: '大阪', category: '購物', categoryColor: 'orange',
         description: '防寒衣物、花花發熱長袖',
         isCompleted: false,
@@ -199,7 +191,7 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         ]
     },
     { 
-        id: 'd2-7', date: '2026-01-05', time: '14:00', title: '淺草茶屋たばねのし', 
+        id: 'd2-7', date: '2026-01-05', time: '14:00', displayTime: '', title: '淺草茶屋たばねのし', 
         location: '大阪 (難波)', category: '下午茶', categoryColor: 'blue',
         description: '可麗餅、抹茶拿鐵',
         businessHours: '11:30 - 21:00',
@@ -207,7 +199,7 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         mapUrl: 'https://maps.app.goo.gl/1Rx3JmBJCNg7nvrz5'
     },
     { 
-        id: 'd2-8', date: '2026-01-05', time: '16:00', displayTime: '10:00\n20:30',
+        id: 'd2-8', date: '2026-01-05', time: '16:00', displayTime: '',
         title: '阿倍野 Harukas', 
         location: '大阪 (阿倍野)', category: '購物', categoryColor: 'orange',
         description: '(3F ANAYI)',
@@ -226,7 +218,7 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         mapUrl: 'https://maps.app.goo.gl/XyLM17JrCuZr45mt8'
     },
     { 
-        id: 'd2-10', date: '2026-01-05', time: '20:00', title: '唐吉軻德', 
+        id: 'd2-10', date: '2026-01-05', time: '20:00', displayTime: '', title: '唐吉軻德', 
         location: '大阪 (心斎橋)', category: '購物', categoryColor: 'orange',
         businessHours: '24H',
         isCompleted: false,
@@ -239,7 +231,7 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         ]
     },
     { 
-        id: 'd2-11', date: '2026-01-05', time: '21:00', title: '藥妝店', 
+        id: 'd2-11', date: '2026-01-05', time: '21:00', displayTime: '', title: '藥妝店', 
         location: '大阪', category: '購物', categoryColor: 'orange',
         description: '量車藥、感冒藥、過敏藥補貨',
         isCompleted: false,
@@ -252,21 +244,21 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         ]
     },
     { 
-        id: 'd3-1', date: '2026-01-06', time: '11:00', 
+        id: 'd3-1', date: '2026-01-06', time: '11:00', displayTime: '', 
         title: 'Tart Square', location: '大阪 (堀江)', category: '早午餐', categoryColor: 'green',
         description: '和牛鹹塔/甜食塔',
         businessHours: '11:00 - 19:00', isCompleted: false,
         mapUrl: 'https://maps.app.goo.gl/iKP9MLJs7AbywHKQ8'
     },
     { 
-        id: 'd3-2', date: '2026-01-06', time: '11:30', title: 'LiLo Coffee Roasters', 
+        id: 'd3-2', date: '2026-01-06', time: '11:30', displayTime: '', title: 'LiLo Coffee Roasters', 
         location: '大阪 (心斎橋)', category: '外帶咖啡', categoryColor: 'blue',
         description: '咖啡廳 | 現金Only',
         isCompleted: false,
         mapUrl: 'https://maps.app.goo.gl/kr7uR73TsLyrguqRA'
     },
     { 
-        id: 'd3-3', date: '2026-01-06', time: '12:00', 
+        id: 'd3-3', date: '2026-01-06', time: '12:00', displayTime: '', 
         title: 'エモジ', location: '大阪 (松屋町)', category: '購物', categoryColor: 'orange',
         description: '御朱印帳、集章冊',
         businessHours: '12:00 - 18:00', isCompleted: false,
@@ -277,14 +269,14 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         ]
     },
     { 
-        id: 'd3-4', date: '2026-01-06', time: '13:00', title: '難波八阪神社', 
+        id: 'd3-4', date: '2026-01-06', time: '13:00', displayTime: '', title: '難波八阪神社', 
         location: '大阪 (難波)', category: '景點', categoryColor: 'purple',
         businessHours: '06:30 - 17:00',
         isCompleted: false,
         mapUrl: 'https://maps.app.goo.gl/ZgiFUDhiTbZUhQvk8'
     },
     { 
-        id: 'd3-5', date: '2026-01-06', time: '14:30', title: 'COLONY by EQI', 
+        id: 'd3-5', date: '2026-01-06', time: '14:30', displayTime: '', title: 'COLONY by EQI', 
         location: '心斎橋アメ村店', category: '下午茶', categoryColor: 'blue',
         description: '舒芙蕾',
         businessHours: '11:00 - 23:00',
@@ -292,7 +284,7 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         mapUrl: 'https://maps.app.goo.gl/eZc5Hi3E5zW9A4sX6'
     },
     { 
-        id: 'd3-6', date: '2026-01-06', time: '16:00', title: '道頓堀大觀覽車', 
+        id: 'd3-6', date: '2026-01-06', time: '16:00', displayTime: '', title: '道頓堀大觀覽車', 
         location: '道頓堀', category: '景點', categoryColor: 'purple',
         description: '唐吉訶德摩天輪\n週二定期維修會延後至13:00開放',
         businessHours: '11:00 - 21:30',
@@ -307,19 +299,19 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         mapUrl: 'https://maps.app.goo.gl/2DAibjATzeB2CVxWA'
     },
     { 
-        id: 'd3-8', date: '2026-01-06', time: '20:00', title: '超商購買明日早餐', 
+        id: 'd3-8', date: '2026-01-06', time: '20:00', displayTime: '', title: '超商購買明日早餐', 
         location: '大阪', category: '一般', categoryColor: 'gray',
         isCompleted: false,
         mapUrl: 'https://www.google.com/maps'
     },
     { 
-        id: 'd4-1', date: '2026-01-07', time: '08:00', title: '超商早餐', 
+        id: 'd4-1', date: '2026-01-07', time: '08:00', displayTime: '', title: '超商早餐', 
         location: '環球影城', category: '早餐', categoryColor: 'green',
         isCompleted: false, isKlook: false,
         mapUrl: 'https://www.google.com/maps'
     },
     { 
-        id: 'd4-2', date: '2026-01-07', time: '09:00', title: '好萊塢美夢·乘車遊~逆轉世界~', 
+        id: 'd4-2', date: '2026-01-07', time: '09:00', displayTime: '', title: '好萊塢美夢·乘車遊~逆轉世界~', 
         location: 'USJ', category: '設施', categoryColor: 'purple',
         isCompleted: false, isKlook: false, 
         mapUrl: 'https://maps.app.goo.gl/m6eZWZhHxoUsrnha8'
@@ -343,21 +335,21 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         mapUrl: 'https://maps.app.goo.gl/m6eZWZhHxoUsrnha8'
     },
     { 
-        id: 'd4-6', date: '2026-01-07', time: '18:00',
+        id: 'd4-6', date: '2026-01-07', time: '18:00', displayTime: '',
         title: '燃えよ麺助', location: '大阪 (福島)', category: '晚餐', categoryColor: 'green',
         description: '蔥鴨拉麵、金色貝拉麵',
         businessHours: '18:00 - 21:00', isCompleted: false,
         mapUrl: 'https://maps.app.goo.gl/qKVRK9EiqsuWwL5k7'
     },
     { 
-        id: 'd5-1', date: '2026-01-08', time: '12:00', 
+        id: 'd5-1', date: '2026-01-08', time: '12:00', displayTime: '', 
         title: 'ろじうさぎ (Roji Usagi)', location: '京都 (宮川町)', category: '早午餐', categoryColor: 'green',
         description: '日式料理',
         businessHours: '12:00 - 15:30', isCompleted: false,
         mapUrl: 'https://maps.app.goo.gl/uJkpfNgAksJ5cWeM7'
     },
     { 
-        id: 'd5-2', date: '2026-01-08', time: '13:30', title: '湯葉チーズ本舗', 
+        id: 'd5-2', date: '2026-01-08', time: '13:30', displayTime: '', title: '湯葉チーズ本舗', 
         location: '京都 (嵐山)', category: '點心', categoryColor: 'blue',
         description: '炸豆皮起司',
         businessHours: '11:00 - 17:30',
@@ -365,32 +357,32 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         mapUrl: 'https://maps.app.goo.gl/Mgt5YJiAe2frMuYo6'
     },
     { 
-        id: 'd5-3', date: '2026-01-08', time: '14:30', title: '天龍寺', 
+        id: 'd5-3', date: '2026-01-08', time: '14:30', displayTime: '', title: '天龍寺', 
         location: '京都 (嵐山)', category: '景點', categoryColor: 'purple',
         businessHours: '08:30 - 17:00',
         isCompleted: false,
         mapUrl: 'https://maps.app.goo.gl/AkXiyUDh8qDgMTGj8'
     },
     { 
-        id: 'd5-4', date: '2026-01-08', time: '15:30', title: '嵯峨野竹林小徑', 
+        id: 'd5-4', date: '2026-01-08', time: '15:30', displayTime: '', title: '嵯峨野竹林小徑', 
         location: '京都 (嵐山)', category: '景點', categoryColor: 'purple',
         isCompleted: false,
         mapUrl: 'https://maps.app.goo.gl/x83m24TFXFNjCe8y5'
     },
     { 
-        id: 'd5-5', date: '2026-01-08', time: '15:30', title: '野宮神社', 
+        id: 'd5-5', date: '2026-01-08', time: '15:30', displayTime: '', title: '野宮神社', 
         location: '京都 (嵐山)', category: '景點', categoryColor: 'purple',
         isCompleted: false,
         mapUrl: 'https://maps.app.goo.gl/q7fRDitmuVnYtKbu8'
     },
     { 
-        id: 'd5-6', date: '2026-01-08', time: '16:30', title: '常寂光寺', 
+        id: 'd5-6', date: '2026-01-08', time: '16:30', displayTime: '', title: '常寂光寺', 
         location: '京都 (嵐山)', category: '景點', categoryColor: 'purple',
         isCompleted: false,
         mapUrl: 'https://maps.app.goo.gl/xiiuvrhTuuvVWmAD9'
     },
     { 
-        id: 'd5-isetan', date: '2026-01-08', time: '17:30', displayTime: '10:00\n20:00',
+        id: 'd5-isetan', date: '2026-01-08', time: '17:30', displayTime: '',
         title: 'JR 京都伊勢丹', location: '京都 (下京區)', category: '購物', categoryColor: 'orange',
         description: '(4F ANAYI)',
         businessHours: '10:00 - 20:00', isCompleted: false,
@@ -407,7 +399,7 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         mapUrl: 'https://maps.app.goo.gl/KzHuQyJdRQKDNHF7'
     },
     { 
-        id: 'd6-1', date: '2026-01-09', time: '10:00', title: '今宮戎神社', 
+        id: 'd6-1', date: '2026-01-09', time: '10:00', displayTime: '', title: '今宮戎神社', 
         location: '大阪 (浪速區)', category: '景點', categoryColor: 'purple',
         description: '中午前會有獻鯛儀式',
         businessHours: '09:00 - 17:00',
@@ -415,7 +407,7 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         mapUrl: 'https://maps.app.goo.gl/Sww1UwU92RM9SPvQ7'
     },
     { 
-        id: 'd6-3', date: '2026-01-09', time: '11:00', 
+        id: 'd6-3', date: '2026-01-09', time: '11:00', displayTime: '', 
         title: 'pâtisserie accueil', location: '大阪 (西區)', category: '下午茶', categoryColor: 'blue',
         description: '法式甜點店',
         businessHours: '11:00 - 19:00', isCompleted: false,
@@ -429,7 +421,7 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         mapUrl: 'https://maps.app.goo.gl/v3PsudaxqCnLeSyj6'
     },
     { 
-        id: 'd7-1', date: '2026-01-10', time: '10:30', 
+        id: 'd7-1', date: '2026-01-10', time: '10:30', displayTime: '', 
         title: '雞Soba 座銀 本店', 
         location: '大阪 (肥後橋)', category: '早午餐', categoryColor: 'green',
         description: '雞白湯拉麵',
@@ -442,6 +434,21 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         title: 'Check Out', 
         location: '大阪難波東急STAY美居酒店', category: 'Check Out', categoryColor: 'red',
         isCompleted: false 
+    },
+    { 
+        id: 'd7-dutyfree', date: '2026-01-10', time: '06:30', displayTime: '',
+        title: '關西國際機場直營免稅店', 
+        location: '關西機場', category: '提貨', categoryColor: 'red',
+        description: '(KIX DUTY FREE)\n＊具體位置： 過了證照查驗（移民官）後，您會先看到一整區很大的免稅店。請尋找掛有 **"WEB ORDER PICK UP"** (網路訂購取貨) 招牌的專屬櫃檯。\n＊通常是在您搭乘「接駁電車 (Wing Shuttle)」前往登機門**之前**的區域。請務必先領貨再搭車去登機口！',
+        businessHours: '06:30 - 00:25', isCompleted: false,
+        mapUrl: 'https://www.kixdutyfree.jp/tw/store-info.html',
+        checkList: [
+          { id: 'd7-df-c1', text: '[DIOR] 粉漾緹花頰彩棒 #012 玫瑰粉 X1', isCompleted: false },
+          { id: 'd7-df-c2', text: '[DIOR] 豐漾俏唇蜜 #012 玫瑰木 X1', isCompleted: false },
+          { id: 'd7-df-c3', text: '[DIOR] 癮誘粉漾潤唇膏 #012 玫瑰木 X1', isCompleted: false },
+          { id: 'd7-df-c4', text: '[CLARINS] 彈潤植萃美唇油 #01 Honey X4', isCompleted: false },
+          { id: 'd7-df-c5', text: '[Jo Malone London] 英國梨與小蒼蘭護手霜 30ml X2', isCompleted: false }
+        ]
     },
     { 
         id: 'd7-3', date: '2026-01-10', time: '14:00', displayTime: '14:00',
