@@ -28,13 +28,12 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
     { 
         id: 'd1-4', date: '2026-01-04', time: '13:00', title: '大阪高島屋店', 
         location: '大阪 (難波)', category: '購物', categoryColor: 'orange',
-        description: '1F SUQQU | 2F Dior | 3-4F Polo',
+        description: '1F 美妝 | 2F Dior | 3F ANAYI (essence)、POLO',
         businessHours: '10:00 - 20:00', isCompleted: false,
         mapUrl: 'https://maps.app.goo.gl/jv8vH9DvuRvfqx1U8',
         checkList: [
-          { id: 'd1-4-c6', text: '[CALARINS 克蘭詩] 彈潤植萃固態美唇油 #03野木薔薇 X1', isCompleted: false },
+          { id: 'd1-4-anayi', text: '[ANAYI] 印花摺襉抓皺傘狀裙', isCompleted: false },
           { id: 'd1-4-c4', text: '[CALARINS 克蘭詩] 彈潤植萃美唇油 #01天然蜜糖 X4', isCompleted: false },
-          { id: 'd1-4-c5', text: '[CALARINS 克蘭詩] 彈潤植萃美唇油 #09誘人可可 X1', isCompleted: false },
           { id: 'd1-4-c1', text: '[DIOR美妝] 有色潤唇膏 #012 玫瑰木', isCompleted: false },
           { id: 'd1-4-c2', text: '[DIOR美妝] 粉漾緹花頰彩棒 #012 玫瑰粉 X1', isCompleted: false },
           { id: 'd1-4-c7', text: '[DIOR美妝] 經典五色眼影 #429法式印花 X1', isCompleted: false },
@@ -44,13 +43,12 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
     { 
         id: 'd1-5', date: '2026-01-04', time: '13:00', title: '大丸心齋橋店 本館', 
         location: '大阪 (心斎橋)', category: '購物', categoryColor: 'orange',
-        description: '1F SUQQU | 3F Celine | 9F pokemon center',
+        description: '1F 美妝 | 4F ANAYI | 9F pokemon center',
         businessHours: '10:00 - 20:00', isCompleted: false,
         mapUrl: 'https://maps.app.goo.gl/BCqeSZqrh5uiRvoy9',
         checkList: [
-          { id: 'd1-5-c6', text: '[CALARINS 克蘭詩] 彈潤植萃固態美唇油 #03野木薔薇 X1', isCompleted: false },
+          { id: 'd1-5-anayi', text: '[ANAYI] 印花摺襉抓皺傘狀裙', isCompleted: false },
           { id: 'd1-5-c4', text: '[CALARINS 克蘭詩] 彈潤植萃美唇油 #01天然蜜糖 X4', isCompleted: false },
-          { id: 'd1-5-c5', text: '[CALARINS 克蘭詩] 彈潤植萃美唇油 #09誘人可可 X1', isCompleted: false },
           { id: 'd1-5-c1', text: '[DIOR美妝] 有色潤唇膏 #012 玫瑰木', isCompleted: false },
           { id: 'd1-5-c2', text: '[DIOR美妝] 粉漾緹花頰彩棒 #012 玫瑰粉 X1', isCompleted: false },
           { id: 'd1-5-c7', text: '[DIOR美妝] 經典五色眼影 #429法式印花 X1', isCompleted: false },
@@ -75,6 +73,16 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         mapUrl: 'https://maps.app.goo.gl/oNoJb8b498ZQfhGbA',
         checkList: [
           { id: 'd1-7-c1', text: '男用卡夾/黑 X1', isCompleted: false }
+        ]
+    },
+    { 
+        id: 'd1-anayi-hankyu', date: '2026-01-04', time: '13:00', displayTime: '10:00\n20:00',
+        title: 'ANAYI 阪急本店', location: '大阪 (梅田)', category: '購物', categoryColor: 'orange',
+        description: '(4F)',
+        businessHours: '10:00 - 20:00', isCompleted: false,
+        mapUrl: 'https://maps.app.goo.gl/Vw3b9hsDHoJXX8h26',
+        checkList: [
+          { id: 'd1-anayi-hankyu-c1', text: '[ANAYI] 印花摺襉抓皺傘狀裙', isCompleted: false }
         ]
     },
     { 
@@ -199,12 +207,16 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         mapUrl: 'https://maps.app.goo.gl/1Rx3JmBJCNg7nvrz5'
     },
     { 
-        id: 'd2-8', date: '2026-01-05', time: '16:00', title: 'あべのソ拉哈', 
+        id: 'd2-8', date: '2026-01-05', time: '16:00', displayTime: '10:00\n20:30',
+        title: '阿倍野 Harukas', 
         location: '大阪 (阿倍野)', category: '購物', categoryColor: 'orange',
-        description: '3F Ungrid服飾店',
-        businessHours: '10:00 - 21:30',
+        description: '(3F ANAYI)',
+        businessHours: '10:00 - 20:30',
         isCompleted: false,
-        mapUrl: 'https://maps.app.goo.gl/KmBGoBB2fNMsXQdd7'
+        mapUrl: 'https://maps.app.goo.gl/DX9Pnu4FkMAwf55t8',
+        checkList: [
+          { id: 'd2-8-anayi', text: '[ANAYI] 印花摺襉抓皺傘狀裙', isCompleted: false }
+        ]
     },
     { 
         id: 'd2-9', date: '2026-01-05', time: '18:00', displayTime: '18:00',
@@ -376,6 +388,16 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         location: '京都 (嵐山)', category: '景點', categoryColor: 'purple',
         isCompleted: false,
         mapUrl: 'https://maps.app.goo.gl/xiiuvrhTuuvVWmAD9'
+    },
+    { 
+        id: 'd5-isetan', date: '2026-01-08', time: '17:30', displayTime: '10:00\n20:00',
+        title: 'JR 京都伊勢丹', location: '京都 (下京區)', category: '購物', categoryColor: 'orange',
+        description: '(4F ANAYI)',
+        businessHours: '10:00 - 20:00', isCompleted: false,
+        mapUrl: 'https://maps.app.goo.gl/U2Nc7Up9AAjWjBGU7',
+        checkList: [
+          { id: 'd5-isetan-anayi', text: '[ANAYI] 印花摺襉抓皺傘狀裙', isCompleted: false }
+        ]
     },
     { 
         id: 'd5-7', date: '2026-01-08', time: '19:00', displayTime: '19:00',
