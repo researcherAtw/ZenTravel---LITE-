@@ -33,7 +33,8 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         mapUrl: 'https://maps.app.goo.gl/jv8vH9DvuRvfqx1U8',
         checkList: [
           { id: 'd1-4-anayi', text: '[ANAYI] 印花摺襉抓皺傘狀裙', isCompleted: false },
-          { id: 'd1-4-c7', text: '[DIOR美妝] 經典五色眼影 #429法式印花 X1', isCompleted: false }
+          { id: 'd1-4-c7', text: '[DIOR美妝] 經典五色眼影 #429法式印花 X1', isCompleted: false },
+          { id: 'd1-4-dior-lip', text: '[DIOR美妝] 粉漾水光潤唇釉 #046 覆盆莓', isCompleted: false }
         ]
     },
     { 
@@ -44,7 +45,8 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         mapUrl: 'https://maps.app.goo.gl/BCqeSZqrh5uiRvoy9',
         checkList: [
           { id: 'd1-5-anayi', text: '[ANAYI] 印花摺襉抓皺傘狀裙', isCompleted: false },
-          { id: 'd1-5-c7', text: '[DIOR美妝] 經典五色眼影 #429法式印花 X1', isCompleted: false }
+          { id: 'd1-5-c7', text: '[DIOR美妝] 經典五色眼影 #429法式印花 X1', isCompleted: false },
+          { id: 'd1-5-dior-lip', text: '[DIOR美妝] 粉漾水光潤唇釉 #046 覆盆莓', isCompleted: false }
         ]
     },
     { 

@@ -278,14 +278,14 @@ export const ScheduleTab: React.FC<ScheduleTabProps> = ({ searchTerm = '', items
 
             return (
               <div key={item.id} className="relative mb-0 group flex gap-0 [content-visibility:auto] -ml-5">
-                {/* 時間欄位：寬度適中，縮小主副時間落差，文字更貼近時間軸 */}
-                <div className="w-14 py-4 flex flex-col items-end justify-start flex-shrink-0 pr-1.5">
+                {/* 時間欄位：更貼近時間軸，縮小字體落差 */}
+                <div className="w-14 py-4 flex flex-col items-end justify-start flex-shrink-0 pr-1">
                   <div className="flex flex-col items-end gap-0.5">
                     {timeLines.map((time, idx) => (
                       <span 
                         key={idx} 
-                        className={`font-mono font-bold text-right leading-tight transition-all whitespace-nowrap ${
-                          idx === 0 ? 'text-[12px]' : 'text-[10px] opacity-80 mt-0.5'
+                        className={`font-mono font-bold text-right leading-[1.1] transition-all whitespace-nowrap ${
+                          idx === 0 ? 'text-[11px]' : 'text-[10px] opacity-90'
                         } ${item.isCompleted ? 'text-gray-300' : 'text-zen-text/70'}`}
                       >
                         {time}
