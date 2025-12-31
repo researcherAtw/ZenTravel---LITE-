@@ -199,7 +199,12 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         description: '(HORINISHI 調味料的品牌旗艦店)',
         businessHours: '11:00 - 21:00',
         isCompleted: false,
-        mapUrl: 'https://maps.app.goo.gl/489Kzru8PtD8ySou8'
+        mapUrl: 'https://maps.app.goo.gl/489Kzru8PtD8ySou8',
+        checkList: [
+          { id: 'd2-orange-c1', text: 'HORINISHI 萬能調味粉 X3（白&紅&金）', isCompleted: false },
+          { id: 'd2-orange-c2', text: 'Horinese 監修美美乃滋 X1 （白）', isCompleted: false },
+          { id: 'd2-orange-c3', text: 'Horinishi (ほりにし)X格鬥家（試聞再決定）', isCompleted: false }
+        ]
     },
     { 
         id: 'd2-7', date: '2026-01-05', time: '14:00', displayTime: '', title: '淺草茶屋たばねのし', 
