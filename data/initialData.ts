@@ -193,6 +193,15 @@ export const INITIAL_TRIP_DATA: ZenTripData = {
         ]
     },
     { 
+        id: 'd2-orange', date: '2026-01-05', time: '13:00', displayTime: '', 
+        title: 'Orangeなんばパークス店', 
+        location: '大阪 (難波 Parks)', category: '購物', categoryColor: 'orange',
+        description: '(HORINISHI 調味料的品牌旗艦店)',
+        businessHours: '11:00 - 21:00',
+        isCompleted: false,
+        mapUrl: 'https://maps.app.goo.gl/489Kzru8PtD8ySou8'
+    },
+    { 
         id: 'd2-7', date: '2026-01-05', time: '14:00', displayTime: '', title: '淺草茶屋たばねのし', 
         location: '大阪 (難波)', category: '下午茶', categoryColor: 'blue',
         description: '可麗餅、抹茶拿鐵',
