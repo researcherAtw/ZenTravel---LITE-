@@ -112,10 +112,11 @@ export const ScheduleTab: React.FC<ScheduleTabProps> = ({ searchTerm = '', items
     });
   }, [selectedDate]);
 
+  // 更新：點擊日期自動置中
   useEffect(() => {
     const activeBtn = dateRefs.current.get(selectedDate);
     if (activeBtn) {
-      activeBtn.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'center' });
+      activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     }
   }, [selectedDate]);
 
@@ -197,8 +198,9 @@ export const ScheduleTab: React.FC<ScheduleTabProps> = ({ searchTerm = '', items
     <div className="pb-20">
       {!searchTerm && (
         <div className="sticky top-[108px] z-30 -mx-5 px-5 bg-zen-bg pt-2 pb-2 transform-gpu">
-          <div className="relative overflow-x-auto no-scrollbar py-2 snap-x items-center">
-            <div className="flex gap-[6px] min-w-max relative px-1">
+          {/* 加入 snap-x snap-mandatory */}
+          <div className="relative overflow-x-auto no-scrollbar py-2 snap-x snap-mandatory items-center">
+            <div className="flex gap-[6px] min-w-max relative px-1 pr-10">
               <div 
                 className="absolute h-[78px] w-[58px] rounded-[24px] bg-[#464646] transition-transform duration-200 pointer-events-none z-0"
                 style={{ 
@@ -217,6 +219,7 @@ export const ScheduleTab: React.FC<ScheduleTabProps> = ({ searchTerm = '', items
                     key={date}
                     ref={(el) => { if (el) dateRefs.current.set(date, el); }}
                     onClick={() => handleDateChange(date)}
+                    // 加入 snap-center
                     className={`snap-center flex-shrink-0 flex flex-col items-center justify-center w-[58px] h-[78px] rounded-[24px] transition-all duration-200 relative z-10 ${
                       isSelected ? 'text-white' : 'bg-white text-stone-400'
                     }`}
@@ -268,7 +271,6 @@ export const ScheduleTab: React.FC<ScheduleTabProps> = ({ searchTerm = '', items
           className={`will-change-transform ${!searchTerm && slideDirection === 'right' ? 'animate-slide-in-right' : ''} ${!searchTerm && slideDirection === 'left' ? 'animate-slide-in-left' : ''} ${searchTerm || !slideDirection ? 'animate-fade-in' : ''}`}
         >
           {filteredItems.map((item) => {
-            // 嚴格過濾時間顯示邏輯：僅當 displayTime 存在且不為空字串時顯示
             const showTime = item.displayTime && item.displayTime !== "";
             const timeLines = showTime ? item.displayTime!.split('\n') : [];
             
@@ -278,7 +280,6 @@ export const ScheduleTab: React.FC<ScheduleTabProps> = ({ searchTerm = '', items
 
             return (
               <div key={item.id} className="relative mb-0 group flex gap-0 [content-visibility:auto] -ml-5">
-                {/* 時間欄位：更貼近時間軸，縮小字體落差 */}
                 <div className="w-14 py-4 flex flex-col items-end justify-start flex-shrink-0 pr-1">
                   <div className="flex flex-col items-end gap-0.5">
                     {timeLines.map((time, idx) => (
@@ -424,6 +425,14 @@ export const BookingsTab: React.FC<BookingsTabProps> = ({ searchTerm = '', booki
     }
   }, [filter]);
 
+  // 新增：當過濾分頁改變時，自動置中橫向捲動
+  useEffect(() => {
+    const activeBtn = filterRefs.current[filter];
+    if (activeBtn) {
+      activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+  }, [filter]);
+
   const getIcon = (type: string) => {
     switch(type) {
       case 'flight': return 'fa-plane-up';
@@ -455,8 +464,9 @@ export const BookingsTab: React.FC<BookingsTabProps> = ({ searchTerm = '', booki
           </div>
         </div>
         
-        <div className="relative overflow-x-auto no-scrollbar pb-1 px-1">
-          <div className="flex gap-2 min-w-max relative">
+        {/* 加入 snap-x snap-mandatory 讓捲動有精確感 */}
+        <div className="relative overflow-x-auto no-scrollbar pb-1 px-1 snap-x snap-mandatory">
+          <div className="flex gap-2 min-w-max relative pr-10">
             <div 
               className="absolute h-full rounded-2xl bg-[#464646] transition-all duration-200 pointer-events-none z-0"
               style={{ 
@@ -471,7 +481,8 @@ export const BookingsTab: React.FC<BookingsTabProps> = ({ searchTerm = '', booki
                 key={f} 
                 ref={(el) => { filterRefs.current[f] = el; }}
                 onClick={() => setFilter(f)} 
-                className={`relative z-10 px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-colors duration-200 whitespace-nowrap border font-sans ${
+                // 加入 snap-center 與 flex-shrink-0 確保寬度不被壓縮且捲動精確
+                className={`relative z-10 px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-colors duration-200 whitespace-nowrap border font-sans snap-center flex-shrink-0 ${
                   filter === f 
                   ? 'text-white border-transparent' 
                   : 'bg-white text-stone-400 border-stone-100 hover:border-stone-200'
